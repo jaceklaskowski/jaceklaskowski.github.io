@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
+    <url>
+        <loc>http://jaceklaskowski.github.io/blog/2013/11/21/day-with-scala-dot-list/</loc>
+        <lastmod>2013-11-21T23:30:35+01:00</lastmod>
+    </url>
+    <url>
+        <loc>http://jaceklaskowski.github.io/blog/archives/</loc>
+        <lastmod>2013-11-21T23:30:35+01:00</lastmod>
+    </url>
+    <url>
+        <loc>http://jaceklaskowski.github.io/</loc>
+        <lastmod>2013-11-21T23:30:35+01:00</lastmod>
+    </url>
+    <url>
+        <loc>http://jaceklaskowski.github.io/robots.txt</loc>
+        <lastmod>2013-11-21T23:22:52+01:00</lastmod>
+    </url>
+</urlset>

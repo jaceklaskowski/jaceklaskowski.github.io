@@ -1,0 +1,28 @@
+{% if site.coderwall_user %}
+<section>
+  <h1>Coderwall Badges</h1>
+  <p>
+    <script type="text/javascript">
+      function display_coderwall(args) {
+        var badges = args["data"]["badges"];
+        var wall = '';
+        for ( var i = 0; i < badges.length; i++ ) {
+          var alt_txt = badges[i]["name"];
+          var title_txt = badges[i]["name"] + ' - ' + badges[i]["description"];
+          wall += '<a href="http://coderwall.com/{{site.coderwall_user}}/"><img src="'
+            + badges[i]["badge"]
+            + '" width="48" height="48" alt="' + alt_txt
+            + '" title="' + title_txt
+            + '"/></a>';
+        }
+        document.write(wall);
+      }
+    </script>
+    <script src="http://coderwall.com/{{site.coderwall_user}}.json?callback=display_coderwall"></script>
+  </p>
+  {% if site.coderwall_show_endorse_link %}
+  <p><a href="http://coderwall.com/{{site.coderwall_user}}"><img src="http://api.coderwall.com/{{site.coderwall_user}}/endorsecount.png" /></a></p>
+  {% endif %}
+</section>
+{% endif %}
+

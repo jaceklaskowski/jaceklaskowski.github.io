@@ -19,7 +19,7 @@ date_format: "ordinal"
 # 2013-11-21
 # http://blog.zerosharp.com/removing-the-rss-subscription-icon-from-octopress/
 show_feeds: true
-subscribe_rss: /atom.xml
+subscribe_rss: http://feeds.feedburner.com/MasteringFpWithScala
 subscribe_email:
 # RSS feeds can list your email address if you like
 email:

@@ -3,11 +3,11 @@
 # ----------------------- #
 
 url: http://jaceklaskowski.github.io
-title: Mastering FP with Scala
-subtitle: Making use of functional programming on JVM
+title: Mastering FP and OO with Scala
+subtitle: Making use of functional and object-oriented programming on JVM
 author: Jacek Laskowski
 simple_search: http://google.com/search
-description: "Recipes for making Scalania.pl even more fun!"
+description: "Recipes for making object-oriented Scala fun(ctional)!"
 
 # Default date format is "ordinal" (resulting in "July 22nd 2007")
 # You can customize the format as defined in

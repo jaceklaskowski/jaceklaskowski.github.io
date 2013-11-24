@@ -4,7 +4,7 @@
   <title><![CDATA[Mastering FP and OO with Scala]]></title>
   <link href="http://jaceklaskowski.github.io/atom.xml" rel="self"/>
   <link href="http://jaceklaskowski.github.io/"/>
-  <updated>2013-11-24T16:06:11+01:00</updated>
+  <updated>2013-11-24T23:56:29+01:00</updated>
   <id>http://jaceklaskowski.github.io/</id>
   <author>
     <name><![CDATA[Jacek Laskowski]]></name>
@@ -27,6 +27,18 @@
 
 <h2>Eta expansion? Uh, oh, are we in trouble?</h2>
 
+<p>Quoting the answer to <a href="http://stackoverflow.com/a/155655/1305344">What is the difference between a method and a function</a> on StackOverflow:</p>
+
+<blockquote><p>A function is a piece of code that is called by name. It can be passed data to operate on (ie. the parameters) and can optionally return data (the return value).</p>
+
+<p>All data that is passed to a function is explicitly passed.</p>
+
+<p>A method is a piece of code that is called by name that is associated with an object. In most respects it is identical to a function except for two key differences.</p>
+
+<p>1. It is implicitly passed the object for which it was called</p>
+
+<p>2. It is able to operate on data that is contained within the class (remembering that an object is an instance of a class &ndash; the class is the definition, the object is an instance of that data)&#8221;</p></blockquote>
+
 <p>Let&rsquo;s start with the following example.</p>
 
 <pre><code>scala&gt; def foo = 5
@@ -44,9 +56,11 @@ f: () =&gt; Int = &lt;function0&gt;
 foo: ()Int
 </code></pre>
 
+<p>Almost.</p>
+
 <p>Can you spot the difference between these three definitions: <code>def foo = 5</code> and <code>def foo() = 5</code> and <code>val f = foo _</code>?</p>
 
-<p>In Scala, <strong>a function</strong> is <em>always</em> a (object) value of a function type that&rsquo;s a syntactic sugar for a Function trait, e.g. <code>Int =&gt; Boolean</code> corresponds to Function1[Int, Boolean]. As a value the function value can be assigned to a name, i.e. can be named.</p>
+<p>In Scala, <strong>a function</strong> is <em>always</em> a (object) value of a function type that&rsquo;s a syntactic sugar for a <code>Function</code> trait, e.g. <code>Int =&gt; Boolean</code> corresponds to Function1[Int, Boolean]. As a value the function value can be assigned to a name, i.e. can be named.</p>
 
 <p>On the other hand, <strong>a method</strong> of a class is <em>always</em> a member of the type the class represents and as such doesn&rsquo;t have its own type. It has a signature, though, e.g. <code>()Int</code> that looks like a function type, e.g. <code>() =&gt; Int</code>.</p>
 
@@ -92,7 +106,90 @@ scala&gt; foo(fv)
 res17: Int = 5
 </code></pre>
 
-<h2>Eta expansion and overloaded methods?</h2>
+<p>Quoting the answer to <a href="http://stackoverflow.com/a/6651099/1305344">When do I have to treat my methods as partially applied functions in Scala?</a> on StackOverflow:</p>
+
+<blockquote><p>You have to write the <code>_</code> whenever the compiler is not explicitly expecting a <code>Function</code> object.</p></blockquote>
+
+<pre><code>scala&gt; def foo(n: Int) = n
+foo: (n: Int)Int
+
+scala&gt; val bar = foo
+&lt;console&gt;:8: error: missing arguments for method foo;
+follow this method with `_' if you want to treat it as a partially applied function
+       val bar = foo
+                 ^
+
+scala&gt; val bar: Int =&gt; Int = foo
+bar: Int =&gt; Int = &lt;function1&gt;
+</code></pre>
+
+<h2>Uniform access principle</h2>
+
+<p>Interestingly, uniform access principle makes understanding eta expansion a bit tricker.</p>
+
+<pre><code>scala&gt; object A {
+     |   def foo(bar: () =&gt; Int) = 1
+     |   def foo(n: Int) = 2
+     | }
+defined module A
+
+scala&gt; def f() = 4
+f: ()Int
+
+scala&gt; def baz() = 4
+baz: ()Int
+</code></pre>
+
+<p>Guess what happens when you execute <code>A.foo(baz)</code>.</p>
+
+<pre><code>scala&gt; A.foo(baz)
+res0: Int = 2
+</code></pre>
+
+<p>What about calling <code>A.foo</code> with <code>baz _</code>?</p>
+
+<pre><code>scala&gt; A.foo(baz _)
+res1: Int = 1
+</code></pre>
+
+<p>Can you explain why? Visit <a href="http://stackoverflow.com/q/17324247/1305344" title="Eta-expansion between methods and functions with overloaded methods in Scala">Eta-expansion between methods and functions with overloaded methods in Scala</a> on StackOverflow for more information.</p>
+
+<p>There&rsquo;s another example that is not easy to explain.</p>
+
+<pre><code>scala&gt; def fm: Map[Int, String] = Map(0 -&gt; "zero")
+fm: Map[Int,String]
+
+scala&gt; fm.isInstanceOf[Function1[Int, String]]
+res15: Boolean = true
+
+scala&gt; def g: Int =&gt; String = fm
+g: Int =&gt; String
+</code></pre>
+
+<p>Since <code>fm</code> is of the <code>Map[Int, String]</code> type and <a href="http://www.scala-lang.org/api/current/index.html#scala.collection.immutable.Map">scala.collection.immutable.Map</a> inherits from <a href="http://www.scala-lang.org/api/current/index.html#scala.Function1">scala.Function1</a>, one can assign <code>fm</code> to <code>g</code>. That works fine.</p>
+
+<p>Can you explain why the following sample doesn&rsquo;t work?</p>
+
+<pre><code>scala&gt; def fm(): Map[Int, String] = Map(0 -&gt; "zero")
+fm: ()Map[Int,String]
+
+scala&gt; def g: Int =&gt; String = fm
+&lt;console&gt;:8: error: type mismatch;
+ found   : () =&gt; Map[Int,String]
+ required: Int =&gt; String
+       def g: Int =&gt; String = fm
+                              ^
+</code></pre>
+
+<p>Note that <code>fm</code> got merely the brackets and they&rsquo;re indeed equal.</p>
+
+<pre><code>scala&gt; fm() == fm
+res16: Boolean = true
+</code></pre>
+
+<p>See <a href="https://issues.scala-lang.org/browse/SI-7187">SI-7187 eta expansion should not precede empty application</a>.</p>
+
+<h2>Eta expansion and overloaded methods</h2>
 
 <p>When there&rsquo;s an object of a type with overloaded methods the underscore <code>_</code> may yield different results.</p>
 
@@ -169,25 +266,25 @@ bar: (x: A)(Int, Int, Int) =&gt; Int
 
 <p>In <strong>6.26.5 Eta Expansion</strong> <a href="http://scala-lang.org/files/archive/nightly/pdfs/ScalaReference.pdf">Scala Language Specification (PDF)</a> says:</p>
 
-<p><em>&ldquo;Eta-expansion converts an expression of method type to an equivalent expression
-of function type.&rdquo;</em></p>
+<blockquote><p>Eta-expansion converts an expression of method type to an equivalent expression
+of function type.</p></blockquote>
 
 <p>The section belongs to <strong>6.26 Implicit Conversions</strong> that gives another perspective on what eta expansion is &ndash; it&rsquo;s <em>an implicit converstion</em>.</p>
 
 <p>In <strong>6.26 Implicit Conversions</strong> the Scala Language Specification says:</p>
 
-<p><em>&ldquo;Implicit conversions can be applied to expressions whose type does not match their
-expected type, to qualifiers in selections, and to unapplied methods.&rdquo;</em></p>
+<blockquote><p>Implicit conversions can be applied to expressions whose type does not match their
+expected type, to qualifiers in selections, and to unapplied methods.</p></blockquote>
 
 <p>It goes further into when a type is compatible to another.</p>
 
-<p><em>&ldquo;We say, a type T is compatible to a type U if T conforms to U after applying eta-expansion (§6.26.5) and view applications (§7.3).&rdquo;</em></p>
+<blockquote><p>We say, a type T is compatible to a type U if T conforms to U after applying eta-expansion (§6.26.5) and view applications (§7.3).</p></blockquote>
 
 <p>In <strong>6.26.2 Method Conversions</strong> the Scala Language Specification says:</p>
 
-<p><em>&ldquo;<strong>Eta Expansion.</strong> Otherwise, if the method is not a constructor, and the expected
+<blockquote><p><strong>Eta Expansion.</strong> Otherwise, if the method is not a constructor, and the expected
 type pt is a function type (Ts&#8217;) => T&#8217;, eta-expansion (§6.26.5) is performed on the
-expression e.&rdquo;</em></p>
+expression e.</p></blockquote>
 
 <h2>References (where wisdom came from)</h2>
 
@@ -195,6 +292,7 @@ expression e.&rdquo;</em></p>
 <li><a href="http://gleichmann.wordpress.com/2011/01/09/functional-scala-turning-methods-into-functions/">Functional Scala: Turning Methods into Functions (or WTF is eta expansion?)</a></li>
 <li><a href="https://groups.google.com/d/msg/scala-language/FrDJiagB8CY/3NVmhdKe0vgJ">Eta expansion, meet overloading</a></li>
 <li><a href="http://scala-lang.org/files/archive/nightly/pdfs/ScalaReference.pdf">Scala Language Specification (PDF)</a></li>
+<li><a href="http://stackoverflow.com/q/17324247/1305344">Eta-expansion between methods and functions with overloaded methods in Scala</a></li>
 </ul>
 
 ]]></content>

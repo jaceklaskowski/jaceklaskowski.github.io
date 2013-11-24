@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Mastering FP and OO with Scala]]></title>
-  <link href="http://jaceklaskowski.github.io/atom.xml" rel="self"/>
+  <title><![CDATA[Category: Scala | Mastering FP and OO with Scala]]></title>
+  <link href="http://jaceklaskowski.github.io/blog/categories/scala/atom.xml" rel="self"/>
   <link href="http://jaceklaskowski.github.io/"/>
   <updated>2013-11-24T13:48:40+01:00</updated>
   <id>http://jaceklaskowski.github.io/</id>
@@ -169,15 +169,6 @@ bar: (x: A)(Int, Int, Int) =&gt; Int
 <li><a href="https://groups.google.com/d/msg/scala-language/FrDJiagB8CY/3NVmhdKe0vgJ">Eta expansion, meet overloading</a></li>
 </ul>
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Day With scala.List]]></title>
-    <link href="http://jaceklaskowski.github.io/blog/day-with-scala-dot-list/"/>
-    <updated>2013-11-21T21:22:12+01:00</updated>
-    <id>http://jaceklaskowski.github.io/blog/day-with-scala-dot-list</id>
-    <content type="html"><![CDATA[<p>How could you make an use of scala.List&hellip;</p>
 ]]></content>
   </entry>
   

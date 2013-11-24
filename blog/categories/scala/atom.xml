@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Scala | Mastering FP and OO with Scala]]></title>
   <link href="http://jaceklaskowski.github.io/blog/categories/scala/atom.xml" rel="self"/>
   <link href="http://jaceklaskowski.github.io/"/>
-  <updated>2013-11-24T15:49:02+01:00</updated>
+  <updated>2013-11-24T16:06:11+01:00</updated>
   <id>http://jaceklaskowski.github.io/</id>
   <author>
     <name><![CDATA[Jacek Laskowski]]></name>
@@ -36,7 +36,7 @@ scala&gt; val f = foo _
 f: () =&gt; Int = &lt;function0&gt;
 </code></pre>
 
-<p>Do you happen to know the name of <em>the (implicit) conversion</em> when the underscore is applied to a method (as if it stood for its parameters) and you eventually end up with a value &ndash; <em>a function</em> (that some call <em>a function value</em>)? That&rsquo;s <em>eta expansion</em> which is a means of coercing methods into functions in Scala.</p>
+<p>Do you happen to know the name of <em>the (implicit) conversion</em> when the underscore is applied to a method (as if it stood for its parameters) and you eventually end up with a value &ndash; <em>a function</em> (that some call <em>a function value</em>)? That&rsquo;s <em>eta expansion</em> which is a means of coercing (converting) methods into functions in Scala.</p>
 
 <p><code>f</code> is a value of <code>() =&gt; Int</code> type or an instance of <code>&lt;function0&gt;</code>. It may have been written as:</p>
 
@@ -169,10 +169,25 @@ bar: (x: A)(Int, Int, Int) =&gt; Int
 
 <p>In <strong>6.26.5 Eta Expansion</strong> <a href="http://scala-lang.org/files/archive/nightly/pdfs/ScalaReference.pdf">Scala Language Specification (PDF)</a> says:</p>
 
-<p><em>Eta-expansion converts an expression of method type to an equivalent expression
-of function type.</em></p>
+<p><em>&ldquo;Eta-expansion converts an expression of method type to an equivalent expression
+of function type.&rdquo;</em></p>
 
 <p>The section belongs to <strong>6.26 Implicit Conversions</strong> that gives another perspective on what eta expansion is &ndash; it&rsquo;s <em>an implicit converstion</em>.</p>
+
+<p>In <strong>6.26 Implicit Conversions</strong> the Scala Language Specification says:</p>
+
+<p><em>&ldquo;Implicit conversions can be applied to expressions whose type does not match their
+expected type, to qualifiers in selections, and to unapplied methods.&rdquo;</em></p>
+
+<p>It goes further into when a type is compatible to another.</p>
+
+<p><em>&ldquo;We say, a type T is compatible to a type U if T conforms to U after applying eta-expansion (§6.26.5) and view applications (§7.3).&rdquo;</em></p>
+
+<p>In <strong>6.26.2 Method Conversions</strong> the Scala Language Specification says:</p>
+
+<p><em>&ldquo;<strong>Eta Expansion.</strong> Otherwise, if the method is not a constructor, and the expected
+type pt is a function type (Ts') => T', eta-expansion (§6.26.5) is performed on the
+expression e.&rdquo;</em></p>
 
 <h2>References (where wisdom came from)</h2>
 

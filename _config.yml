@@ -2,7 +2,7 @@
 #      Main Configs       #
 # ----------------------- #
 
-url: http://jaceklaskowski.github.io
+url: http://blog.jaceklaskowski.pl
 title: Mastering FP and OO with Scala
 subtitle: Making use of functional and object-oriented programming on JVM
 author: Jacek Laskowski
@@ -30,7 +30,7 @@ email:
 
 # If publishing to a subdirectory as in http://site.com/project set 'root: /project'
 root: /
-permalink: /blog/:title/
+permalink: date
 source: source
 destination: public
 plugins: plugins

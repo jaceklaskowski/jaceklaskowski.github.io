@@ -106,3 +106,6 @@ facebook_like: true
 # Coderwall
 coderwall_user: jaceklaskowski
 coderwall_show_endorse_link: true
+
+# LinkedIn
+linkedin_user: JacekLaskowski

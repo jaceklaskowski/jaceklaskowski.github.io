@@ -1,4 +1,4 @@
 User-agent: *
 Disallow: 
 
-Sitemap: http://jaceklaskowski.github.io/sitemap.xml 
+Sitemap: http://blog.jaceklaskowski.pl/sitemap.xml 

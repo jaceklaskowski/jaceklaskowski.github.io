@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: List | Mastering FP and OO with Scala]]></title>
-  <link href="http://jaceklaskowski.github.io/blog/categories/list/atom.xml" rel="self"/>
-  <link href="http://jaceklaskowski.github.io/"/>
-  <updated>2014-06-29T22:29:19+02:00</updated>
-  <id>http://jaceklaskowski.github.io/</id>
+  <link href="http://blog.jaceklaskowski.pl/blog/categories/list/atom.xml" rel="self"/>
+  <link href="http://blog.jaceklaskowski.pl/"/>
+  <updated>2014-06-29T23:19:56+02:00</updated>
+  <id>http://blog.jaceklaskowski.pl/</id>
   <author>
     <name><![CDATA[Jacek Laskowski]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Day With scala.List]]></title>
-    <link href="http://jaceklaskowski.github.io/blog/day-with-scala-dot-list/"/>
+    <link href="http://blog.jaceklaskowski.pl/list/2013/11/21/day-with-scala-dot-list.html"/>
     <updated>2013-11-21T21:22:12+01:00</updated>
-    <id>http://jaceklaskowski.github.io/blog/day-with-scala-dot-list</id>
+    <id>http://blog.jaceklaskowski.pl/list/2013/11/21/day-with-scala-dot-list</id>
     <content type="html"><![CDATA[<p>How could you make an use of scala.List&hellip;</p>
 ]]></content>
   </entry>

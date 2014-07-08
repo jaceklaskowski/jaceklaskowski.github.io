@@ -97,7 +97,9 @@ You can always go back to the previous state (before squashing) with `git rebase
 
 Doing squashing is worth the time since merging the changes with the master later on becomes a no-brainer for the project maintainers.
 
-You may also want to read the article [squashing commits with rebase](http://gitready.com/advanced/2009/02/10/squashing-commits-with-rebase.html) that has helped me a lot to get the gist of rebasing under git.
+Useful links about git rebase:
+* [squashing commits with rebase](http://gitready.com/advanced/2009/02/10/squashing-commits-with-rebase.html)
+* [About Git rebase](https://help.github.com/articles/about-git-rebase)
 
 ## Deleting remote and local branches
 

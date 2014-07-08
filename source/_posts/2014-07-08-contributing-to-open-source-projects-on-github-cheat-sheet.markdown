@@ -91,7 +91,13 @@ Use `git rebase -i`:
 
 where `master` is the name of the master branch of the project you forked and then branched for your changes.
 
-Fix any merge issues while rebasing. It's worth the time since merging the changes with the master becomes a no-brainer for the project maintainers.
+Fix any merge issues while rebasing. When fixed, `git add` the files and `git rebase --continue` afterwards.
+
+You can always go back to the previous state (before squashing) with `git rebase --abort`.
+
+Doing squashing is worth the time since merging the changes with the master later on becomes a no-brainer for the project maintainers.
+
+You may also want to read the article [squashing commits with rebase](http://gitready.com/advanced/2009/02/10/squashing-commits-with-rebase.html) that has helped me a lot to get the gist of rebasing under git.
 
 ## Deleting remote and local branches
 

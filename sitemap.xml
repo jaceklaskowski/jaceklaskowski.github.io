@@ -3,6 +3,12 @@
   
   
   <url>
+    <loc>http://blog.jaceklaskowski.pl/github/2014/07/08/contributing-to-open-source-projects-on-github-cheat-sheet.html</loc>
+    <lastmod>2014-07-08T01:24:32+02:00</lastmod>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
     <loc>http://blog.jaceklaskowski.pl/scala/2014/06/26/calculate-profit-in-scala-with-foldLeft.html</loc>
     <lastmod>2014-06-26T22:57:00+02:00</lastmod>
     <priority>0.8</priority>
@@ -29,14 +35,14 @@
   
   <url>
     <loc>http://blog.jaceklaskowski.pl/blog/archives/</loc>
-    <lastmod>2014-06-29T23:19:56+02:00</lastmod>
+    <lastmod>2014-07-08T02:36:11+02:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
     <loc>http://blog.jaceklaskowski.pl/</loc>
-    <lastmod>2014-06-29T23:19:56+02:00</lastmod>
+    <lastmod>2014-07-08T02:36:11+02:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>

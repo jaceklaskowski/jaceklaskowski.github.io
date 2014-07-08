@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Github | Mastering FP and OO with Scala]]></title>
   <link href="http://blog.jaceklaskowski.pl/blog/categories/github/atom.xml" rel="self"/>
   <link href="http://blog.jaceklaskowski.pl/"/>
-  <updated>2014-07-08T22:43:05+02:00</updated>
+  <updated>2014-07-08T22:49:32+02:00</updated>
   <id>http://blog.jaceklaskowski.pl/</id>
   <author>
     <name><![CDATA[Jacek Laskowski]]></name>
@@ -115,7 +115,9 @@
 
 <p>Doing squashing is worth the time since merging the changes with the master later on becomes a no-brainer for the project maintainers.</p>
 
-<p>You may also want to read the article <a href="http://gitready.com/advanced/2009/02/10/squashing-commits-with-rebase.html">squashing commits with rebase</a> that has helped me a lot to get the gist of rebasing under git.</p>
+<p>Useful links about git rebase:
+* <a href="http://gitready.com/advanced/2009/02/10/squashing-commits-with-rebase.html">squashing commits with rebase</a>
+* <a href="https://help.github.com/articles/about-git-rebase">About Git rebase</a></p>
 
 <h2>Deleting remote and local branches</h2>
 

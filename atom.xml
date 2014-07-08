@@ -4,7 +4,7 @@
   <title><![CDATA[Mastering FP and OO with Scala]]></title>
   <link href="http://blog.jaceklaskowski.pl/atom.xml" rel="self"/>
   <link href="http://blog.jaceklaskowski.pl/"/>
-  <updated>2014-07-08T02:36:11+02:00</updated>
+  <updated>2014-07-08T22:43:05+02:00</updated>
   <id>http://blog.jaceklaskowski.pl/</id>
   <author>
     <name><![CDATA[Jacek Laskowski]]></name>
@@ -109,7 +109,13 @@
 
 <p>where <code>master</code> is the name of the master branch of the project you forked and then branched for your changes.</p>
 
-<p>Fix any merge issues while rebasing. It&rsquo;s worth the time since merging the changes with the master becomes a no-brainer for the project maintainers.</p>
+<p>Fix any merge issues while rebasing. When fixed, <code>git add</code> the files and <code>git rebase --continue</code> afterwards.</p>
+
+<p>You can always go back to the previous state (before squashing) with <code>git rebase --abort</code>.</p>
+
+<p>Doing squashing is worth the time since merging the changes with the master later on becomes a no-brainer for the project maintainers.</p>
+
+<p>You may also want to read the article <a href="http://gitready.com/advanced/2009/02/10/squashing-commits-with-rebase.html">squashing commits with rebase</a> that has helped me a lot to get the gist of rebasing under git.</p>
 
 <h2>Deleting remote and local branches</h2>
 

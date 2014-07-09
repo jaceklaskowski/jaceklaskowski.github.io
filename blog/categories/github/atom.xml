@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Github | Mastering FP and OO with Scala]]></title>
   <link href="http://blog.jaceklaskowski.pl/blog/categories/github/atom.xml" rel="self"/>
   <link href="http://blog.jaceklaskowski.pl/"/>
-  <updated>2014-07-08T22:49:32+02:00</updated>
+  <updated>2014-07-10T00:27:01+02:00</updated>
   <id>http://blog.jaceklaskowski.pl/</id>
   <author>
     <name><![CDATA[Jacek Laskowski]]></name>
@@ -100,14 +100,14 @@
 
 <h2>Squashing changes</h2>
 
-<p>There might be times when your work in progress generates a stream of changes to the branch. You may face a request <em>to squash the changes</em> so it goes (aka gets merged) to the master as a single change/commit.</p>
+<p>There might be times when your work in progress generates a stream of changes to a branch. It&rsquo;s assumed that the changes are already <code>git add</code>ed and the project maintainers have requested <em>to squash the changes</em> so they ultimately go (aka get merged) to the master as a single change/commit.</p>
 
-<p>Use <code>git rebase -i</code>:</p>
+<p>Use <code>git rebase -i [branch]</code>:</p>
 
-<pre><code>git rebase -i master
+<pre><code>git rebase -i origin/master
 </code></pre>
 
-<p>where <code>master</code> is the name of the master branch of the project you forked and then branched for your changes.</p>
+<p>where <code>origin/master</code> is the name of the <code>master</code> branch of the project you forked and then branched for your changes from the remote <code>origin</code> repository.</p>
 
 <p>Fix any merge issues while rebasing. When fixed, <code>git add</code> the files and <code>git rebase --continue</code> afterwards.</p>
 
@@ -133,6 +133,15 @@
 <p>where <code>branch-name</code> is the name of the branch you want to delete.</p>
 
 <p>You should change the branch to some other branch to be able to delete it.</p>
+
+<h2>Maintainers, use &ldquo;Closes #XXX&rdquo; to auto-close pull requests</h2>
+
+<p>It&rsquo;s a feature of GitHub and mostly for project maintainers when they merging pull requests to <code>master</code>.</p>
+
+<p>After you&rsquo;re about to <code>git push</code> your local changes, <code>git commit</code> them and as the last line add <strong>Closes #XXX</strong> where <strong>XXX</strong> is the pull request id. It will auto-close the pull request.</p>
+
+<p>Useful links about the feature:
+* <a href="http://blog.spreedly.com/2014/06/24/merge-pull-request-considered-harmful/">&ldquo;Merge pull request&rdquo; Considered Harmful</a></p>
 ]]></content>
   </entry>
   

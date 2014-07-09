@@ -83,13 +83,13 @@ Click Create and you've just contributed to the project! Open Source Contributor
 
 ## Squashing changes
 
-There might be times when your work in progress generates a stream of changes to the branch. You may face a request *to squash the changes* so it goes (aka gets merged) to the master as a single change/commit.
+There might be times when your work in progress generates a stream of changes to a branch. It's assumed that the changes are already `git add`ed and the project maintainers have requested *to squash the changes* so they ultimately go (aka get merged) to the master as a single change/commit.
 
-Use `git rebase -i`:
+Use `git rebase -i [branch]`:
 
-    git rebase -i master
+    git rebase -i origin/master
 
-where `master` is the name of the master branch of the project you forked and then branched for your changes.
+where `origin/master` is the name of the `master` branch of the project you forked and then branched for your changes from the remote `origin` repository.
 
 Fix any merge issues while rebasing. When fixed, `git add` the files and `git rebase --continue` afterwards.
 
@@ -114,3 +114,12 @@ Delete the local branch with the command:
 where `branch-name` is the name of the branch you want to delete.
 
 You should change the branch to some other branch to be able to delete it.
+
+## Maintainers, use "Closes #XXX" to auto-close pull requests
+
+It's a feature of GitHub and mostly for project maintainers when they merging pull requests to `master`.
+
+After you're about to `git push` your local changes, `git commit` them and as the last line add **Closes #XXX** where **XXX** is the pull request id. It will auto-close the pull request.
+
+Useful links about the feature:
+* ["Merge pull request" Considered Harmful](http://blog.spreedly.com/2014/06/24/merge-pull-request-considered-harmful/)

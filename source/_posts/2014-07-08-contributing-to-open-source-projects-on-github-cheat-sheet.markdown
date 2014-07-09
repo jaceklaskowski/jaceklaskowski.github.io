@@ -98,6 +98,7 @@ You can always go back to the previous state (before squashing) with `git rebase
 Doing squashing is worth the time since merging the changes with the master later on becomes a no-brainer for the project maintainers.
 
 Useful links about git rebase:
+
 * [squashing commits with rebase](http://gitready.com/advanced/2009/02/10/squashing-commits-with-rebase.html)
 * [About Git rebase](https://help.github.com/articles/about-git-rebase)
 
@@ -122,4 +123,5 @@ It's a feature of GitHub and mostly for project maintainers when they merging pu
 After you're about to `git push` your local changes, `git commit` them and as the last line add **Closes #XXX** where **XXX** is the pull request id. It will auto-close the pull request.
 
 Useful links about the feature:
+
 * ["Merge pull request" Considered Harmful](http://blog.spreedly.com/2014/06/24/merge-pull-request-considered-harmful/)

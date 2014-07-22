@@ -4,7 +4,7 @@
   <title><![CDATA[Mastering FP and OO with Scala]]></title>
   <link href="http://blog.jaceklaskowski.pl/atom.xml" rel="self"/>
   <link href="http://blog.jaceklaskowski.pl/"/>
-  <updated>2014-07-10T00:29:29+02:00</updated>
+  <updated>2014-07-22T14:23:07+02:00</updated>
   <id>http://blog.jaceklaskowski.pl/</id>
   <author>
     <name><![CDATA[Jacek Laskowski]]></name>
@@ -12,6 +12,96 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Trait Init[Scope] in Sbt]]></title>
+    <link href="http://blog.jaceklaskowski.pl/scala/sbt/2014/07/22/trait-init-scope-in-sbt.html"/>
+    <updated>2014-07-22T13:19:54+02:00</updated>
+    <id>http://blog.jaceklaskowski.pl/scala/sbt/2014/07/22/trait-init-scope-in-sbt</id>
+    <content type="html"><![CDATA[<p>It&rsquo;s been my wish to master <a href="http://scala-lang.org/">Scala</a> recently and since I&rsquo;ve been spending more time with <a href="http://www.scala-sbt.org/">sbt</a> I&rsquo;ve made the decision to use one to master the other (in no particular order). There are quite a few sophisticated projects in Scala out there, but sbt is enough for my needs.</p>
+
+<p>In order to pursue my understanding of sbt (and hence Scala itself) I&rsquo;ve been reading the sources that honestly keep surprising me so much often. It&rsquo;s almost every minute when I find myself scratching my head to digest a piece of sbt code. It&rsquo;s akin to when I was reading the source code of <a href="http://clojure.org/">Clojure</a> to learn the language. People can write complicated code and I wouldn&rsquo;t be surprised to hear sbt&rsquo;s sources belong to the category. I don&rsquo;t care, though. I&rsquo;m fine with the complexity hoping the mental pain brings me closer to master Scala.</p>
+
+<p>Today I picked the trait <a href="https://github.com/sbt/sbt/blob/0.13/util/collection/src/main/scala/sbt/Settings.scala#L41">sbt.Init</a> believing it&rsquo;d be an important step in my journey.</p>
+
+<p><strong>NOTE</strong> It becomes feature-complete when the note disappears. Live with the few mistakes for now. Let me know what you think in the Comments section. The site is on GitHub so pull requests are warmly welcome, too. Thanks!</p>
+
+<!-- more -->
+
+
+<p>There’s the trait <a href="https://github.com/sbt/sbt/blob/0.13/util/collection/src/main/scala/sbt/Settings.scala#L41">sbt.Init</a>. I don’t really know what its purpose is and I hope to find it out after few Scala snippets. There’s just enough hope to master Scala while pursuing my understanding of sbt with the trait.</p>
+
+<h2>Goal</h2>
+
+<p>Create an instance of trait <code>Init[Scope]</code>.</p>
+
+<h2>Solution</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>val init = new Init[Int] {
+</span><span class='line'>  def showFullKey: Show[ScopedKey[_]] = Show { (sk: ScopedKey[_]) =&gt; 
+</span><span class='line'>    s"${sk.scope}:${sk.key}...${sk.scopedKey}"
+</span><span class='line'>  }
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Run <code>sbt</code> and then execute the command <code>consoleProject</code> to open sbt&rsquo;s Scala REPL with all the necessary types of sbt loaded.</p>
+
+<h2>Mental issues encountered</h2>
+
+<ol>
+<li><p>I’m far from being able to distinguish easily type parameters, e.g. <code>Scope</code>, in parameterised types, e.g. <code>Init[Scope]</code>, from types themselves. When I see <code>Init[Scope]</code> my Java-trained eyes see <code>Scope</code> type within <code>Init</code> type and although it doesn’t make sense after a moment that’s my initial thought.</p></li>
+<li><p>The type constructor <code>Show[ScopedKey[_]]</code> in the return value type of <code>showFullKey</code> is another trait <code>Show</code> that comes with <code>apply</code> that is supposed to return a <code>String</code> instance from <code>ScopedKey[_]</code>. But hey, <code>ScopedKey[_]</code> is another type constructor, and things get more complex for me again. Happily, <code>Show</code> has a companion object with <code>apply</code> method. The story ends as <code>ScopedKey</code> is a final parameterized case class and the function parameter <code>f: T =&gt; String</code> in <code>Show</code> returns a <code>String</code> so I&rsquo;ve just merely followed the types and it <em>happened</em> to work fine. The Scala compiler happy and so am I.</p></li>
+</ol>
+
+
+<h2>Summary</h2>
+
+<p><code>Show</code> is a function type (with <code>apply</code>) that accepts <code>T</code> and returns <code>String</code>. In our case, <code>T</code> is <code>ScopedKey[_]</code> that’s&hellip;well&hellip;it’s yet to be understood.</p>
+
+<h2>consoleProject in sbt</h2>
+
+<p>If you happened to want to see the code in action, execute <code>sbt consoleProject</code> and give the following a try:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>// (attribute) key that points at Int value
+</span><span class='line'>scala&gt; val number = AttributeKey[Int]("number", "number stringified")
+</span><span class='line'>number: sbt.AttributeKey[Int] = number
+</span><span class='line'> 
+</span><span class='line'>scala&gt; val init = new Init[Int] {
+</span><span class='line'>     |   def showFullKey: Show[ScopedKey[_]] = Show { (sk: ScopedKey[_]) =&gt;
+</span><span class='line'>     |     s"${sk.scope}:${sk.key}...${sk.scopedKey}"
+</span><span class='line'>     |   }
+</span><span class='line'>     | }
+</span><span class='line'>init: sbt.Init[Int] = $anon$1@1f95802
+</span><span class='line'> 
+</span><span class='line'>scala&gt; val sfk: Show[init.ScopedKey[_]] = init.showFullKey
+</span><span class='line'>sfk: sbt.Show[init.ScopedKey[_]] = sbt.Show$$anon$1@7f54be72
+</span><span class='line'>
+</span><span class='line'>scala&gt; val s = sfk(init.ScopedKey[Int](scope=5, key=number))
+</span><span class='line'>s: String = 5:number...ScopedKey(5,number)</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Contributing to Open Source Projects on GitHub - Cheat Sheet]]></title>

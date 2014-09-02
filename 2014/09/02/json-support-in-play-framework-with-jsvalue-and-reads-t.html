@@ -5,12 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Category: Sbt - Mastering FP and OO with Scala</title>
+  <title>JSON Support in Play Framework With JsValue and Reads[T] - Mastering FP and OO with Scala</title>
   <meta name="author" content="Jacek Laskowski">
 
   
-  <meta name="description" content="Category: sbt">
-  
+  <meta name="description" content="There are many ways to learn the Scala programming language and the vast number of libraries for the language. Mine is to use sbt console in a &hellip;">
+  <meta name="keywords" content="development,play framework,scala,json">
 
   <!-- http://t.co/dKP3o1e -->
   <meta name="HandheldFriendly" content="True">
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://blog.jaceklaskowski.pl/blog/categories/sbt/index.html">
+  <link rel="canonical" href="http://blog.jaceklaskowski.pl/2014/09/02/json-support-in-play-framework-with-jsvalue-and-reads-t.html">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="http://feeds.feedburner.com/MasteringFpWithScala" rel="alternate" title="Mastering FP and OO with Scala" type="application/atom+xml">
@@ -46,7 +46,7 @@
 
 </head>
 
-<body   >
+<body    class="collapse-sidebar sidebar-footer" >
   <header role="banner"><hgroup>
   <h1><a href="/">Mastering FP and OO with Scala</a></h1>
   
@@ -78,53 +78,177 @@
   <div id="main">
     <div id="content">
       <div>
-<article role="article">
+<article class="hentry" role="article">
   
   <header>
-    <h1 class="entry-title">Category: Sbt</h1>
+    
+      <h1 class="entry-title">JSON Support in Play Framework With JsValue and Reads[T]</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-09-02T16:00:00+02:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>2</span><span class='date-suffix'>nd</span>, <span class='date-year'>2014</span></span> <span class='time'>4:00 pm</span></time>
+        
+      </p>
     
   </header>
-  
-  <div id="blog-archives" class="category">
 
 
+<div class="entry-content"><p>There are many ways to learn <a href="http://www.scala-lang.org/">the Scala programming language</a> and the vast number of libraries for the language. Mine is to use <a href="http://www.scala-sbt.org/">sbt</a> console in a customized project with required dependencies that are automatically downloaded by sbt. All (analysing, downloading, setting up CLASSPATH and such) is handled by the tooling itself not me. Share your approach if it appears smarter.</p>
 
-  
-  <h2>2014</h2>
+<p>In this installment, I&rsquo;m presenting a sbt build for learning the JSON API from the <a href="https://www.playframework.com/documentation/2.4.x/ScalaJson">play-json</a> module in the <a href="https://www.playframework.com/documentation/2.4.x/api/scala/index.html#play.api.libs.json.package">play.api.libs.json</a> package in <a href="https://www.playframework.com/">Play Framework 2.4.0-M1</a>.</p>
 
-<article>
-  
-<h1><a href="/2014/07/22/trait-init-scope-in-sbt.html">Trait Init[Scope] in Sbt</a></h1>
-<time datetime="2014-07-22T13:19:54+02:00" pubdate><span class='month'>Jul</span> <span class='day'>22</span> <span class='year'>2014</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/sbt/'>sbt</a>, <a class='category' href='/blog/categories/scala/'>scala</a></span>
-</footer>
+<!-- more -->
 
 
-</article>
+<p>It’s a code-mainly version of the article <a href="https://www.playframework.com/documentation/2.4.x/ScalaJsonInception">JSON Macro Inception</a> from the official documentation of Play Framework.</p>
 
+<p>Start a new activator/sbt project with the following build definition in <code>build.sbt</code>:</p>
 
+<pre><code>scalaVersion := "2.11.2"
 
-  
-  <h2>2013</h2>
+val playVersion = "2.4.0-M1"
 
-<article>
-  
-<h1><a href="/2013/12/07/beginner-guide-to-sbt-0-dot-13-and-intellij-idea-13.html">Beginner &#8220;Guide&#8221; to Sbt 0.13 and IntelliJ IDEA 13</a></h1>
-<time datetime="2013-12-07T16:39:37+01:00" pubdate><span class='month'>Dec</span> <span class='day'>07</span> <span class='year'>2013</span></time>
+libraryDependencies += "com.typesafe.play" %% "play-json" % playVersion
+</code></pre>
 
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/intellij-idea/'>intellij-idea</a>, <a class='category' href='/blog/categories/sbt/'>sbt</a>, <a class='category' href='/blog/categories/scala/'>scala</a></span>
-</footer>
+<p>On the command line execute <code>sbt</code> and then, while in the sbt shell, <code>console</code>.</p>
 
+<pre><code>&gt; console
+[info] Starting scala interpreter...
+[info]
+Welcome to Scala version 2.11.2 (Java HotSpot(TM) 64-Bit Server VM, Java 1.8.0_20).
+Type in expressions to have them evaluated.
+Type :help for more information.
+</code></pre>
 
-</article>
+<p>When you see the above (the Java version might be different depending on your configuration), you’re in an interactive development environment - Scala REPL - with play-json library and Scala 2.11.2. The world of JSON’s (almost) yours!</p>
 
+<p><code>:pa</code> (a shortcut for <code>:paste</code>) enters paste mode so you can copy and paste entire Scala statements.</p>
+
+<pre><code>scala&gt; :pa
+// Entering paste mode (ctrl-D to finish)
+
+import play.api.libs.functional.syntax._
+import play.api.libs.json._
+
+// Exiting paste mode, now interpreting.
+
+import play.api.libs.functional.syntax._
+import play.api.libs.json._
+
+scala&gt; case class Person(name: String, age: Int, lovesChocolate: Boolean)
+defined class Person
+
+scala&gt; :pa
+// Entering paste mode (ctrl-D to finish)
+
+implicit val personReads = (
+  (__ \ 'name).read[String] and
+  (__ \ 'age).read[Int] and
+  (__ \ 'lovesChocolate).read[Boolean]
+)(Person)
+
+// Exiting paste mode, now interpreting.
+
+personReads: play.api.libs.json.Reads[Person] = play.api.libs.json.Reads$$anon$8@5c2b898d
+
+scala&gt; val jsonStr = """{ "name" : "Jacek", "age" : 41, "lovesChocolate": true }"""
+jsonStr: String = { "name" : "Jacek", "age" : 41, "lovesChocolate": true }
+
+scala&gt; val json = play.api.libs.json.Json.parse(jsonStr)
+json: play.api.libs.json.JsValue = {"name":"Jacek","age":41,"lovesChocolate":true}
+
+scala&gt; val jacek: Person = json
+&lt;console&gt;:18: error: type mismatch;
+ found   : play.api.libs.json.JsValue
+ required: Person
+       val jacek: Person = json
+                           ^
+
+scala&gt; val jacek: Person = json.as[Person]
+jacek: Person = Person(Jacek,41,true)
+
+scala&gt; implicit val personReads = Json.reads[Person]
+personReads: play.api.libs.json.Reads[Person] = play.api.libs.json.Reads$$anon$8@5e930aa2
+</code></pre>
+
+<p>With the playground you can play with JSON types in Play however you like. Start with the trait <a href="https://www.playframework.com/documentation/2.4.x/api/scala/index.html#play.api.libs.json.JsValue">play.api.libs.json.JsValue</a> and then learn what <a href="https://www.playframework.com/documentation/2.4.x/api/scala/index.html#play.api.libs.json.Reads">play.api.libs.json.Reads[T]</a> offers. They&rsquo;re the cornerstone of the JSON API in Play.</p>
+
+<p>The entire code to paste (<code>:pa</code> or <code>:paste</code> in sbt console) follows. Note the simplifications codenamed <strong>JSON Inception</strong>.</p>
+
+<pre><code>import play.api.libs.json._
+
+case class Person(name: String, age: Int, lovesChocolate: Boolean)
+
+val jsonStr = """{ "name" : "Jacek", "age" : 41, "lovesChocolate": true }"""
+
+val json = play.api.libs.json.Json.parse(jsonStr)
+
+implicit val personReads = Json.reads[Person]
+
+val jacek: Person = json.as[Person]
+</code></pre>
+
+<p>Once you’re done, press <code>Ctrl+D</code> twice to exit <code>console</code> and the sbt shell afterwards.</p>
 </div>
 
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">Jacek Laskowski</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2014-09-02T16:00:00+02:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>2</span><span class='date-suffix'>nd</span>, <span class='date-year'>2014</span></span> <span class='time'>4:00 pm</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/json/'>json</a>, <a class='category' href='/blog/categories/play-framework/'>play framework</a>, <a class='category' href='/blog/categories/scala/'>scala</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://blog.jaceklaskowski.pl/2014/09/02/json-support-in-play-framework-with-jsvalue-and-reads-t.html" data-via="jaceklaskowski" data-counturl="http://blog.jaceklaskowski.pl/2014/09/02/json-support-in-play-framework-with-jsvalue-and-reads-t.html" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/2014/07/22/trait-init-scope-in-sbt.html" title="Previous Post: trait Init[Scope] in sbt">&laquo; trait Init[Scope] in sbt</a>
+      
+      
+    </p>
+  </footer>
 </article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
 
 </div>
 
@@ -262,7 +386,10 @@
       var disqus_shortname = 'jaceklaskowski';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://blog.jaceklaskowski.pl/2014/09/02/json-support-in-play-framework-with-jsvalue-and-reads-t.html';
+        var disqus_url = 'http://blog.jaceklaskowski.pl/2014/09/02/json-support-in-play-framework-with-jsvalue-and-reads-t.html';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

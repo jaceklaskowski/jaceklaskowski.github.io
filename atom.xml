@@ -4,7 +4,7 @@
   <title><![CDATA[Mastering FP and OO with Scala]]></title>
   <link href="http://blog.jaceklaskowski.pl/atom.xml" rel="self"/>
   <link href="http://blog.jaceklaskowski.pl/"/>
-  <updated>2014-07-22T14:23:07+02:00</updated>
+  <updated>2014-09-02T15:51:07+02:00</updated>
   <id>http://blog.jaceklaskowski.pl/</id>
   <author>
     <name><![CDATA[Jacek Laskowski]]></name>
@@ -14,10 +14,115 @@
 
   
   <entry>
+    <title type="html"><![CDATA[JSON Support in Play Framework With JsValue and Reads[T]]]></title>
+    <link href="http://blog.jaceklaskowski.pl/2014/09/02/json-support-in-play-framework-with-jsvalue-and-reads-t.html"/>
+    <updated>2014-09-02T16:00:00+02:00</updated>
+    <id>http://blog.jaceklaskowski.pl/2014/09/02/json-support-in-play-framework-with-jsvalue-and-reads-t</id>
+    <content type="html"><![CDATA[<p>There are many ways to learn <a href="http://www.scala-lang.org/">the Scala programming language</a> and the vast number of libraries for the language. Mine is to use <a href="http://www.scala-sbt.org/">sbt</a> console in a customized project with required dependencies that are automatically downloaded by sbt. All (analysing, downloading, setting up CLASSPATH and such) is handled by the tooling itself not me. Share your approach if it appears smarter.</p>
+
+<p>In this installment, I&rsquo;m presenting a sbt build for learning the JSON API from the <a href="https://www.playframework.com/documentation/2.4.x/ScalaJson">play-json</a> module in the <a href="https://www.playframework.com/documentation/2.4.x/api/scala/index.html#play.api.libs.json.package">play.api.libs.json</a> package in <a href="https://www.playframework.com/">Play Framework 2.4.0-M1</a>.</p>
+
+<!-- more -->
+
+
+<p>It’s a code-mainly version of the article <a href="https://www.playframework.com/documentation/2.4.x/ScalaJsonInception">JSON Macro Inception</a> from the official documentation of Play Framework.</p>
+
+<p>Start a new activator/sbt project with the following build definition in <code>build.sbt</code>:</p>
+
+<pre><code>scalaVersion := "2.11.2"
+
+val playVersion = "2.4.0-M1"
+
+libraryDependencies += "com.typesafe.play" %% "play-json" % playVersion
+</code></pre>
+
+<p>On the command line execute <code>sbt</code> and then, while in the sbt shell, <code>console</code>.</p>
+
+<pre><code>&gt; console
+[info] Starting scala interpreter...
+[info]
+Welcome to Scala version 2.11.2 (Java HotSpot(TM) 64-Bit Server VM, Java 1.8.0_20).
+Type in expressions to have them evaluated.
+Type :help for more information.
+</code></pre>
+
+<p>When you see the above (the Java version might be different depending on your configuration), you’re in an interactive development environment - Scala REPL - with play-json library and Scala 2.11.2. The world of JSON’s (almost) yours!</p>
+
+<p><code>:pa</code> (a shortcut for <code>:paste</code>) enters paste mode so you can copy and paste entire Scala statements.</p>
+
+<pre><code>scala&gt; :pa
+// Entering paste mode (ctrl-D to finish)
+
+import play.api.libs.functional.syntax._
+import play.api.libs.json._
+
+// Exiting paste mode, now interpreting.
+
+import play.api.libs.functional.syntax._
+import play.api.libs.json._
+
+scala&gt; case class Person(name: String, age: Int, lovesChocolate: Boolean)
+defined class Person
+
+scala&gt; :pa
+// Entering paste mode (ctrl-D to finish)
+
+implicit val personReads = (
+  (__ \ 'name).read[String] and
+  (__ \ 'age).read[Int] and
+  (__ \ 'lovesChocolate).read[Boolean]
+)(Person)
+
+// Exiting paste mode, now interpreting.
+
+personReads: play.api.libs.json.Reads[Person] = play.api.libs.json.Reads$$anon$8@5c2b898d
+
+scala&gt; val jsonStr = """{ "name" : "Jacek", "age" : 41, "lovesChocolate": true }"""
+jsonStr: String = { "name" : "Jacek", "age" : 41, "lovesChocolate": true }
+
+scala&gt; val json = play.api.libs.json.Json.parse(jsonStr)
+json: play.api.libs.json.JsValue = {"name":"Jacek","age":41,"lovesChocolate":true}
+
+scala&gt; val jacek: Person = json
+&lt;console&gt;:18: error: type mismatch;
+ found   : play.api.libs.json.JsValue
+ required: Person
+       val jacek: Person = json
+                           ^
+
+scala&gt; val jacek: Person = json.as[Person]
+jacek: Person = Person(Jacek,41,true)
+
+scala&gt; implicit val personReads = Json.reads[Person]
+personReads: play.api.libs.json.Reads[Person] = play.api.libs.json.Reads$$anon$8@5e930aa2
+</code></pre>
+
+<p>With the playground you can play with JSON types in Play however you like. Start with the trait <a href="https://www.playframework.com/documentation/2.4.x/api/scala/index.html#play.api.libs.json.JsValue">play.api.libs.json.JsValue</a> and then learn what <a href="https://www.playframework.com/documentation/2.4.x/api/scala/index.html#play.api.libs.json.Reads">play.api.libs.json.Reads[T]</a> offers. They&rsquo;re the cornerstone of the JSON API in Play.</p>
+
+<p>The entire code to paste (<code>:pa</code> or <code>:paste</code> in sbt console) follows. Note the simplifications codenamed <strong>JSON Inception</strong>.</p>
+
+<pre><code>import play.api.libs.json._
+
+case class Person(name: String, age: Int, lovesChocolate: Boolean)
+
+val jsonStr = """{ "name" : "Jacek", "age" : 41, "lovesChocolate": true }"""
+
+val json = play.api.libs.json.Json.parse(jsonStr)
+
+implicit val personReads = Json.reads[Person]
+
+val jacek: Person = json.as[Person]
+</code></pre>
+
+<p>Once you’re done, press <code>Ctrl+D</code> twice to exit <code>console</code> and the sbt shell afterwards.</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Trait Init[Scope] in Sbt]]></title>
-    <link href="http://blog.jaceklaskowski.pl/scala/sbt/2014/07/22/trait-init-scope-in-sbt.html"/>
+    <link href="http://blog.jaceklaskowski.pl/2014/07/22/trait-init-scope-in-sbt.html"/>
     <updated>2014-07-22T13:19:54+02:00</updated>
-    <id>http://blog.jaceklaskowski.pl/scala/sbt/2014/07/22/trait-init-scope-in-sbt</id>
+    <id>http://blog.jaceklaskowski.pl/2014/07/22/trait-init-scope-in-sbt</id>
     <content type="html"><![CDATA[<p>It&rsquo;s been my wish to master <a href="http://scala-lang.org/">Scala</a> recently and since I&rsquo;ve been spending more time with <a href="http://www.scala-sbt.org/">sbt</a> I&rsquo;ve made the decision to use one to master the other (in no particular order). There are quite a few sophisticated projects in Scala out there, but sbt is enough for my needs.</p>
 
 <p>In order to pursue my understanding of sbt (and hence Scala itself) I&rsquo;ve been reading the sources that honestly keep surprising me so much often. It&rsquo;s almost every minute when I find myself scratching my head to digest a piece of sbt code. It&rsquo;s akin to when I was reading the source code of <a href="http://clojure.org/">Clojure</a> to learn the language. People can write complicated code and I wouldn&rsquo;t be surprised to hear sbt&rsquo;s sources belong to the category. I don&rsquo;t care, though. I&rsquo;m fine with the complexity hoping the mental pain brings me closer to master Scala.</p>
@@ -105,9 +210,9 @@
   
   <entry>
     <title type="html"><![CDATA[Contributing to Open Source Projects on GitHub - Cheat Sheet]]></title>
-    <link href="http://blog.jaceklaskowski.pl/github/2014/07/08/contributing-to-open-source-projects-on-github-cheat-sheet.html"/>
+    <link href="http://blog.jaceklaskowski.pl/2014/07/08/contributing-to-open-source-projects-on-github-cheat-sheet.html"/>
     <updated>2014-07-08T01:24:32+02:00</updated>
-    <id>http://blog.jaceklaskowski.pl/github/2014/07/08/contributing-to-open-source-projects-on-github-cheat-sheet</id>
+    <id>http://blog.jaceklaskowski.pl/2014/07/08/contributing-to-open-source-projects-on-github-cheat-sheet</id>
     <content type="html"><![CDATA[<p>I&rsquo;ve been contributing to many open source projects over the past couple of years and I found <a href="https://github.com/jaceklaskowski">GitHub</a> pleasantly helpful to continue the gig in the years to come. I&rsquo;ve learnt few techniques along the way.</p>
 
 <p>I don&rsquo;t want to keep the techniques for myself so the git/GitHub cheat sheet is supposed to help me remember the commands and others to learn from my mistakes (<em>aka</em> experience). It&rsquo;s so easy on GitHub that I keep wondering why it took me so long to learn it. It must not for you.</p>
@@ -123,7 +228,7 @@
 
 <p>You start your day hunting down the project you want to contribute to. Be adventurous and pick the one you&rsquo;ve always been dreaming about. This might be the day when the dream comes true.</p>
 
-<p>I&rsquo;m more into Scala/sbt lately so I&rsquo;m with projects under control of the project build tool &ndash; <a href="http://www.scala-sbt.org/">sbt</a> as I can learn both contributing.</p>
+<p>I&rsquo;m more into Scala/sbt lately so I&rsquo;m with projects under control of the project build tool - <a href="http://www.scala-sbt.org/">sbt</a> as I can learn both contributing.</p>
 
 <h2>Cloning project</h2>
 
@@ -245,9 +350,9 @@
   
   <entry>
     <title type="html"><![CDATA[Calculate Profit in Scala With foldLeft]]></title>
-    <link href="http://blog.jaceklaskowski.pl/scala/2014/06/26/calculate-profit-in-scala-with-foldLeft.html"/>
+    <link href="http://blog.jaceklaskowski.pl/2014/06/26/calculate-profit-in-scala-with-foldLeft.html"/>
     <updated>2014-06-26T22:57:00+02:00</updated>
-    <id>http://blog.jaceklaskowski.pl/scala/2014/06/26/calculate-profit-in-scala-with-foldLeft</id>
+    <id>http://blog.jaceklaskowski.pl/2014/06/26/calculate-profit-in-scala-with-foldLeft</id>
     <content type="html"><![CDATA[<p>With a credit in a foreign currency one may want to hedge to offset the foreign currency getting stronger, and hence increasing the cost of the credit.</p>
 
 <p>Say, you bought 589 CHF when it costed 3.4007 PLN and then 593 for 3.3704. How much would you profit when the price of selling CHF rose to 3.4107 PLN?</p>
@@ -277,14 +382,14 @@ res0: Double = 29.787899999999745
   
   <entry>
     <title type="html"><![CDATA[Beginner "Guide" to Sbt 0.13 and IntelliJ IDEA 13]]></title>
-    <link href="http://blog.jaceklaskowski.pl/scala/sbt/intellij-idea/2013/12/07/beginner-guide-to-sbt-0-dot-13-and-intellij-idea-13.html"/>
+    <link href="http://blog.jaceklaskowski.pl/2013/12/07/beginner-guide-to-sbt-0-dot-13-and-intellij-idea-13.html"/>
     <updated>2013-12-07T16:39:37+01:00</updated>
-    <id>http://blog.jaceklaskowski.pl/scala/sbt/intellij-idea/2013/12/07/beginner-guide-to-sbt-0-dot-13-and-intellij-idea-13</id>
+    <id>http://blog.jaceklaskowski.pl/2013/12/07/beginner-guide-to-sbt-0-dot-13-and-intellij-idea-13</id>
     <content type="html"><![CDATA[<p><img class="left" src="http://blog.jaceklaskowski.pl/images/intellij-idea-13-new-logo.png" title="The logo of IntelliJ IDEA 13" > It has not been very long ago when the only way to work with <a href="http://www.scala-sbt.org/">sbt</a> projects in <a href="http://www.jetbrains.com/idea/">IntelliJ IDEA</a> was to use the <a href="https://github.com/mpeltonen/sbt-idea">sbt-idea</a> plugin that aimed at <em>&ldquo;creating IntelliJ IDEA project files&rdquo;</em>.</p>
 
-<p><a href="http://www.jetbrains.com/idea/whatsnew/">With the recent release of IntelliJ IDEA 13</a> (build: 133.193,  released: December 3, 2013) it&rsquo;s no longer true &ndash; the version comes with built-in sbt support and the support is available in <a href="http://www.jetbrains.com/idea/download/index.html">the free Community Edition</a>, too.</p>
+<p><a href="http://www.jetbrains.com/idea/whatsnew/">With the recent release of IntelliJ IDEA 13</a> (build: 133.193,  released: December 3, 2013) it&rsquo;s no longer true - the version comes with built-in sbt support and the support is available in <a href="http://www.jetbrains.com/idea/download/index.html">the free Community Edition</a>, too.</p>
 
-<p>My recent, rather quite frequent visits on <a href="http://stackoverflow.com/">StackOverflow</a> have showed that there&rsquo;s one question very often asked &ndash; <strong>How to start using sbt with IntelliJ IDEA?</strong> It turns out that the latest version of IntelliJ IDEA 13 squashed it pretty neatly and the built-in sbt support made the question irrelevant.</p>
+<p>My recent, rather quite frequent visits on <a href="http://stackoverflow.com/">StackOverflow</a> have showed that there&rsquo;s one question very often asked - <strong>How to start using sbt with IntelliJ IDEA?</strong> It turns out that the latest version of IntelliJ IDEA 13 squashed it pretty neatly and the built-in sbt support made the question irrelevant.</p>
 
 <p>Unless it changes, the page remains empty<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup>. What a surprise, isn&rsquo;t it? I&rsquo;ve always been thinking about writing the best beginner guide and here it is&hellip;at long last!</p>
 
@@ -302,9 +407,9 @@ res0: Double = 29.787899999999745
   
   <entry>
     <title type="html"><![CDATA[How Much One Ought to Know Eta Expansion]]></title>
-    <link href="http://blog.jaceklaskowski.pl/scala/2013/11/23/how-much-one-ought-to-know-eta-expansion.html"/>
+    <link href="http://blog.jaceklaskowski.pl/2013/11/23/how-much-one-ought-to-know-eta-expansion.html"/>
     <updated>2013-11-23T22:20:23+01:00</updated>
-    <id>http://blog.jaceklaskowski.pl/scala/2013/11/23/how-much-one-ought-to-know-eta-expansion</id>
+    <id>http://blog.jaceklaskowski.pl/2013/11/23/how-much-one-ought-to-know-eta-expansion</id>
     <content type="html"><![CDATA[<p>Have you ever wondered how much you should understand the concept of <strong>eta expansion</strong> to master <a href="http://scala-lang.org/">Scala</a>? I have and hence the page in which I&rsquo;m going to collect the wisdom (dug out of Internet) with its applications.</p>
 
 <!-- more -->
@@ -324,7 +429,7 @@ res0: Double = 29.787899999999745
 
 <p>1. It is implicitly passed the object for which it was called</p>
 
-<p>2. It is able to operate on data that is contained within the class (remembering that an object is an instance of a class &ndash; the class is the definition, the object is an instance of that data)&#8221;</p></blockquote>
+<p>2. It is able to operate on data that is contained within the class (remembering that an object is an instance of a class - the class is the definition, the object is an instance of that data)&#8221;</p></blockquote>
 
 <p>Let&rsquo;s start with the following example.</p>
 
@@ -335,7 +440,7 @@ scala&gt; val f = foo _
 f: () =&gt; Int = &lt;function0&gt;
 </code></pre>
 
-<p>Do you happen to know the name of <em>the (implicit) conversion</em> when the underscore is applied to a method (as if it stood for its parameters) and you eventually end up with a value &ndash; <em>a function</em> (that some call <em>a function value</em>)? That&rsquo;s <em>eta expansion</em> which is a means of coercing (converting) methods into functions in Scala.</p>
+<p>Do you happen to know the name of <em>the (implicit) conversion</em> when the underscore is applied to a method (as if it stood for its parameters) and you eventually end up with a value - <em>a function</em> (that some call <em>a function value</em>)? That&rsquo;s <em>eta expansion</em> which is a means of coercing (converting) methods into functions in Scala.</p>
 
 <p><code>f</code> is a value of <code>() =&gt; Int</code> type or an instance of <code>&lt;function0&gt;</code>. It may have been written as:</p>
 
@@ -512,7 +617,7 @@ scala&gt; A.foo _ : ((Int, Int) =&gt; Int)
 res5: (Int, Int) =&gt; Int = &lt;function2&gt;
 </code></pre>
 
-<p>Interestingly, the underscore is more forgiving (regarding the explicit type of the function value) when there are two overloaded methods of which one accepts a single parameter of the type <a href="http://www.scala-lang.org/api/current/scala/AnyRef.html">AnyRef</a>. In such case, the other method &ndash; the no-AnyRef method is chosen.</p>
+<p>Interestingly, the underscore is more forgiving (regarding the explicit type of the function value) when there are two overloaded methods of which one accepts a single parameter of the type <a href="http://www.scala-lang.org/api/current/scala/AnyRef.html">AnyRef</a>. In such case, the other method - the no-AnyRef method is chosen.</p>
 
 <pre><code>scala&gt; object A {
      |   def foo(a: AnyRef) = 5
@@ -524,7 +629,7 @@ scala&gt; A.foo _
 res5: (String, Int) =&gt; Int = &lt;function2&gt;
 </code></pre>
 
-<h2>Use case &ndash; Abstracting over arity</h2>
+<h2>Use case - Abstracting over arity</h2>
 
 <p>With eta expansion you may forget about the arity of a method.</p>
 
@@ -556,7 +661,7 @@ bar: (x: A)(Int, Int, Int) =&gt; Int
 <blockquote><p>Eta-expansion converts an expression of method type to an equivalent expression
 of function type.</p></blockquote>
 
-<p>The section belongs to <strong>6.26 Implicit Conversions</strong> that gives another perspective on what eta expansion is &ndash; it&rsquo;s <em>an implicit converstion</em>.</p>
+<p>The section belongs to <strong>6.26 Implicit Conversions</strong> that gives another perspective on what eta expansion is - it&rsquo;s <em>an implicit converstion</em>.</p>
 
 <p>In <strong>6.26 Implicit Conversions</strong> the Scala Language Specification says:</p>
 
@@ -587,9 +692,9 @@ expression e.</p></blockquote>
   
   <entry>
     <title type="html"><![CDATA[Day With scala.List]]></title>
-    <link href="http://blog.jaceklaskowski.pl/list/2013/11/21/day-with-scala-dot-list.html"/>
+    <link href="http://blog.jaceklaskowski.pl/2013/11/21/day-with-scala-dot-list.html"/>
     <updated>2013-11-21T21:22:12+01:00</updated>
-    <id>http://blog.jaceklaskowski.pl/list/2013/11/21/day-with-scala-dot-list</id>
+    <id>http://blog.jaceklaskowski.pl/2013/11/21/day-with-scala-dot-list</id>
     <content type="html"><![CDATA[<p>How could you make an use of scala.List&hellip;</p>
 ]]></content>
   </entry>

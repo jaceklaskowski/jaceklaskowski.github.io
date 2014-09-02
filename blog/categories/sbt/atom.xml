@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Sbt | Mastering FP and OO with Scala]]></title>
   <link href="http://blog.jaceklaskowski.pl/blog/categories/sbt/atom.xml" rel="self"/>
   <link href="http://blog.jaceklaskowski.pl/"/>
-  <updated>2014-07-22T14:23:07+02:00</updated>
+  <updated>2014-09-02T15:51:07+02:00</updated>
   <id>http://blog.jaceklaskowski.pl/</id>
   <author>
     <name><![CDATA[Jacek Laskowski]]></name>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Trait Init[Scope] in Sbt]]></title>
-    <link href="http://blog.jaceklaskowski.pl/scala/sbt/2014/07/22/trait-init-scope-in-sbt.html"/>
+    <link href="http://blog.jaceklaskowski.pl/2014/07/22/trait-init-scope-in-sbt.html"/>
     <updated>2014-07-22T13:19:54+02:00</updated>
-    <id>http://blog.jaceklaskowski.pl/scala/sbt/2014/07/22/trait-init-scope-in-sbt</id>
+    <id>http://blog.jaceklaskowski.pl/2014/07/22/trait-init-scope-in-sbt</id>
     <content type="html"><![CDATA[<p>It&rsquo;s been my wish to master <a href="http://scala-lang.org/">Scala</a> recently and since I&rsquo;ve been spending more time with <a href="http://www.scala-sbt.org/">sbt</a> I&rsquo;ve made the decision to use one to master the other (in no particular order). There are quite a few sophisticated projects in Scala out there, but sbt is enough for my needs.</p>
 
 <p>In order to pursue my understanding of sbt (and hence Scala itself) I&rsquo;ve been reading the sources that honestly keep surprising me so much often. It&rsquo;s almost every minute when I find myself scratching my head to digest a piece of sbt code. It&rsquo;s akin to when I was reading the source code of <a href="http://clojure.org/">Clojure</a> to learn the language. People can write complicated code and I wouldn&rsquo;t be surprised to hear sbt&rsquo;s sources belong to the category. I don&rsquo;t care, though. I&rsquo;m fine with the complexity hoping the mental pain brings me closer to master Scala.</p>
@@ -37,17 +37,14 @@
 
 <h2>Solution</h2>
 
-<p>```
-val init = new Init[Int] {
-  def showFullKey: Show[ScopedKey[<em>]] = Show { (sk: ScopedKey[</em>]) =></p>
-
-<pre><code>s"${sk.scope}:${sk.key}...${sk.scopedKey}"
+<pre><code>val init = new Init[Int] {
+  def showFullKey: Show[ScopedKey[_]] = Show { (sk: ScopedKey[_]) =&gt; 
+    s"${sk.scope}:${sk.key}...${sk.scopedKey}"
+  }
+}
 </code></pre>
 
-<p>  }
-}
-<code>``
-Run</code>sbt<code>and then execute the command</code>consoleProject` to open sbt&rsquo;s Scala REPL with all the necessary types of sbt loaded.</p>
+<p>Run <code>sbt</code> and then execute the command <code>consoleProject</code> to open sbt&rsquo;s Scala REPL with all the necessary types of sbt loaded.</p>
 
 <h2>Mental issues encountered</h2>
 
@@ -64,40 +61,37 @@ Run</code>sbt<code>and then execute the command</code>consoleProject` to open sb
 <h2>consoleProject in sbt</h2>
 
 <p>If you happened to want to see the code in action, execute <code>sbt consoleProject</code> and give the following a try:
-```
+&#8220;`
 // (attribute) key that points at Int value
 scala> val number = AttributeKey<a href="" title="number&quot;, &quot;number stringified">Int</a>
 number: sbt.AttributeKey[Int] = number</p>
 
-<p>scala> val init = new Init[Int] {</p>
-
-<pre><code> |   def showFullKey: Show[ScopedKey[_]] = Show { (sk: ScopedKey[_]) =&gt;
- |     s"${sk.scope}:${sk.key}...${sk.scopedKey}"
- |   }
- | }
-</code></pre>
-
-<p>init: sbt.Init[Int] = $anon$1@1f95802</p>
+<p>scala> val init = new Init[Int] {
+     |   def showFullKey: Show[ScopedKey[<em>]] = Show { (sk: ScopedKey[</em>]) =>
+     |     s&#8221;${sk.scope}:${sk.key}&hellip;${sk.scopedKey}&ldquo;
+     |   }
+     | }
+init: sbt.Init[Int] = $anon$1@1f95802</p>
 
 <p>scala> val sfk: Show[init.ScopedKey[<em>]] = init.showFullKey
 sfk: sbt.Show[init.ScopedKey[</em>]] = sbt.Show$$anon$1@7f54be72</p>
 
 <p>scala> val s = sfk(init.ScopedKey<a href="scope=5,%20key=number">Int</a>)
 s: String = 5:number&hellip;ScopedKey(5,number)
-```</p>
+&#8220;`</p>
 ]]></content>
   </entry>
   
   <entry>
     <title type="html"><![CDATA[Beginner "Guide" to Sbt 0.13 and IntelliJ IDEA 13]]></title>
-    <link href="http://blog.jaceklaskowski.pl/scala/sbt/intellij-idea/2013/12/07/beginner-guide-to-sbt-0-dot-13-and-intellij-idea-13.html"/>
+    <link href="http://blog.jaceklaskowski.pl/2013/12/07/beginner-guide-to-sbt-0-dot-13-and-intellij-idea-13.html"/>
     <updated>2013-12-07T16:39:37+01:00</updated>
-    <id>http://blog.jaceklaskowski.pl/scala/sbt/intellij-idea/2013/12/07/beginner-guide-to-sbt-0-dot-13-and-intellij-idea-13</id>
+    <id>http://blog.jaceklaskowski.pl/2013/12/07/beginner-guide-to-sbt-0-dot-13-and-intellij-idea-13</id>
     <content type="html"><![CDATA[<p><img class="left" src="/images/intellij-idea-13-new-logo.png" title="The logo of IntelliJ IDEA 13" > It has not been very long ago when the only way to work with <a href="http://www.scala-sbt.org/">sbt</a> projects in <a href="http://www.jetbrains.com/idea/">IntelliJ IDEA</a> was to use the <a href="https://github.com/mpeltonen/sbt-idea">sbt-idea</a> plugin that aimed at <em>&ldquo;creating IntelliJ IDEA project files&rdquo;</em>.</p>
 
-<p><a href="http://www.jetbrains.com/idea/whatsnew/">With the recent release of IntelliJ IDEA 13</a> (build: 133.193,  released: December 3, 2013) it&rsquo;s no longer true &ndash; the version comes with built-in sbt support and the support is available in <a href="http://www.jetbrains.com/idea/download/index.html">the free Community Edition</a>, too.</p>
+<p><a href="http://www.jetbrains.com/idea/whatsnew/">With the recent release of IntelliJ IDEA 13</a> (build: 133.193,  released: December 3, 2013) it&rsquo;s no longer true - the version comes with built-in sbt support and the support is available in <a href="http://www.jetbrains.com/idea/download/index.html">the free Community Edition</a>, too.</p>
 
-<p>My recent, rather quite frequent visits on <a href="http://stackoverflow.com/">StackOverflow</a> have showed that there&rsquo;s one question very often asked &ndash; <strong>How to start using sbt with IntelliJ IDEA?</strong> It turns out that the latest version of IntelliJ IDEA 13 squashed it pretty neatly and the built-in sbt support made the question irrelevant.</p>
+<p>My recent, rather quite frequent visits on <a href="http://stackoverflow.com/">StackOverflow</a> have showed that there&rsquo;s one question very often asked - <strong>How to start using sbt with IntelliJ IDEA?</strong> It turns out that the latest version of IntelliJ IDEA 13 squashed it pretty neatly and the built-in sbt support made the question irrelevant.</p>
 
 <p>Unless it changes, the page remains empty<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup>. What a surprise, isn&rsquo;t it? I&rsquo;ve always been thinking about writing the best beginner guide and here it is&hellip;at long last!</p>
 

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Json | Mastering FP and OO with Scala]]></title>
+  <link href="http://blog.jaceklaskowski.pl/blog/categories/json/atom.xml" rel="self"/>
+  <link href="http://blog.jaceklaskowski.pl/"/>
+  <updated>2014-09-02T15:51:07+02:00</updated>
+  <id>http://blog.jaceklaskowski.pl/</id>
+  <author>
+    <name><![CDATA[Jacek Laskowski]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[JSON Support in Play Framework With JsValue and Reads[T]]]></title>
+    <link href="http://blog.jaceklaskowski.pl/2014/09/02/json-support-in-play-framework-with-jsvalue-and-reads-t.html"/>
+    <updated>2014-09-02T16:00:00+02:00</updated>
+    <id>http://blog.jaceklaskowski.pl/2014/09/02/json-support-in-play-framework-with-jsvalue-and-reads-t</id>
+    <content type="html"><![CDATA[<p>There are many ways to learn <a href="http://www.scala-lang.org/">the Scala programming language</a> and the vast number of libraries for the language. Mine is to use <a href="http://www.scala-sbt.org/">sbt</a> console in a customized project with required dependencies that are automatically downloaded by sbt. All (analysing, downloading, setting up CLASSPATH and such) is handled by the tooling itself not me. Share your approach if it appears smarter.</p>
+
+<p>In this installment, I&rsquo;m presenting a sbt build for learning the JSON API from the <a href="https://www.playframework.com/documentation/2.4.x/ScalaJson">play-json</a> module in the <a href="https://www.playframework.com/documentation/2.4.x/api/scala/index.html#play.api.libs.json.package">play.api.libs.json</a> package in <a href="https://www.playframework.com/">Play Framework 2.4.0-M1</a>.</p>
+
+<!-- more -->
+
+
+<p>It’s a code-mainly version of the article <a href="https://www.playframework.com/documentation/2.4.x/ScalaJsonInception">JSON Macro Inception</a> from the official documentation of Play Framework.</p>
+
+<p>Start a new activator/sbt project with the following build definition in <code>build.sbt</code>:</p>
+
+<pre><code>scalaVersion := "2.11.2"
+
+val playVersion = "2.4.0-M1"
+
+libraryDependencies += "com.typesafe.play" %% "play-json" % playVersion
+</code></pre>
+
+<p>On the command line execute <code>sbt</code> and then, while in the sbt shell, <code>console</code>.</p>
+
+<pre><code>&gt; console
+[info] Starting scala interpreter...
+[info]
+Welcome to Scala version 2.11.2 (Java HotSpot(TM) 64-Bit Server VM, Java 1.8.0_20).
+Type in expressions to have them evaluated.
+Type :help for more information.
+</code></pre>
+
+<p>When you see the above (the Java version might be different depending on your configuration), you’re in an interactive development environment - Scala REPL - with play-json library and Scala 2.11.2. The world of JSON’s (almost) yours!</p>
+
+<p><code>:pa</code> (a shortcut for <code>:paste</code>) enters paste mode so you can copy and paste entire Scala statements.</p>
+
+<pre><code>scala&gt; :pa
+// Entering paste mode (ctrl-D to finish)
+
+import play.api.libs.functional.syntax._
+import play.api.libs.json._
+
+// Exiting paste mode, now interpreting.
+
+import play.api.libs.functional.syntax._
+import play.api.libs.json._
+
+scala&gt; case class Person(name: String, age: Int, lovesChocolate: Boolean)
+defined class Person
+
+scala&gt; :pa
+// Entering paste mode (ctrl-D to finish)
+
+implicit val personReads = (
+  (__ \ 'name).read[String] and
+  (__ \ 'age).read[Int] and
+  (__ \ 'lovesChocolate).read[Boolean]
+)(Person)
+
+// Exiting paste mode, now interpreting.
+
+personReads: play.api.libs.json.Reads[Person] = play.api.libs.json.Reads$$anon$8@5c2b898d
+
+scala&gt; val jsonStr = """{ "name" : "Jacek", "age" : 41, "lovesChocolate": true }"""
+jsonStr: String = { "name" : "Jacek", "age" : 41, "lovesChocolate": true }
+
+scala&gt; val json = play.api.libs.json.Json.parse(jsonStr)
+json: play.api.libs.json.JsValue = {"name":"Jacek","age":41,"lovesChocolate":true}
+
+scala&gt; val jacek: Person = json
+&lt;console&gt;:18: error: type mismatch;
+ found   : play.api.libs.json.JsValue
+ required: Person
+       val jacek: Person = json
+                           ^
+
+scala&gt; val jacek: Person = json.as[Person]
+jacek: Person = Person(Jacek,41,true)
+
+scala&gt; implicit val personReads = Json.reads[Person]
+personReads: play.api.libs.json.Reads[Person] = play.api.libs.json.Reads$$anon$8@5e930aa2
+</code></pre>
+
+<p>With the playground you can play with JSON types in Play however you like. Start with the trait <a href="https://www.playframework.com/documentation/2.4.x/api/scala/index.html#play.api.libs.json.JsValue">play.api.libs.json.JsValue</a> and then learn what <a href="https://www.playframework.com/documentation/2.4.x/api/scala/index.html#play.api.libs.json.Reads">play.api.libs.json.Reads[T]</a> offers. They&rsquo;re the cornerstone of the JSON API in Play.</p>
+
+<p>The entire code to paste (<code>:pa</code> or <code>:paste</code> in sbt console) follows. Note the simplifications codenamed <strong>JSON Inception</strong>.</p>
+
+<pre><code>import play.api.libs.json._
+
+case class Person(name: String, age: Int, lovesChocolate: Boolean)
+
+val jsonStr = """{ "name" : "Jacek", "age" : 41, "lovesChocolate": true }"""
+
+val json = play.api.libs.json.Json.parse(jsonStr)
+
+implicit val personReads = Json.reads[Person]
+
+val jacek: Person = json.as[Person]
+</code></pre>
+
+<p>Once you’re done, press <code>Ctrl+D</code> twice to exit <code>console</code> and the sbt shell afterwards.</p>
+]]></content>
+  </entry>
+  
+</feed>

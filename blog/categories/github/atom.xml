@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Github | Mastering FP and OO with Scala]]></title>
   <link href="http://blog.jaceklaskowski.pl/blog/categories/github/atom.xml" rel="self"/>
   <link href="http://blog.jaceklaskowski.pl/"/>
-  <updated>2014-07-22T14:23:07+02:00</updated>
+  <updated>2014-09-02T15:51:07+02:00</updated>
   <id>http://blog.jaceklaskowski.pl/</id>
   <author>
     <name><![CDATA[Jacek Laskowski]]></name>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Contributing to Open Source Projects on GitHub - Cheat Sheet]]></title>
-    <link href="http://blog.jaceklaskowski.pl/github/2014/07/08/contributing-to-open-source-projects-on-github-cheat-sheet.html"/>
+    <link href="http://blog.jaceklaskowski.pl/2014/07/08/contributing-to-open-source-projects-on-github-cheat-sheet.html"/>
     <updated>2014-07-08T01:24:32+02:00</updated>
-    <id>http://blog.jaceklaskowski.pl/github/2014/07/08/contributing-to-open-source-projects-on-github-cheat-sheet</id>
+    <id>http://blog.jaceklaskowski.pl/2014/07/08/contributing-to-open-source-projects-on-github-cheat-sheet</id>
     <content type="html"><![CDATA[<p>I&rsquo;ve been contributing to many open source projects over the past couple of years and I found <a href="https://github.com/jaceklaskowski">GitHub</a> pleasantly helpful to continue the gig in the years to come. I&rsquo;ve learnt few techniques along the way.</p>
 
 <p>I don&rsquo;t want to keep the techniques for myself so the git/GitHub cheat sheet is supposed to help me remember the commands and others to learn from my mistakes (<em>aka</em> experience). It&rsquo;s so easy on GitHub that I keep wondering why it took me so long to learn it. It must not for you.</p>
@@ -33,7 +33,7 @@
 
 <p>You start your day hunting down the project you want to contribute to. Be adventurous and pick the one you&rsquo;ve always been dreaming about. This might be the day when the dream comes true.</p>
 
-<p>I&rsquo;m more into Scala/sbt lately so I&rsquo;m with projects under control of the project build tool &ndash; <a href="http://www.scala-sbt.org/">sbt</a> as I can learn both contributing.</p>
+<p>I&rsquo;m more into Scala/sbt lately so I&rsquo;m with projects under control of the project build tool - <a href="http://www.scala-sbt.org/">sbt</a> as I can learn both contributing.</p>
 
 <h2>Cloning project</h2>
 

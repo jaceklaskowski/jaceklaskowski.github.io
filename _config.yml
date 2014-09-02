@@ -2,12 +2,12 @@
 #      Main Configs       #
 # ----------------------- #
 
-url: http://blog.jaceklaskowski.pl
-title: Mastering FP and OO with Scala
-subtitle: Making use of functional and object-oriented programming on JVM
-author: Jacek Laskowski
+url:           http://blog.jaceklaskowski.pl
+title:         Mastering FP and OO with Scala
+subtitle:      Making use of functional and object-oriented programming on JVM
+author:        Jacek Laskowski
 simple_search: https://www.google.com/search
-description: "Recipes for making object-oriented Scala fun(ctional)!"
+description:   "Recipes for making object-oriented Scala fun(ctional)!"
 
 # Default date format is "ordinal" (resulting in "July 22nd 2007")
 # You can customize the format as defined in
@@ -29,14 +29,14 @@ email:
 # ----------------------- #
 
 # If publishing to a subdirectory as in http://site.com/project set 'root: /project'
-root: /
-permalink: date
-source: source
-destination: public
-plugins: plugins
-code_dir: downloads/code
+root:         /
+permalink:    /:year/:month/:day/:title.html
+source:       source
+destination:  public
+plugins:      plugins
+code_dir:     downloads/code
 category_dir: blog/categories
-markdown: rdiscount
+markdown:     rdiscount
 rdiscount:
   extensions:
     - autolink

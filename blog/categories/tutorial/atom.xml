@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Tutorial | Mastering FP and OO with Scala]]></title>
   <link href="http://blog.jaceklaskowski.pl/blog/categories/tutorial/atom.xml" rel="self"/>
   <link href="http://blog.jaceklaskowski.pl/"/>
-  <updated>2014-09-08T20:04:12+02:00</updated>
+  <updated>2014-09-08T20:11:05+02:00</updated>
   <id>http://blog.jaceklaskowski.pl/</id>
   <author>
     <name><![CDATA[Jacek Laskowski]]></name>
@@ -18,7 +18,7 @@
     <link href="http://blog.jaceklaskowski.pl/2014/09/08/getting-started-with-play-framework-and-angularjs-day-1.html"/>
     <updated>2014-09-08T12:42:49+02:00</updated>
     <id>http://blog.jaceklaskowski.pl/2014/09/08/getting-started-with-play-framework-and-angularjs-day-1</id>
-    <content type="html"><![CDATA[<p>Let&rsquo;s face it &ndash; there are a tons of very good tutorials about how to get started with <a href="https://www.playframework.com/">Play Framework</a> and <a href="https://angularjs.org/">AngularJS</a> to build modern web applications, and despite the fact there are still quite a few people out there who keep asking me about writing mine. Since writing tutorials is a way to clear up understanding of a topic to me, I found it very compelling to help myself and others using the two - Play and Angular - properly. Well, the <em>properly</em> part comes with your comments when I fix the parts that are outdated or plain wrong.</p>
+    <content type="html"><![CDATA[<p>Let&rsquo;s face it &ndash; there are tons of very good tutorials about how to get started with <a href="https://www.playframework.com/">Play Framework</a> and <a href="https://angularjs.org/">AngularJS</a> to build modern web applications, and despite the fact there are still quite a few people out there who keep asking me about writing mine. Since writing tutorials is a way to clear up understanding of a topic to me, I found it very compelling to help myself and others using the two - Play and Angular - properly. Well, the <em>properly</em> part comes with your comments when I fix the parts that are outdated or plain wrong.</p>
 
 <p>So, here it is. The yet another tutorial series about developing web applications in Play Framework (with Scala) and AngularJS (in JavaScript). Let&rsquo;s get rolling!</p>
 

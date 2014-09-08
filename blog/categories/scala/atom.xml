@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Scala | Mastering FP and OO with Scala]]></title>
   <link href="http://blog.jaceklaskowski.pl/blog/categories/scala/atom.xml" rel="self"/>
   <link href="http://blog.jaceklaskowski.pl/"/>
-  <updated>2014-09-02T15:51:07+02:00</updated>
+  <updated>2014-09-08T09:07:31+02:00</updated>
   <id>http://blog.jaceklaskowski.pl/</id>
   <author>
     <name><![CDATA[Jacek Laskowski]]></name>
@@ -14,10 +14,10 @@
 
   
   <entry>
-    <title type="html"><![CDATA[JSON Support in Play Framework With JsValue and Reads[T]]]></title>
-    <link href="http://blog.jaceklaskowski.pl/2014/09/02/json-support-in-play-framework-with-jsvalue-and-reads-t.html"/>
+    <title type="html"><![CDATA[JSON in Play Framework With JsValue and Reads]]></title>
+    <link href="http://blog.jaceklaskowski.pl/2014/09/02/json-in-play-framework-with-jsvalue-and-reads.html"/>
     <updated>2014-09-02T16:00:00+02:00</updated>
-    <id>http://blog.jaceklaskowski.pl/2014/09/02/json-support-in-play-framework-with-jsvalue-and-reads-t</id>
+    <id>http://blog.jaceklaskowski.pl/2014/09/02/json-in-play-framework-with-jsvalue-and-reads</id>
     <content type="html"><![CDATA[<p>There are many ways to learn <a href="http://www.scala-lang.org/">the Scala programming language</a> and the vast number of libraries for the language. Mine is to use <a href="http://www.scala-sbt.org/">sbt</a> console in a customized project with required dependencies that are automatically downloaded by sbt. All (analysing, downloading, setting up CLASSPATH and such) is handled by the tooling itself not me. Share your approach if it appears smarter.</p>
 
 <p>In this installment, I&rsquo;m presenting a sbt build for learning the JSON API from the <a href="https://www.playframework.com/documentation/2.4.x/ScalaJson">play-json</a> module in the <a href="https://www.playframework.com/documentation/2.4.x/api/scala/index.html#play.api.libs.json.package">play.api.libs.json</a> package in <a href="https://www.playframework.com/">Play Framework 2.4.0-M1</a>.</p>

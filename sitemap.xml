@@ -3,7 +3,7 @@
   
   
   <url>
-    <loc>http://blog.jaceklaskowski.pl/2014/09/02/json-support-in-play-framework-with-jsvalue-and-reads-t.html</loc>
+    <loc>http://blog.jaceklaskowski.pl/2014/09/02/json-in-play-framework-with-jsvalue-and-reads.html</loc>
     <lastmod>2014-09-02T16:00:00+02:00</lastmod>
     <priority>0.8</priority>
   </url>
@@ -47,14 +47,14 @@
   
   <url>
     <loc>http://blog.jaceklaskowski.pl/blog/archives/</loc>
-    <lastmod>2014-09-02T15:51:07+02:00</lastmod>
+    <lastmod>2014-09-08T09:07:31+02:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
     <loc>http://blog.jaceklaskowski.pl/</loc>
-    <lastmod>2014-09-02T15:51:07+02:00</lastmod>
+    <lastmod>2014-09-08T09:07:31+02:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>

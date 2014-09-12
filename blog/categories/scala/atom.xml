@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Scala | Mastering FP and OO with Scala]]></title>
   <link href="http://blog.jaceklaskowski.pl/blog/categories/scala/atom.xml" rel="self"/>
   <link href="http://blog.jaceklaskowski.pl/"/>
-  <updated>2014-09-08T20:11:05+02:00</updated>
+  <updated>2014-09-12T21:59:37+02:00</updated>
   <id>http://blog.jaceklaskowski.pl/</id>
   <author>
     <name><![CDATA[Jacek Laskowski]]></name>
@@ -12,6 +12,112 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Mistakes Introducing Slick for Database Access Under Play Framework 2.3.4 and 2.4.0-M1]]></title>
+    <link href="http://blog.jaceklaskowski.pl/2014/09/12/mistakes-introducing-slick-for-database-access-under-play-framework-2-dot-3-4-and-2-dot-4-0-m1.html"/>
+    <updated>2014-09-12T21:47:50+02:00</updated>
+    <id>http://blog.jaceklaskowski.pl/2014/09/12/mistakes-introducing-slick-for-database-access-under-play-framework-2-dot-3-4-and-2-dot-4-0-m1</id>
+    <content type="html"><![CDATA[<p>This is a summary of my attempt to run <a href="http://slick.typesafe.com/">Slick</a> under <a href="https://www.playframework.com/">Play Framework</a> <strong>2.3.4</strong> and <strong>2.4.0-M1</strong> that ultimately turned out a quite successful endeavour.</p>
+
+<p>I’m currently using Play’s Anorm and writing the queries myself didn’t seem to be something I much liked. I’ve been seeing Slick has had a good press so it was a no-brainer to pick it as an alternative.</p>
+
+<!-- more -->
+
+
+<h2>Mistake #1. Hurting myself with cutting edge versions</h2>
+
+<p>Reading the documentation at <a href="http://slick.typesafe.com/">http://slick.typesafe.com/</a> was not very informative as there was no word about how to embed it in a Play Framework application. There should really be a &ldquo;Getting started with Slick and Play Framework&rdquo; tutorial since both are part of <a href="https://typesafe.com/platform">The Typesafe Reactive Platform</a>.</p>
+
+<p>I added Slick to <code>build.sbt</code> as follows:</p>
+
+<pre><code>"com.typesafe.slick" %% "slick" % “2.1.0"
+</code></pre>
+
+<p>And then I realised that I’d have had to do:</p>
+
+<pre><code>Database.forURL("jdbc:h2:mem:test1", driver = "org.h2.Driver") withSession {
+  implicit session =&gt;
+  // &lt;- write queries here
+}
+</code></pre>
+
+<p>but Play Framework gives me:</p>
+
+<pre><code>DB.withConnection("sayenedb") { implicit c =&gt;
+    ...
+}
+</code></pre>
+
+<p>It was certainly not the way to follow. I needed a solution that would read database configuration from Play&rsquo;s.</p>
+
+<h2>Mistake #2. Using play-slick with Play 2.4.0-M1</h2>
+
+<p>Time has come to give <a href="https://github.com/playframework/play-slick">play-slick</a> a serious try. The project aims to make <em>&ldquo;Slick a first-class citizen of Play 2.x.”</em></p>
+
+<p>It took me a while to abandon the idea of running play-slick with Play 2.4.0-M1 since <a href="https://groups.google.com/d/msg/play-framework/m_bxuqgSKgk/Z4WgfUer19wJ">this</a>:</p>
+
+<blockquote><p>The purpose of this release is to get feedback about the approach to dependency injection that we&rsquo;re implementing in Play 2.4.  The old Play plugins mechanism is going to be deprecated.  For a detailed overview of the different styles of DI available in Play 2.4, please read here:</p>
+
+<p><a href="https://www.playframework.com/documentation/2.4.x/ScalaDependencyInjection">https://www.playframework.com/documentation/2.4.x/ScalaDependencyInjection</a>
+<a href="https://www.playframework.com/documentation/2.4.x/ScalaCompileTimeDependencyInjection">https://www.playframework.com/documentation/2.4.x/ScalaCompileTimeDependencyInjection</a>
+<a href="https://www.playframework.com/documentation/2.4.x/JavaDependencyInjection">https://www.playframework.com/documentation/2.4.x/JavaDependencyInjection</a></p></blockquote>
+
+<p>I reported <a href="https://github.com/playframework/play-slick/issues/208">an issue for play-slick</a> hoping that the developers notice the missing integration point and the support for 2.4 will come&hellip;sooner (?)</p>
+
+<h2>Mistake #3. Using custom db configuration in Play</h2>
+
+<p>The application uses no <code>db.default</code> configuration in <code>application.conf</code> in Play - just a custom one. The result?</p>
+
+<pre><code>[error] application -
+
+! @6jg39b0pk - Internal server error, for (GET) [/tips/wgcategories] -&gt;
+
+play.api.Configuration$$anon$1: Configuration error[Slick error : jdbc driver not defined in application.conf for db.default.driver key]
+     at play.api.Configuration$.play$api$Configuration$$configError(Configuration.scala:94) ~[play_2.11-2.3.4.jar:2.3.4]
+     at play.api.Configuration.reportError(Configuration.scala:743) ~[play_2.11-2.3.4.jar:2.3.4]
+     at play.api.db.slick.Config$$anonfun$1.apply(Config.scala:64) ~[play-slick_2.11-0.8.0.jar:0.8.0]
+     at play.api.db.slick.Config$$anonfun$1.apply(Config.scala:64) ~[play-slick_2.11-0.8.0.jar:0.8.0]
+     at scala.Option.getOrElse(Option.scala:120) ~[scala-library-2.11.2.jar:na]
+</code></pre>
+
+<p>I had to add the following entries to work it around:</p>
+
+<pre><code>db.default.driver=org.postgresql.Driver
+db.default.url=${?DB_CONN}
+</code></pre>
+
+<p><code>DB_CONN</code> is the property I set up at command line at Play startup.</p>
+
+<p>Using two datasources required following <a href="https://github.com/playframework/play-slick/wiki/ScalaSlickDrivers">Advanced drivers configuration</a> and applying the (in)famous Cake pattern.</p>
+
+<h2>Mistake #4. Copying examples to production code - PostgreSQL is case sensitive for field names in quotes</h2>
+
+<p>I had the following in my Component:</p>
+
+<pre><code>def id = column[Int](“ID", O.PrimaryKey, O.AutoInc)
+</code></pre>
+
+<p>That generated a query with <code>"ID"</code> in <code>select</code> clause that in turn resulted in the following error:</p>
+
+<pre><code>STATEMENT:  select s13."ID", s13."name" from “xxx" s13;
+ERROR:  column s13.ID does not exist at character 8
+</code></pre>
+
+<p><a href="https://twitter.com/rgielen/status/510501297473462272">As Rene pointed out in his tweet</a>:</p>
+
+<blockquote><p>@jaceklaskowski not true - #PostgreSQL follows SQL standard. Columns names are case insensitive unless created with quotation marks</p></blockquote>
+
+<p>He was right - changing <code>ID</code> to <code>id</code> has indeed fixed the issue.</p>
+
+<pre><code>def id = column[Int](“ID", O.PrimaryKey, O.AutoInc)
+</code></pre>
+
+<h2>Summary</h2>
+
+<p>Using a non-default configuration is always a kind of minefield. Stay away from it unless you’re adventurous and have enough time and patience to fix issues along the way. You’ve been warned.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Getting Started With Play Framework and AngularJS - Day 1]]></title>
@@ -336,31 +442,6 @@ res0: Double = 29.787899999999745
 <p>It gives you ca 30 PLN.</p>
 
 <p>It&rsquo;d be nice to have a series with the date when a given pair was made, and then compare it with other means of gaining profits. A web app developed in <a href="http://www.playframework.com/">Play</a> and deployed to <a href="https://www.heroku.com/">Heroku</a> or <a href="http://www.cloudbees.com/">CloudBees</a> might be of help, wouldn&rsquo;t it?</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Beginner "Guide" to Sbt 0.13 and IntelliJ IDEA 13]]></title>
-    <link href="http://blog.jaceklaskowski.pl/2013/12/07/beginner-guide-to-sbt-0-dot-13-and-intellij-idea-13.html"/>
-    <updated>2013-12-07T16:39:37+01:00</updated>
-    <id>http://blog.jaceklaskowski.pl/2013/12/07/beginner-guide-to-sbt-0-dot-13-and-intellij-idea-13</id>
-    <content type="html"><![CDATA[<p><img class="left" src="/images/intellij-idea-13-new-logo.png" title="The logo of IntelliJ IDEA 13" > It has not been very long ago when the only way to work with <a href="http://www.scala-sbt.org/">sbt</a> projects in <a href="http://www.jetbrains.com/idea/">IntelliJ IDEA</a> was to use the <a href="https://github.com/mpeltonen/sbt-idea">sbt-idea</a> plugin that aimed at <em>&ldquo;creating IntelliJ IDEA project files&rdquo;</em>.</p>
-
-<p><a href="http://www.jetbrains.com/idea/whatsnew/">With the recent release of IntelliJ IDEA 13</a> (build: 133.193,  released: December 3, 2013) it&rsquo;s no longer true - the version comes with built-in sbt support and the support is available in <a href="http://www.jetbrains.com/idea/download/index.html">the free Community Edition</a>, too.</p>
-
-<p>My recent, rather quite frequent visits on <a href="http://stackoverflow.com/">StackOverflow</a> have showed that there&rsquo;s one question very often asked - <strong>How to start using sbt with IntelliJ IDEA?</strong> It turns out that the latest version of IntelliJ IDEA 13 squashed it pretty neatly and the built-in sbt support made the question irrelevant.</p>
-
-<p>Unless it changes, the page remains empty<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup>. What a surprise, isn&rsquo;t it? I&rsquo;ve always been thinking about writing the best beginner guide and here it is&hellip;at long last!</p>
-
-<p>On to querying <a href="http://stackoverflow.com/questions/tagged/sbt">StackOverflow&rsquo;s #sbt tag</a> for questions about <em>a</em> sbt support in IntelliJ IDEA 13.</p>
-<div class="footnotes">
-<hr/>
-<ol>
-<li id="fn:1">
-<p>as a kind of placeholder for future tips and tricks<a href="#fnref:1" rev="footnote">&#8617;</a></p></li>
-</ol>
-</div>
-
 ]]></content>
   </entry>
   

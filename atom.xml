@@ -4,7 +4,7 @@
   <title><![CDATA[Mastering FP and OO with Scala]]></title>
   <link href="http://blog.jaceklaskowski.pl/atom.xml" rel="self"/>
   <link href="http://blog.jaceklaskowski.pl/"/>
-  <updated>2014-09-12T21:59:37+02:00</updated>
+  <updated>2014-09-14T16:13:02+02:00</updated>
   <id>http://blog.jaceklaskowski.pl/</id>
   <author>
     <name><![CDATA[Jacek Laskowski]]></name>
@@ -911,6 +911,7 @@ expression e.</p></blockquote>
 <li><a href="https://groups.google.com/d/msg/scala-language/FrDJiagB8CY/3NVmhdKe0vgJ">Eta expansion, meet overloading</a></li>
 <li><a href="http://scala-lang.org/files/archive/nightly/pdfs/ScalaReference.pdf">Scala Language Specification (PDF)</a></li>
 <li><a href="http://stackoverflow.com/q/17324247/1305344">Eta-expansion between methods and functions with overloaded methods in Scala</a></li>
+<li><a href="http://tpolecat.github.io/2014/06/09/methods-functions.html">Methods are not Functions</a></li>
 </ul>
 
 ]]></content>

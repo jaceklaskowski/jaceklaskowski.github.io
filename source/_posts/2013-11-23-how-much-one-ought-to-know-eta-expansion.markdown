@@ -265,3 +265,4 @@ expression e.
 * [Eta expansion, meet overloading](https://groups.google.com/d/msg/scala-language/FrDJiagB8CY/3NVmhdKe0vgJ)
 * [Scala Language Specification (PDF)](http://scala-lang.org/files/archive/nightly/pdfs/ScalaReference.pdf)
 * [Eta-expansion between methods and functions with overloaded methods in Scala](http://stackoverflow.com/q/17324247/1305344)
+* [Methods are not Functions](http://tpolecat.github.io/2014/06/09/methods-functions.html)

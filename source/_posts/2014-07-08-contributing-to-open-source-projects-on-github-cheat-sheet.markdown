@@ -6,8 +6,7 @@ comments: true
 categories: GitHub
 sidebar: collapse
 ---
-
-I've been contributing to many open source projects over the past couple of years and I found [GitHub](https://github.com/jaceklaskowski) pleasantly helpful to continue the gig in the years to come. I've learnt few techniques along the way.
+I've been contributing to many open source projects over the past couple of years and I found [GitHub](https://github.com/jaceklaskowski) pleasantly helpful to continue the gig in the years to come. I've learnt few techniques along the way (from many sources I'm including after the section they appply to).
 
 I don't want to keep the techniques for myself so the git/GitHub cheat sheet is supposed to help me remember the commands and others to learn from my mistakes (*aka* experience). It's so easy on GitHub that I keep wondering why it took me so long to learn it. It must not for you.
 
@@ -59,7 +58,7 @@ creates and changes your current branch from `master` (usually) to `branch-name`
 
 On a branch, go the following to commit the changes of yours:
 
-    git commit -m [commit-message] -a
+    git commit -am [commit-message]
 
 There are some strict rules on how to write a proper `commit-message`. For now, don't worry about it too much. There are tougher things you will have to go through and writing proper commit messages don't belong to that category...yet. It's more important to get you up to speed with contributing to a project than to do it without mistakes from the day 0.
 
@@ -75,7 +74,7 @@ Using command completion can save you a lot of typing here. A decent shell like 
 
 ## Creating pull request on GitHub
 
-With the changes in the remote repository on GitHub, you should now be able to send a pull request to the original repo.
+With the changes in the remote repository on GitHub, you should now be able to send a pull request to the **origin**al repo (usually called **origin**, but git lets you name it whatever you like).
 
 GitHub shows the Pull Request button when you're changes hit your repository that's a fork of the project. Click the button and fill out the blanks. GitHub uses your commit message as the title that further easies the process.
 
@@ -83,7 +82,7 @@ Click Create and you've just contributed to the project! Open Source Contributor
 
 ## Squashing changes
 
-There might be times when your work in progress generates a stream of changes to a branch. It's assumed that the changes are already `git add`ed and the project maintainers have requested *to squash the changes* so they ultimately go (aka get merged) to the master as a single change/commit.
+There might be times when your work in progress generates a stream of changes to a branch. It's assumed that the changes are already `git add`ed and the project maintainers have requested *to squash the changes* so they ultimately go (aka *get merged*) to the `master` as a single change/commit (since a branch is usually about a single feature that's often reasonable to have the feature merged in as a single change -- so it's self-contained and makes code review a little easier).
 
 Use `git rebase -i [branch]`:
 
@@ -91,16 +90,19 @@ Use `git rebase -i [branch]`:
 
 where `origin/master` is the name of the `master` branch of the project you forked and then branched for your changes from the remote `origin` repository.
 
-Fix any merge issues while rebasing. When fixed, `git add` the files and `git rebase --continue` afterwards.
+Fix any merge issues while rebasing. When fixed, `git add` the files changed (because of the merge conflict) and `git rebase --continue` afterwards.
 
-You can always go back to the previous state (before squashing) with `git rebase --abort`.
+You can always go back to the previous state (before doing `git rebase`) with `git rebase --abort`.
 
-Doing squashing is worth the time since merging the changes with the master later on becomes a no-brainer for the project maintainers.
+Doing squashing is worth the time since merging the changes with `master` later on becomes a no-brainer for the project maintainers.
+
+Once you're done with modifying the history of the changes in your branch, do `git push -f` to push your changes forcefully. The reason for the `-f` option is that you make changes to the history of a public branch that others could've already featched and based their work on -- a conflict may be coming. To prevent the conflict git makes sure that's what you really want to do. You've been warned.
 
 Useful links about git rebase:
 
 * [squashing commits with rebase](http://gitready.com/advanced/2009/02/10/squashing-commits-with-rebase.html)
 * [About Git rebase](https://help.github.com/articles/about-git-rebase)
+* [How to Rebase a Pull Request](https://github.com/edx/edx-platform/wiki/How-to-Rebase-a-Pull-Request)
 
 ## Deleting remote and local branches
 

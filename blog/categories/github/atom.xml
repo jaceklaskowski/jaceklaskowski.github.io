@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Github | Mastering FP and OO with Scala]]></title>
   <link href="http://blog.jaceklaskowski.pl/blog/categories/github/atom.xml" rel="self"/>
   <link href="http://blog.jaceklaskowski.pl/"/>
-  <updated>2014-09-14T16:13:02+02:00</updated>
+  <updated>2014-09-18T10:36:02+02:00</updated>
   <id>http://blog.jaceklaskowski.pl/</id>
   <author>
     <name><![CDATA[Jacek Laskowski]]></name>
@@ -18,138 +18,127 @@
     <link href="http://blog.jaceklaskowski.pl/2014/07/08/contributing-to-open-source-projects-on-github-cheat-sheet.html"/>
     <updated>2014-07-08T01:24:32+02:00</updated>
     <id>http://blog.jaceklaskowski.pl/2014/07/08/contributing-to-open-source-projects-on-github-cheat-sheet</id>
-    <content type="html"><![CDATA[<p>I&rsquo;ve been contributing to many open source projects over the past couple of years and I found <a href="https://github.com/jaceklaskowski">GitHub</a> pleasantly helpful to continue the gig in the years to come. I&rsquo;ve learnt few techniques along the way.</p>
+    <content type="html"><![CDATA[I've been contributing to many open source projects over the past couple of years and I found [GitHub](https://github.com/jaceklaskowski) pleasantly helpful to continue the gig in the years to come. I've learnt few techniques along the way (from many sources I'm including after the section they appply to).
 
-<p>I don&rsquo;t want to keep the techniques for myself so the git/GitHub cheat sheet is supposed to help me remember the commands and others to learn from my mistakes (<em>aka</em> experience). It&rsquo;s so easy on GitHub that I keep wondering why it took me so long to learn it. It must not for you.</p>
+I don't want to keep the techniques for myself so the git/GitHub cheat sheet is supposed to help me remember the commands and others to learn from my mistakes (*aka* experience). It's so easy on GitHub that I keep wondering why it took me so long to learn it. It must not for you.
 
-<p>Have fun contributing to open source projects as much as I do! <em>Pro publico bono.</em></p>
+Have fun contributing to open source projects as much as I do! *Pro publico bono.*
 
-<p><strong>NOTE</strong> It becomes feature-complete when the note disappears. Live with the few mistakes for now. Let me know what you think in the Comments section. Pull requests are welcome, too. Thanks!</p>
+**NOTE** It becomes feature-complete when the note disappears. Live with the few mistakes for now. Let me know what you think in the Comments section. Pull requests are welcome, too. Thanks!
 
 <!-- more -->
 
+## Picking project
 
-<h2>Picking project</h2>
+You start your day hunting down the project you want to contribute to. Be adventurous and pick the one you&#8217;ve always been dreaming about. This might be the day when the dream comes true.
 
-<p>You start your day hunting down the project you want to contribute to. Be adventurous and pick the one you&rsquo;ve always been dreaming about. This might be the day when the dream comes true.</p>
+I&#8217;m more into Scala/sbt lately so I&#8217;m with projects under control of the project build tool - [sbt](http://www.scala-sbt.org/) as I can learn both contributing.
 
-<p>I&rsquo;m more into Scala/sbt lately so I&rsquo;m with projects under control of the project build tool - <a href="http://www.scala-sbt.org/">sbt</a> as I can learn both contributing.</p>
+## Cloning project
 
-<h2>Cloning project</h2>
+Learning a project can take different approaches and reading the source code or just building it and staying on the cutting edge are a few examples.
 
-<p>Learning a project can take different approaches and reading the source code or just building it and staying on the cutting edge are a few examples.</p>
+In the project&#8217;s repository on GitHub, on the right-hand side, there&#8217;s this clone URL field. Select the protocol to use (HTTPS or SSH) and click the Copy to clipboard button.
 
-<p>In the project&rsquo;s repository on GitHub, on the right-hand side, there&rsquo;s this clone URL field. Select the protocol to use (HTTPS or SSH) and click the Copy to clipboard button.</p>
+In the terminal, execute the following command:
 
-<p>In the terminal, execute the following command:</p>
+    git clone [clone URL]
 
-<pre><code>git clone [clone URL]
-</code></pre>
+It creates a directory with the project. The sources are yours now, master.
 
-<p>It creates a directory with the project. The sources are yours now, master.</p>
+## Forking project
 
-<h2>Forking project</h2>
+Your very first step is to fork a project. Forking means creating your own copy of the project. On GitHub it&#8217;s so easy with the Fork button in the upper-right corner. Click it and select the account you want the fork go.
 
-<p>Your very first step is to fork a project. Forking means creating your own copy of the project. On GitHub it&rsquo;s so easy with the Fork button in the upper-right corner. Click it and select the account you want the fork go.</p>
+In the terminal, go to the project&#8217;s directory and add the repository as a remote repository.
 
-<p>In the terminal, go to the project&rsquo;s directory and add the repository as a remote repository.</p>
+    git remote add [remote-name] [clone URL]
 
-<pre><code>git remote add [remote-name] [clone URL]
-</code></pre>
+I tend to use my first name for `remote-name` so I know that my personal repository copy is under `jacek` nick.
 
-<p>I tend to use my first name for <code>remote-name</code> so I know that my personal repository copy is under <code>jacek</code> nick.</p>
+## Branching project
 
-<h2>Branching project</h2>
+Developing a change for a project is the real thing. It can be a documentation page, a fix for an issue or whatever else the project holds.
 
-<p>Developing a change for a project is the real thing. It can be a documentation page, a fix for an issue or whatever else the project holds.</p>
+The following command
 
-<p>The following command</p>
+    git checkout -b [branch-name]
 
-<pre><code>git checkout -b [branch-name]
-</code></pre>
+creates and changes your current branch from `master` (usually) to `branch-name`. Use `wip/` in the `branch-name` to denote that the work is in progress so people can review the changes before they get *squashed* and merged with the master.
 
-<p>creates and changes your current branch from <code>master</code> (usually) to <code>branch-name</code>. Use <code>wip/</code> in the <code>branch-name</code> to denote that the work is in progress so people can review the changes before they get <em>squashed</em> and merged with the master.</p>
+## Committing changes to project
 
-<h2>Committing changes to project</h2>
+On a branch, go the following to commit the changes of yours:
 
-<p>On a branch, go the following to commit the changes of yours:</p>
+    git commit -am [commit-message]
 
-<pre><code>git commit -m [commit-message] -a
-</code></pre>
+There are some strict rules on how to write a proper `commit-message`. For now, don&#8217;t worry about it too much. There are tougher things you will have to go through and writing proper commit messages don&#8217;t belong to that category&#8230;yet. It&#8217;s more important to get you up to speed with contributing to a project than to do it without mistakes from the day 0.
 
-<p>There are some strict rules on how to write a proper <code>commit-message</code>. For now, don&rsquo;t worry about it too much. There are tougher things you will have to go through and writing proper commit messages don&rsquo;t belong to that category&hellip;yet. It&rsquo;s more important to get you up to speed with contributing to a project than to do it without mistakes from the day 0.</p>
+## Pushing changes to remote repo
 
-<h2>Pushing changes to remote repo</h2>
+With the changes on the branch committed, it&#8217;s time to show off on GitHub. Push the changes with the following command:
 
-<p>With the changes on the branch committed, it&rsquo;s time to show off on GitHub. Push the changes with the following command:</p>
+    git push [remote-name] [branch-name]
 
-<pre><code>git push [remote-name] [branch-name]
-</code></pre>
+Using command completion can save you a lot of typing here. A decent shell like [oh-my-zsh](http://ohmyz.sh/) is highly recommended (on Mac OS X at the very least).
 
-<p>Using command completion can save you a lot of typing here. A decent shell like <a href="http://ohmyz.sh/">oh-my-zsh</a> is highly recommended (on Mac OS X at the very least).</p>
+`remote-name` is the nick of the remote repository, e.g. `jacek` while `branch-name` is the name of the branch you&#8217;re working on right now.
 
-<p><code>remote-name</code> is the nick of the remote repository, e.g. <code>jacek</code> while <code>branch-name</code> is the name of the branch you&rsquo;re working on right now.</p>
+## Creating pull request on GitHub
 
-<h2>Creating pull request on GitHub</h2>
+With the changes in the remote repository on GitHub, you should now be able to send a pull request to the **origin**al repo (usually called **origin**, but git lets you name it whatever you like).
 
-<p>With the changes in the remote repository on GitHub, you should now be able to send a pull request to the original repo.</p>
+GitHub shows the Pull Request button when you&#8217;re changes hit your repository that&#8217;s a fork of the project. Click the button and fill out the blanks. GitHub uses your commit message as the title that further easies the process.
 
-<p>GitHub shows the Pull Request button when you&rsquo;re changes hit your repository that&rsquo;s a fork of the project. Click the button and fill out the blanks. GitHub uses your commit message as the title that further easies the process.</p>
+Click Create and you&#8217;ve just contributed to the project! Open Source Contributor badge unlocked! Congratulations.
 
-<p>Click Create and you&rsquo;ve just contributed to the project! Open Source Contributor badge unlocked! Congratulations.</p>
+## Squashing changes
 
-<h2>Squashing changes</h2>
+There might be times when your work in progress generates a stream of changes to a branch. It&#8217;s assumed that the changes are already `git add`ed and the project maintainers have requested *to squash the changes* so they ultimately go (aka *get merged*) to the `master` as a single change/commit (since a branch is usually about a single feature that&#8217;s often reasonable to have the feature merged in as a single change &#8211; so it&#8217;s self-contained and makes code review a little easier).
 
-<p>There might be times when your work in progress generates a stream of changes to a branch. It&rsquo;s assumed that the changes are already <code>git add</code>ed and the project maintainers have requested <em>to squash the changes</em> so they ultimately go (aka get merged) to the master as a single change/commit.</p>
+Use `git rebase -i [branch]`:
 
-<p>Use <code>git rebase -i [branch]</code>:</p>
+    git rebase -i origin/master
 
-<pre><code>git rebase -i origin/master
-</code></pre>
+where `origin/master` is the name of the `master` branch of the project you forked and then branched for your changes from the remote `origin` repository.
 
-<p>where <code>origin/master</code> is the name of the <code>master</code> branch of the project you forked and then branched for your changes from the remote <code>origin</code> repository.</p>
+Fix any merge issues while rebasing. When fixed, `git add` the files changed (because of the merge conflict) and `git rebase &#8211;continue` afterwards.
 
-<p>Fix any merge issues while rebasing. When fixed, <code>git add</code> the files and <code>git rebase --continue</code> afterwards.</p>
+You can always go back to the previous state (before doing `git rebase`) with `git rebase &#8211;abort`.
 
-<p>You can always go back to the previous state (before squashing) with <code>git rebase --abort</code>.</p>
+Doing squashing is worth the time since merging the changes with `master` later on becomes a no-brainer for the project maintainers.
 
-<p>Doing squashing is worth the time since merging the changes with the master later on becomes a no-brainer for the project maintainers.</p>
+Once you&#8217;re done with modifying the history of the changes in your branch, do `git push -f` to push your changes forcefully. The reason for the `-f` option is that you make changes to the history of a public branch that others could&#8217;ve already featched and based their work on &#8211; a conflict may be coming. To prevent the conflict git makes sure that&#8217;s what you really want to do. You&#8217;ve been warned.
 
-<p>Useful links about git rebase:</p>
+Useful links about git rebase:
 
-<ul>
-<li><a href="http://gitready.com/advanced/2009/02/10/squashing-commits-with-rebase.html">squashing commits with rebase</a></li>
-<li><a href="https://help.github.com/articles/about-git-rebase">About Git rebase</a></li>
-</ul>
+* [squashing commits with rebase](http://gitready.com/advanced/2009/02/10/squashing-commits-with-rebase.html)
+* [About Git rebase](https://help.github.com/articles/about-git-rebase)
+* [How to Rebase a Pull Request](https://github.com/edx/edx-platform/wiki/How-to-Rebase-a-Pull-Request)
 
+## Deleting remote and local branches
 
-<h2>Deleting remote and local branches</h2>
+When the work is over and all the changes are merged with the master, you can safely delete remote and local branches.
 
-<p>When the work is over and all the changes are merged with the master, you can safely delete remote and local branches.</p>
+Once the work gets merged, GitHub asks you to delete the branch. Click the button under the pull request.
 
-<p>Once the work gets merged, GitHub asks you to delete the branch. Click the button under the pull request.</p>
+Delete the local branch with the command:
 
-<p>Delete the local branch with the command:</p>
+    git branch -D [branch-name]
 
-<pre><code>git branch -D [branch-name]
-</code></pre>
+where `branch-name` is the name of the branch you want to delete.
 
-<p>where <code>branch-name</code> is the name of the branch you want to delete.</p>
+You should change the branch to some other branch to be able to delete it.
 
-<p>You should change the branch to some other branch to be able to delete it.</p>
+## Maintainers, use &#8220;Closes #XXX&#8221; to auto-close pull requests
 
-<h2>Maintainers, use &ldquo;Closes #XXX&rdquo; to auto-close pull requests</h2>
+It&#8217;s a feature of GitHub and mostly for project maintainers when they merging pull requests to `master`.
 
-<p>It&rsquo;s a feature of GitHub and mostly for project maintainers when they merging pull requests to <code>master</code>.</p>
+After you&#8217;re about to `git push` your local changes, `git commit` them and as the last line add **Closes #XXX** where **XXX** is the pull request id. It will auto-close the pull request.
 
-<p>After you&rsquo;re about to <code>git push</code> your local changes, <code>git commit</code> them and as the last line add <strong>Closes #XXX</strong> where <strong>XXX</strong> is the pull request id. It will auto-close the pull request.</p>
+Useful links about the feature:
 
-<p>Useful links about the feature:</p>
-
-<ul>
-<li><a href="http://blog.spreedly.com/2014/06/24/merge-pull-request-considered-harmful/">&ldquo;Merge pull request&rdquo; Considered Harmful</a></li>
-</ul>
-
+* [&#8220;Merge pull request&#8221; Considered Harmful](http://blog.spreedly.com/2014/06/24/merge-pull-request-considered-harmful/)
 ]]></content>
   </entry>
   

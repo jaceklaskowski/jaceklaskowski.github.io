@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Tutorial | Mastering FP and OO with Scala]]></title>
   <link href="http://blog.jaceklaskowski.pl/blog/categories/tutorial/atom.xml" rel="self"/>
   <link href="http://blog.jaceklaskowski.pl/"/>
-  <updated>2014-09-14T16:13:02+02:00</updated>
+  <updated>2014-09-18T10:36:02+02:00</updated>
   <id>http://blog.jaceklaskowski.pl/</id>
   <author>
     <name><![CDATA[Jacek Laskowski]]></name>
@@ -14,123 +14,132 @@
 
   
   <entry>
+    <title type="html"><![CDATA[Developing Web Applications With Play Framework and AngularJS - Day 2 - Angular Setup]]></title>
+    <link href="http://blog.jaceklaskowski.pl/2014/09/16/developing-web-applications-with-play-framework-and-angularjs-day-2-angular-setup.html"/>
+    <updated>2014-09-16T08:36:57+02:00</updated>
+    <id>http://blog.jaceklaskowski.pl/2014/09/16/developing-web-applications-with-play-framework-and-angularjs-day-2-angular-setup</id>
+    <content type="html"><![CDATA[This is the part 2 in the series about developing applications with two web frameworks - [Play Framework](https://www.playframework.com/) and [AngularJS](https://angularjs.org/) - where you learn how to set up AngularJS.
+
+See [Getting started with Play Framework and AngularJS - Day 1](/2014/09/08/getting-started-with-play-framework-and-angularjs-day-1.html) to read about the day 1's activities where the necessary software was installed and used to create a sample web application in Play.
+
+<!-- more -->
+
+## Step 1. Installing Typesafe Activator
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Getting Started With Play Framework and AngularJS - Day 1]]></title>
     <link href="http://blog.jaceklaskowski.pl/2014/09/08/getting-started-with-play-framework-and-angularjs-day-1.html"/>
     <updated>2014-09-08T12:42:49+02:00</updated>
     <id>http://blog.jaceklaskowski.pl/2014/09/08/getting-started-with-play-framework-and-angularjs-day-1</id>
-    <content type="html"><![CDATA[<p>Let&rsquo;s face it &ndash; there are tons of very good tutorials about how to get started with <a href="https://www.playframework.com/">Play Framework</a> and <a href="https://angularjs.org/">AngularJS</a> to build modern web applications, and despite the fact there are still quite a few people out there who keep asking me about writing mine. Since writing tutorials is a way to clear up understanding of a topic to me, I found it very compelling to help myself and others using the two - Play and Angular - properly. Well, the <em>properly</em> part comes with your comments when I fix the parts that are outdated or plain wrong.</p>
+    <content type="html"><![CDATA[Let's face it -- there are tons of very good tutorials about how to get started with [Play Framework](https://www.playframework.com/) and [AngularJS](https://angularjs.org/) to build modern web applications, and despite the fact there are still quite a few people out there who keep asking me about writing mine. Since writing tutorials is a way to clear up understanding of a topic to me, I found it very compelling to help myself and others using the two - Play and Angular - properly. Well, the *properly* part comes with your comments when I fix the parts that are outdated or plain wrong.
 
-<p>So, here it is. The yet another tutorial series about developing web applications in Play Framework (with Scala) and AngularJS (in JavaScript). Let&rsquo;s get rolling!</p>
+So, here it is. The yet another tutorial series about developing web applications in Play Framework (with Scala) and AngularJS (in JavaScript). Let's get rolling!
 
-<p><strong>NOTE</strong> It&rsquo;s a work in progress. Watch this space until the note has disappeared and the blog post become feature-complete.</p>
+**NOTE** It's a work in progress. Watch this space until the note has disappeared and the blog post become feature-complete.
 
 <!-- more -->
 
+## Step 1. Installing Typesafe Activator
 
-<h2>Step 1. Installing Typesafe Activator</h2>
+Download Typesafe Activator from http://typesafe.com/activator and install it in a directory. Add the directory to `PATH` so you&#8217;ll be able to execute `activator` from any place in your file system without having to use the fully-qualified path.
 
-<p>Download Typesafe Activator from <a href="http://typesafe.com/activator">http://typesafe.com/activator</a> and install it in a directory. Add the directory to <code>PATH</code> so you&rsquo;ll be able to execute <code>activator</code> from any place in your file system without having to use the fully-qualified path.</p>
+Execute `activator ui` to open up Activator UI in a browser. Go to http://localhost:8888.
 
-<p>Execute <code>activator ui</code> to open up Activator UI in a browser. Go to <a href="http://localhost:8888.">http://localhost:8888.</a></p>
+See what&#8217;s available in the UI and once you&#8217;re satisfied, go to the command line where `activator ui` is running and press `Ctrl+C` to stop the UI process.
 
-<p>See what&rsquo;s available in the UI and once you&rsquo;re satisfied, go to the command line where <code>activator ui</code> is running and press <code>Ctrl+C</code> to stop the UI process.</p>
+## Step 2. Creating hello-play-tutorial web application
 
-<h2>Step 2. Creating hello-play-tutorial web application</h2>
+In a directory of your choice, execute `activator new hello-play-tutorial play-scala` to create a web application using [the Play Scala Seed template](https://typesafe.com/activator/template/play-scala).
 
-<p>In a directory of your choice, execute <code>activator new hello-play-tutorial play-scala</code> to create a web application using <a href="https://typesafe.com/activator/template/play-scala">the Play Scala Seed template</a>.</p>
+**Pro-tip:** Read the output from the command so you learn what you can do with `activator` that I&#8217;m not going to cover in the article.
 
-<p><strong>Pro-tip:</strong> Read the output from the command so you learn what you can do with <code>activator</code> that I&rsquo;m not going to cover in the article.</p>
+    ➜  sandbox  activator new hello-play-tutorial play-scala
 
-<pre><code>➜  sandbox  activator new hello-play-tutorial play-scala
+    Fetching the latest list of templates&#8230;
 
-Fetching the latest list of templates...
+    OK, application &#8220;hello-play-tutorial&#8221; is being created using the &#8220;play-scala&#8221; template.
 
-OK, application "hello-play-tutorial" is being created using the "play-scala" template.
+    To run &#8220;hello-play-tutorial&#8221; from the command line, &#8220;cd hello-play-tutorial&#8221; then:
+    /Users/jacek/sandbox/hello-play-tutorial/activator run
 
-To run "hello-play-tutorial" from the command line, "cd hello-play-tutorial" then:
-/Users/jacek/sandbox/hello-play-tutorial/activator run
+    To run the test for &#8220;hello-play-tutorial&#8221; from the command line, &#8220;cd hello-play-tutorial&#8221; then:
+    /Users/jacek/sandbox/hello-play-tutorial/activator test
 
-To run the test for "hello-play-tutorial" from the command line, "cd hello-play-tutorial" then:
-/Users/jacek/sandbox/hello-play-tutorial/activator test
+    To run the Activator UI for &#8220;hello-play-tutorial&#8221; from the command line, &#8220;cd hello-play-tutorial&#8221; then:
+    /Users/jacek/sandbox/hello-play-tutorial/activator ui
 
-To run the Activator UI for "hello-play-tutorial" from the command line, "cd hello-play-tutorial" then:
-/Users/jacek/sandbox/hello-play-tutorial/activator ui
-</code></pre>
+Change the working directory to `hello-play-tutorial` and run `activator run`. Wait until the message `(Server started, use Ctrl+D to stop and go back to the console&#8230;)` has showed up.
 
-<p>Change the working directory to <code>hello-play-tutorial</code> and run <code>activator run</code>. Wait until the message <code>(Server started, use Ctrl+D to stop and go back to the console...)</code> has showed up.</p>
+    ➜  sandbox  cd hello-play-tutorial
+    ➜  hello-play-tutorial  activator run
+    [info] Loading global plugins from /Users/jacek/.sbt/0.13/plugins
+    [info] Loading project definition from /Users/jacek/sandbox/hello-play-tutorial/project
+    [info] Updating {file:/Users/jacek/sandbox/hello-play-tutorial/project/}hello-play-tutorial-build&#8230;
+    [info] Resolving org.fusesource.jansi#jansi;1.4 &#8230;
+    [info] Done updating.
+    [info] Set current project to hello-play-tutorial (in build file:/Users/jacek/sandbox/hello-play-tutorial/)
+    [info] Updating {file:/Users/jacek/sandbox/hello-play-tutorial/}root&#8230;
+    [info] Resolving jline#jline;2.11 &#8230;
+    [info] Done updating.
 
-<pre><code>➜  sandbox  cd hello-play-tutorial
-➜  hello-play-tutorial  activator run
-[info] Loading global plugins from /Users/jacek/.sbt/0.13/plugins
-[info] Loading project definition from /Users/jacek/sandbox/hello-play-tutorial/project
-[info] Updating {file:/Users/jacek/sandbox/hello-play-tutorial/project/}hello-play-tutorial-build...
-[info] Resolving org.fusesource.jansi#jansi;1.4 ...
-[info] Done updating.
-[info] Set current project to hello-play-tutorial (in build file:/Users/jacek/sandbox/hello-play-tutorial/)
-[info] Updating {file:/Users/jacek/sandbox/hello-play-tutorial/}root...
-[info] Resolving jline#jline;2.11 ...
-[info] Done updating.
+    &#8212; (Running the application from SBT, auto-reloading is enabled) &#8212;
 
---- (Running the application from SBT, auto-reloading is enabled) ---
+    [info] play - Listening for HTTP on /0:0:0:0:0:0:0:0:9000
 
-[info] play - Listening for HTTP on /0:0:0:0:0:0:0:0:9000
+    (Server started, use Ctrl+D to stop and go back to the console&#8230;)
 
-(Server started, use Ctrl+D to stop and go back to the console...)
-</code></pre>
+Visit http://localhost:9000 to open up the web application in a browser.
 
-<p>Visit <a href="http://localhost:9000">http://localhost:9000</a> to open up the web application in a browser.</p>
+**Pro-tip:** Read the content of the welcome page so you know what the sample application offers beyond what is included in the article.
 
-<p><strong>Pro-tip:</strong> Read the content of the welcome page so you know what the sample application offers beyond what is included in the article.</p>
+## Step 3. (optional) Deploying to a cloud service - CloudBees
 
-<h2>Step 3. (optional) Deploying to a cloud service - CloudBees</h2>
+According to the official documentation of Play Framework in [Deploying to Cloudbees](https://www.playframework.com/documentation/2.4.x/Deploying-to-CloudBees):
 
-<p>According to the official documentation of Play Framework in <a href="https://www.playframework.com/documentation/2.4.x/Deploying-to-CloudBees">Deploying to Cloudbees</a>:</p>
+>CloudBees support Play dists natively - with Jenkins and continuous deployment
 
-<blockquote><p>CloudBees support Play dists natively - with Jenkins and continuous deployment</p></blockquote>
+that is in turn confirmed in the official documentation of CloudBees in [RUN@cloud » Play Framework](https://developer.cloudbees.com/bin/view/RUN/Playframework):
 
-<p>that is in turn confirmed in the official documentation of CloudBees in <a href="https://developer.cloudbees.com/bin/view/RUN/Playframework">RUN@cloud » Play Framework</a>:</p>
+>CloudBees includes first-class support for running Play! applications in the Cloud.
 
-<blockquote><p>CloudBees includes first-class support for running Play! applications in the Cloud.</p></blockquote>
+Install [CloudBees SDK](http://developer.cloudbees.com/bin/view/RUN/BeesSDK). On Mac OS X it&#8217;s just that easy as `brew install cloudbees-sdk`.
 
-<p>Install <a href="http://developer.cloudbees.com/bin/view/RUN/BeesSDK">CloudBees SDK</a>. On Mac OS X it&rsquo;s just that easy as <code>brew install cloudbees-sdk</code>.</p>
+Start with `bees init` and provide necessary configuration information before moving on to deploying the Play application.
 
-<p>Start with <code>bees init</code> and provide necessary configuration information before moving on to deploying the Play application.</p>
+Execute `bees app:create hello-play-tutorial -t play2` to configure the application on CloudBees.
 
-<p>Execute <code>bees app:create hello-play-tutorial -t play2</code> to configure the application on CloudBees.</p>
+    ➜  hello-play-tutorial git:(master) bees app:create hello-play-tutorial -t play2
+    Application: jaceklaskowski/hello-play-tutorial
+        url: hello-play-tutorial.jaceklaskowski.eu.cloudbees.net
 
-<pre><code>➜  hello-play-tutorial git:(master) bees app:create hello-play-tutorial -t play2
-Application: jaceklaskowski/hello-play-tutorial
-    url: hello-play-tutorial.jaceklaskowski.eu.cloudbees.net
-</code></pre>
+Create a new git repository under `Repos` in the CloudBees Administrative Console and execute `git init` followed by `git add -am &#8216;Initial commit&#8217;` in the directory.
 
-<p>Create a new git repository under <code>Repos</code> in the CloudBees Administrative Console and execute <code>git init</code> followed by <code>git add -am 'Initial commit'</code> in the directory.</p>
+    ➜  hello-play-tutorial git:(master) git remote add cloudbees https://git.cloudbees.com/jaceklaskowski/hello-play-tutorial.git
+    ➜  hello-play-tutorial git:(master) git push &#8211;mirror cloudbees
+    Counting objects: 30, done.
+    Delta compression using up to 8 threads.
+    Compressing objects: 100% (25/25), done.
+    Writing objects: 100% (30/30), 1010.69 KiB | 0 bytes/s, done.
+    Total 30 (delta 0), reused 0 (delta 0)
+    To https://git.cloudbees.com/jaceklaskowski/hello-play-tutorial.git
+     * [new branch]      master -> master
+    ➜  hello-play-tutorial git:(master) activator clean dist
+    &#8230;
+    ➜  hello-play-tutorial git:(master) bees app:deploy -t play2 -a hello-play-tutorial target/universal/hello-play-tutorial-1.0-SNAPSHOT.zip
+    Deploying application jaceklaskowski/hello-play-tutorial (environment: ): target/universal/hello-play-tutorial-1.0-SNAPSHOT.zip
+    Application parameters: {containerType=play2}
+    &#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;uploaded 25%
+    &#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;uploaded 50%
+    &#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;uploaded 75%
+    &#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;upload completed
+    deploying application to server(s)&#8230;
+    Application jaceklaskowski/hello-play-tutorial deployed: http://hello-play-tutorial.jaceklaskowski.eu.cloudbees.net
 
-<pre><code>➜  hello-play-tutorial git:(master) git remote add cloudbees https://git.cloudbees.com/jaceklaskowski/hello-play-tutorial.git
-➜  hello-play-tutorial git:(master) git push --mirror cloudbees
-Counting objects: 30, done.
-Delta compression using up to 8 threads.
-Compressing objects: 100% (25/25), done.
-Writing objects: 100% (30/30), 1010.69 KiB | 0 bytes/s, done.
-Total 30 (delta 0), reused 0 (delta 0)
-To https://git.cloudbees.com/jaceklaskowski/hello-play-tutorial.git
- * [new branch]      master -&gt; master
-➜  hello-play-tutorial git:(master) activator clean dist
-...
-➜  hello-play-tutorial git:(master) bees app:deploy -t play2 -a hello-play-tutorial target/universal/hello-play-tutorial-1.0-SNAPSHOT.zip
-Deploying application jaceklaskowski/hello-play-tutorial (environment: ): target/universal/hello-play-tutorial-1.0-SNAPSHOT.zip
-Application parameters: {containerType=play2}
-........................uploaded 25%
-........................uploaded 50%
-........................uploaded 75%
-........................upload completed
-deploying application to server(s)...
-Application jaceklaskowski/hello-play-tutorial deployed: http://hello-play-tutorial.jaceklaskowski.eu.cloudbees.net
-</code></pre>
+Access http://hello-play-tutorial.jaceklaskowski.eu.cloudbees.net (mind that yours is different) to see the application deployed and running.
 
-<p>Access <a href="http://hello-play-tutorial.jaceklaskowski.eu.cloudbees.net">http://hello-play-tutorial.jaceklaskowski.eu.cloudbees.net</a> (mind that yours is different) to see the application deployed and running.</p>
-
-<p>Set up a Jenkins job so the application&rsquo;s deployed every <code>git push cloudbees</code>.</p>
-]]></content>
+Set up a Jenkins job so the application&#8217;s deployed every `git push cloudbees`.]]></content>
   </entry>
   
 </feed>

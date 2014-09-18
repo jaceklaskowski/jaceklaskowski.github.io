@@ -4,7 +4,7 @@
   <title><![CDATA[Mastering FP and OO with Scala]]></title>
   <link href="http://blog.jaceklaskowski.pl/atom.xml" rel="self"/>
   <link href="http://blog.jaceklaskowski.pl/"/>
-  <updated>2014-09-14T16:13:02+02:00</updated>
+  <updated>2014-09-18T10:36:02+02:00</updated>
   <id>http://blog.jaceklaskowski.pl/</id>
   <author>
     <name><![CDATA[Jacek Laskowski]]></name>
@@ -12,6 +12,22 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Developing Web Applications With Play Framework and AngularJS - Day 2 - Angular Setup]]></title>
+    <link href="http://blog.jaceklaskowski.pl/2014/09/16/developing-web-applications-with-play-framework-and-angularjs-day-2-angular-setup.html"/>
+    <updated>2014-09-16T08:36:57+02:00</updated>
+    <id>http://blog.jaceklaskowski.pl/2014/09/16/developing-web-applications-with-play-framework-and-angularjs-day-2-angular-setup</id>
+    <content type="html"><![CDATA[<p>This is the part 2 in the series about developing applications with two web frameworks - <a href="https://www.playframework.com/">Play Framework</a> and <a href="https://angularjs.org/">AngularJS</a> - where you learn how to set up AngularJS.</p>
+
+<p>See <a href="http://blog.jaceklaskowski.pl/2014/09/08/getting-started-with-play-framework-and-angularjs-day-1.html">Getting started with Play Framework and AngularJS - Day 1</a> to read about the day 1&rsquo;s activities where the necessary software was installed and used to create a sample web application in Play.</p>
+
+<!-- more -->
+
+
+<h2>Step 1. Installing Typesafe Activator</h2>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Mistakes Introducing Slick for Database Access Under Play Framework 2.3.4 and 2.4.0-M1]]></title>
@@ -439,7 +455,7 @@ val jacek: Person = json.as[Person]
     <link href="http://blog.jaceklaskowski.pl/2014/07/08/contributing-to-open-source-projects-on-github-cheat-sheet.html"/>
     <updated>2014-07-08T01:24:32+02:00</updated>
     <id>http://blog.jaceklaskowski.pl/2014/07/08/contributing-to-open-source-projects-on-github-cheat-sheet</id>
-    <content type="html"><![CDATA[<p>I&rsquo;ve been contributing to many open source projects over the past couple of years and I found <a href="https://github.com/jaceklaskowski">GitHub</a> pleasantly helpful to continue the gig in the years to come. I&rsquo;ve learnt few techniques along the way.</p>
+    <content type="html"><![CDATA[<p>I&rsquo;ve been contributing to many open source projects over the past couple of years and I found <a href="https://github.com/jaceklaskowski">GitHub</a> pleasantly helpful to continue the gig in the years to come. I&rsquo;ve learnt few techniques along the way (from many sources I&rsquo;m including after the section they appply to).</p>
 
 <p>I don&rsquo;t want to keep the techniques for myself so the git/GitHub cheat sheet is supposed to help me remember the commands and others to learn from my mistakes (<em>aka</em> experience). It&rsquo;s so easy on GitHub that I keep wondering why it took me so long to learn it. It must not for you.</p>
 
@@ -495,7 +511,7 @@ val jacek: Person = json.as[Person]
 
 <p>On a branch, go the following to commit the changes of yours:</p>
 
-<pre><code>git commit -m [commit-message] -a
+<pre><code>git commit -am [commit-message]
 </code></pre>
 
 <p>There are some strict rules on how to write a proper <code>commit-message</code>. For now, don&rsquo;t worry about it too much. There are tougher things you will have to go through and writing proper commit messages don&rsquo;t belong to that category&hellip;yet. It&rsquo;s more important to get you up to speed with contributing to a project than to do it without mistakes from the day 0.</p>
@@ -513,7 +529,7 @@ val jacek: Person = json.as[Person]
 
 <h2>Creating pull request on GitHub</h2>
 
-<p>With the changes in the remote repository on GitHub, you should now be able to send a pull request to the original repo.</p>
+<p>With the changes in the remote repository on GitHub, you should now be able to send a pull request to the <strong>origin</strong>al repo (usually called <strong>origin</strong>, but git lets you name it whatever you like).</p>
 
 <p>GitHub shows the Pull Request button when you&rsquo;re changes hit your repository that&rsquo;s a fork of the project. Click the button and fill out the blanks. GitHub uses your commit message as the title that further easies the process.</p>
 
@@ -521,7 +537,7 @@ val jacek: Person = json.as[Person]
 
 <h2>Squashing changes</h2>
 
-<p>There might be times when your work in progress generates a stream of changes to a branch. It&rsquo;s assumed that the changes are already <code>git add</code>ed and the project maintainers have requested <em>to squash the changes</em> so they ultimately go (aka get merged) to the master as a single change/commit.</p>
+<p>There might be times when your work in progress generates a stream of changes to a branch. It&rsquo;s assumed that the changes are already <code>git add</code>ed and the project maintainers have requested <em>to squash the changes</em> so they ultimately go (aka <em>get merged</em>) to the <code>master</code> as a single change/commit (since a branch is usually about a single feature that&rsquo;s often reasonable to have the feature merged in as a single change &ndash; so it&rsquo;s self-contained and makes code review a little easier).</p>
 
 <p>Use <code>git rebase -i [branch]</code>:</p>
 
@@ -530,17 +546,20 @@ val jacek: Person = json.as[Person]
 
 <p>where <code>origin/master</code> is the name of the <code>master</code> branch of the project you forked and then branched for your changes from the remote <code>origin</code> repository.</p>
 
-<p>Fix any merge issues while rebasing. When fixed, <code>git add</code> the files and <code>git rebase --continue</code> afterwards.</p>
+<p>Fix any merge issues while rebasing. When fixed, <code>git add</code> the files changed (because of the merge conflict) and <code>git rebase --continue</code> afterwards.</p>
 
-<p>You can always go back to the previous state (before squashing) with <code>git rebase --abort</code>.</p>
+<p>You can always go back to the previous state (before doing <code>git rebase</code>) with <code>git rebase --abort</code>.</p>
 
-<p>Doing squashing is worth the time since merging the changes with the master later on becomes a no-brainer for the project maintainers.</p>
+<p>Doing squashing is worth the time since merging the changes with <code>master</code> later on becomes a no-brainer for the project maintainers.</p>
+
+<p>Once you&rsquo;re done with modifying the history of the changes in your branch, do <code>git push -f</code> to push your changes forcefully. The reason for the <code>-f</code> option is that you make changes to the history of a public branch that others could&rsquo;ve already featched and based their work on &ndash; a conflict may be coming. To prevent the conflict git makes sure that&rsquo;s what you really want to do. You&rsquo;ve been warned.</p>
 
 <p>Useful links about git rebase:</p>
 
 <ul>
 <li><a href="http://gitready.com/advanced/2009/02/10/squashing-commits-with-rebase.html">squashing commits with rebase</a></li>
 <li><a href="https://help.github.com/articles/about-git-rebase">About Git rebase</a></li>
+<li><a href="https://github.com/edx/edx-platform/wiki/How-to-Rebase-a-Pull-Request">How to Rebase a Pull Request</a></li>
 </ul>
 
 

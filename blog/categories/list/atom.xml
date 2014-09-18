@@ -4,7 +4,7 @@
   <title><![CDATA[Category: List | Mastering FP and OO with Scala]]></title>
   <link href="http://blog.jaceklaskowski.pl/blog/categories/list/atom.xml" rel="self"/>
   <link href="http://blog.jaceklaskowski.pl/"/>
-  <updated>2014-09-14T16:13:02+02:00</updated>
+  <updated>2014-09-18T10:36:02+02:00</updated>
   <id>http://blog.jaceklaskowski.pl/</id>
   <author>
     <name><![CDATA[Jacek Laskowski]]></name>
@@ -18,7 +18,7 @@
     <link href="http://blog.jaceklaskowski.pl/2013/11/21/day-with-scala-dot-list.html"/>
     <updated>2013-11-21T21:22:12+01:00</updated>
     <id>http://blog.jaceklaskowski.pl/2013/11/21/day-with-scala-dot-list</id>
-    <content type="html"><![CDATA[<p>How could you make an use of scala.List&hellip;</p>
+    <content type="html"><![CDATA[How could you make an use of scala.List...
 ]]></content>
   </entry>
   

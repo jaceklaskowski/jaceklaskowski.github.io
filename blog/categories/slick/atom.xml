@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Slick | Mastering FP and OO with Scala]]></title>
   <link href="http://blog.jaceklaskowski.pl/blog/categories/slick/atom.xml" rel="self"/>
   <link href="http://blog.jaceklaskowski.pl/"/>
-  <updated>2014-09-14T16:13:02+02:00</updated>
+  <updated>2014-09-18T10:36:02+02:00</updated>
   <id>http://blog.jaceklaskowski.pl/</id>
   <author>
     <name><![CDATA[Jacek Laskowski]]></name>
@@ -18,104 +18,95 @@
     <link href="http://blog.jaceklaskowski.pl/2014/09/12/mistakes-introducing-slick-for-database-access-under-play-framework-2-dot-3-4-and-2-dot-4-0-m1.html"/>
     <updated>2014-09-12T21:47:50+02:00</updated>
     <id>http://blog.jaceklaskowski.pl/2014/09/12/mistakes-introducing-slick-for-database-access-under-play-framework-2-dot-3-4-and-2-dot-4-0-m1</id>
-    <content type="html"><![CDATA[<p>This is a summary of my attempt to run <a href="http://slick.typesafe.com/">Slick</a> under <a href="https://www.playframework.com/">Play Framework</a> <strong>2.3.4</strong> and <strong>2.4.0-M1</strong> that ultimately turned out a quite successful endeavour.</p>
+    <content type="html"><![CDATA[This is a summary of my attempt to run [Slick](http://slick.typesafe.com/) under [Play Framework](https://www.playframework.com/) **2.3.4** and **2.4.0-M1** that ultimately turned out a quite successful endeavour.
 
-<p>I’m currently using Play’s Anorm and writing the queries myself didn’t seem to be something I much liked. I’ve been seeing Slick has had a good press so it was a no-brainer to pick it as an alternative.</p>
+I’m currently using Play’s Anorm and writing the queries myself didn’t seem to be something I much liked. I’ve been seeing Slick has had a good press so it was a no-brainer to pick it as an alternative.
 
 <!-- more -->
 
+## Mistake #1. Hurting myself with cutting edge versions
 
-<h2>Mistake #1. Hurting myself with cutting edge versions</h2>
+Reading the documentation at http://slick.typesafe.com/ was not very informative as there was no word about how to embed it in a Play Framework application. There should really be a &#8220;Getting started with Slick and Play Framework&#8221; tutorial since both are part of [The Typesafe Reactive Platform](https://typesafe.com/platform).
 
-<p>Reading the documentation at <a href="http://slick.typesafe.com/">http://slick.typesafe.com/</a> was not very informative as there was no word about how to embed it in a Play Framework application. There should really be a &ldquo;Getting started with Slick and Play Framework&rdquo; tutorial since both are part of <a href="https://typesafe.com/platform">The Typesafe Reactive Platform</a>.</p>
+I added Slick to `build.sbt` as follows:
 
-<p>I added Slick to <code>build.sbt</code> as follows:</p>
+    &#8220;com.typesafe.slick&#8221; %% &#8220;slick&#8221; % “2.1.0&#8221;
 
-<pre><code>"com.typesafe.slick" %% "slick" % “2.1.0"
-</code></pre>
+And then I realised that I’d have had to do:
 
-<p>And then I realised that I’d have had to do:</p>
+    Database.forURL(&#8220;jdbc:h2:mem:test1&#8221;, driver = &#8220;org.h2.Driver&#8221;) withSession {
+      implicit session =>
+      // <- write queries here
+    }
 
-<pre><code>Database.forURL("jdbc:h2:mem:test1", driver = "org.h2.Driver") withSession {
-  implicit session =&gt;
-  // &lt;- write queries here
-}
-</code></pre>
+but Play Framework gives me:
 
-<p>but Play Framework gives me:</p>
+    DB.withConnection("sayenedb") { implicit c =>
+        &#8230;
+    }
 
-<pre><code>DB.withConnection("sayenedb") { implicit c =&gt;
-    ...
-}
-</code></pre>
+It was certainly not the way to follow. I needed a solution that would read database configuration from Play&#8217;s.
 
-<p>It was certainly not the way to follow. I needed a solution that would read database configuration from Play&rsquo;s.</p>
+## Mistake #2. Using play-slick with Play 2.4.0-M1
 
-<h2>Mistake #2. Using play-slick with Play 2.4.0-M1</h2>
+Time has come to give [play-slick](https://github.com/playframework/play-slick) a serious try. The project aims to make *&#8221;Slick a first-class citizen of Play 2.x.”*
 
-<p>Time has come to give <a href="https://github.com/playframework/play-slick">play-slick</a> a serious try. The project aims to make <em>&ldquo;Slick a first-class citizen of Play 2.x.”</em></p>
+It took me a while to abandon the idea of running play-slick with Play 2.4.0-M1 since [this](https://groups.google.com/d/msg/play-framework/m_bxuqgSKgk/Z4WgfUer19wJ):
 
-<p>It took me a while to abandon the idea of running play-slick with Play 2.4.0-M1 since <a href="https://groups.google.com/d/msg/play-framework/m_bxuqgSKgk/Z4WgfUer19wJ">this</a>:</p>
+> The purpose of this release is to get feedback about the approach to dependency injection that we&#8217;re implementing in Play 2.4.  The old Play plugins mechanism is going to be deprecated.  For a detailed overview of the different styles of DI available in Play 2.4, please read here:
 
-<blockquote><p>The purpose of this release is to get feedback about the approach to dependency injection that we&rsquo;re implementing in Play 2.4.  The old Play plugins mechanism is going to be deprecated.  For a detailed overview of the different styles of DI available in Play 2.4, please read here:</p>
+> https://www.playframework.com/documentation/2.4.x/ScalaDependencyInjection
+https://www.playframework.com/documentation/2.4.x/ScalaCompileTimeDependencyInjection
+https://www.playframework.com/documentation/2.4.x/JavaDependencyInjection
 
-<p><a href="https://www.playframework.com/documentation/2.4.x/ScalaDependencyInjection">https://www.playframework.com/documentation/2.4.x/ScalaDependencyInjection</a>
-<a href="https://www.playframework.com/documentation/2.4.x/ScalaCompileTimeDependencyInjection">https://www.playframework.com/documentation/2.4.x/ScalaCompileTimeDependencyInjection</a>
-<a href="https://www.playframework.com/documentation/2.4.x/JavaDependencyInjection">https://www.playframework.com/documentation/2.4.x/JavaDependencyInjection</a></p></blockquote>
+I reported [an issue for play-slick](https://github.com/playframework/play-slick/issues/208) hoping that the developers notice the missing integration point and the support for 2.4 will come&#8230;sooner (?)
 
-<p>I reported <a href="https://github.com/playframework/play-slick/issues/208">an issue for play-slick</a> hoping that the developers notice the missing integration point and the support for 2.4 will come&hellip;sooner (?)</p>
+## Mistake #3. Using custom db configuration in Play
 
-<h2>Mistake #3. Using custom db configuration in Play</h2>
+The application uses no `db.default` configuration in `application.conf` in Play - just a custom one. The result?
 
-<p>The application uses no <code>db.default</code> configuration in <code>application.conf</code> in Play - just a custom one. The result?</p>
+    [error] application -
 
-<pre><code>[error] application -
+    ! @6jg39b0pk - Internal server error, for (GET) [/tips/wgcategories] ->
 
-! @6jg39b0pk - Internal server error, for (GET) [/tips/wgcategories] -&gt;
+    play.api.Configuration$$anon$1: Configuration error[Slick error : jdbc driver not defined in application.conf for db.default.driver key]
+         at play.api.Configuration$.play$api$Configuration$$configError(Configuration.scala:94) ~[play_2.11-2.3.4.jar:2.3.4]
+         at play.api.Configuration.reportError(Configuration.scala:743) ~[play_2.11-2.3.4.jar:2.3.4]
+         at play.api.db.slick.Config$$anonfun$1.apply(Config.scala:64) ~[play-slick_2.11-0.8.0.jar:0.8.0]
+         at play.api.db.slick.Config$$anonfun$1.apply(Config.scala:64) ~[play-slick_2.11-0.8.0.jar:0.8.0]
+         at scala.Option.getOrElse(Option.scala:120) ~[scala-library-2.11.2.jar:na]
 
-play.api.Configuration$$anon$1: Configuration error[Slick error : jdbc driver not defined in application.conf for db.default.driver key]
-     at play.api.Configuration$.play$api$Configuration$$configError(Configuration.scala:94) ~[play_2.11-2.3.4.jar:2.3.4]
-     at play.api.Configuration.reportError(Configuration.scala:743) ~[play_2.11-2.3.4.jar:2.3.4]
-     at play.api.db.slick.Config$$anonfun$1.apply(Config.scala:64) ~[play-slick_2.11-0.8.0.jar:0.8.0]
-     at play.api.db.slick.Config$$anonfun$1.apply(Config.scala:64) ~[play-slick_2.11-0.8.0.jar:0.8.0]
-     at scala.Option.getOrElse(Option.scala:120) ~[scala-library-2.11.2.jar:na]
-</code></pre>
+I had to add the following entries to work it around:
 
-<p>I had to add the following entries to work it around:</p>
+    db.default.driver=org.postgresql.Driver
+    db.default.url=${?DB_CONN}
 
-<pre><code>db.default.driver=org.postgresql.Driver
-db.default.url=${?DB_CONN}
-</code></pre>
+`DB_CONN` is the property I set up at command line at Play startup.
 
-<p><code>DB_CONN</code> is the property I set up at command line at Play startup.</p>
+Using two datasources required following [Advanced drivers configuration](https://github.com/playframework/play-slick/wiki/ScalaSlickDrivers) and applying the (in)famous Cake pattern.
 
-<p>Using two datasources required following <a href="https://github.com/playframework/play-slick/wiki/ScalaSlickDrivers">Advanced drivers configuration</a> and applying the (in)famous Cake pattern.</p>
+## Mistake #4. Copying examples to production code - PostgreSQL is case sensitive for field names in quotes
 
-<h2>Mistake #4. Copying examples to production code - PostgreSQL is case sensitive for field names in quotes</h2>
+I had the following in my Component:
 
-<p>I had the following in my Component:</p>
+    def id = column[Int](“ID&#8221;, O.PrimaryKey, O.AutoInc)
 
-<pre><code>def id = column[Int](“ID", O.PrimaryKey, O.AutoInc)
-</code></pre>
+That generated a query with `&#8221;ID&#8221;` in `select` clause that in turn resulted in the following error:
 
-<p>That generated a query with <code>"ID"</code> in <code>select</code> clause that in turn resulted in the following error:</p>
+    STATEMENT:  select s13.&#8221;ID&#8221;, s13.&#8221;name&#8221; from “xxx&#8221; s13;
+    ERROR:  column s13.ID does not exist at character 8
 
-<pre><code>STATEMENT:  select s13."ID", s13."name" from “xxx" s13;
-ERROR:  column s13.ID does not exist at character 8
-</code></pre>
+[As Rene pointed out in his tweet](https://twitter.com/rgielen/status/510501297473462272):
 
-<p><a href="https://twitter.com/rgielen/status/510501297473462272">As Rene pointed out in his tweet</a>:</p>
+> @jaceklaskowski not true - #PostgreSQL follows SQL standard. Columns names are case insensitive unless created with quotation marks
 
-<blockquote><p>@jaceklaskowski not true - #PostgreSQL follows SQL standard. Columns names are case insensitive unless created with quotation marks</p></blockquote>
+He was right - changing `ID` to `id` has indeed fixed the issue.
 
-<p>He was right - changing <code>ID</code> to <code>id</code> has indeed fixed the issue.</p>
+    def id = column[Int](“ID&#8221;, O.PrimaryKey, O.AutoInc)
 
-<pre><code>def id = column[Int](“ID", O.PrimaryKey, O.AutoInc)
-</code></pre>
+## Summary
 
-<h2>Summary</h2>
-
-<p>Using a non-default configuration is always a kind of minefield. Stay away from it unless you’re adventurous and have enough time and patience to fix issues along the way. You’ve been warned.</p>
+Using a non-default configuration is always a kind of minefield. Stay away from it unless you’re adventurous and have enough time and patience to fix issues along the way. You’ve been warned.
 ]]></content>
   </entry>
   

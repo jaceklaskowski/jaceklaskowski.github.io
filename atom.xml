@@ -4,7 +4,7 @@
   <title><![CDATA[Mastering FP and OO with Scala]]></title>
   <link href="http://blog.jaceklaskowski.pl/atom.xml" rel="self"/>
   <link href="http://blog.jaceklaskowski.pl/"/>
-  <updated>2014-09-19T09:37:44+02:00</updated>
+  <updated>2014-09-19T13:53:42+02:00</updated>
   <id>http://blog.jaceklaskowski.pl/</id>
   <author>
     <name><![CDATA[Jacek Laskowski]]></name>
@@ -159,6 +159,8 @@ ERROR:  column s13.ID does not exist at character 8
     def * = (id, login) &lt;&gt; ((User.apply _).tupled, User.unapply)
 }
 </code></pre>
+
+<p>See <a href="http://stackoverflow.com/q/15175659/1305344">Mapped projection with &lt;> to a case class with companion object in Slick</a> for alternative solution.</p>
 
 <h2>Mistake #6. JodaTime support</h2>
 

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Slick | Mastering FP and OO with Scala]]></title>
   <link href="http://blog.jaceklaskowski.pl/blog/categories/slick/atom.xml" rel="self"/>
   <link href="http://blog.jaceklaskowski.pl/"/>
-  <updated>2014-09-19T09:37:44+02:00</updated>
+  <updated>2014-09-19T13:53:42+02:00</updated>
   <id>http://blog.jaceklaskowski.pl/</id>
   <author>
     <name><![CDATA[Jacek Laskowski]]></name>
@@ -131,6 +131,8 @@ The mapping definition would then look as follows:
     
         def * = (id, login) <> ((User.apply _).tupled, User.unapply)
     }
+
+See [Mapped projection with <> to a case class with companion object in Slick](http://stackoverflow.com/q/15175659/1305344) for alternative solution.
 
 ## Mistake #6. JodaTime support
 

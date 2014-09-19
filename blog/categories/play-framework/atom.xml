@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Play Framework | Mastering FP and OO with Scala]]></title>
   <link href="http://blog.jaceklaskowski.pl/blog/categories/play-framework/atom.xml" rel="self"/>
   <link href="http://blog.jaceklaskowski.pl/"/>
-  <updated>2014-09-18T10:36:02+02:00</updated>
+  <updated>2014-09-19T09:37:44+02:00</updated>
   <id>http://blog.jaceklaskowski.pl/</id>
   <author>
     <name><![CDATA[Jacek Laskowski]]></name>
@@ -104,7 +104,7 @@ Using two datasources required following [Advanced drivers configuration](https:
 
 I had the following in my Component:
 
-    def id = column[Int](“ID&#8221;, O.PrimaryKey, O.AutoInc)
+    def id = column[Int](&#8220;ID&#8221;, O.PrimaryKey, O.AutoInc)
 
 That generated a query with `&#8221;ID&#8221;` in `select` clause that in turn resulted in the following error:
 
@@ -117,7 +117,41 @@ That generated a query with `&#8221;ID&#8221;` in `select` clause that in turn r
 
 He was right - changing `ID` to `id` has indeed fixed the issue.
 
-    def id = column[Int](“ID&#8221;, O.PrimaryKey, O.AutoInc)
+    def id = column[Int](&#8220;id&#8221;, O.PrimaryKey, O.AutoInc)
+
+## Mistake #5. [SI-3664] Explicit case class companion does not extend Function / override toString
+
+There&#8217;s a bug in the Scala compiler that stands in a way when `def * = &#8230;` is defined for a case class as follows:
+
+    class Users(tag: Tag) extends Table[User](tag, &#8220;users&#8221;) {
+        def id    = column[Int]   (&#8220;id&#8221;, O.PrimaryKey, O.AutoInc)
+        def login = column[String](&#8220;login&#8221;)
+
+        def * = (id, login) <> (User.tupled, User.unapply)
+    }
+
+For the `Users` class the compiler says:
+
+> value tupled is not a member of object model.User
+
+A solution is in another issue report [#11 Companion object cover method &#8220;tupled&#8221; in case class](https://github.com/VirtusLab/unicorn/issues/11) and boils down to using the following instead:
+
+    (User.apply _).tupled
+
+The mapping definition would then look as follows:
+
+    class Users(tag: Tag) extends Table[User](tag, &#8220;users&#8221;) {
+        def id    = column[Int]   (&#8220;id&#8221;, O.PrimaryKey, O.AutoInc)
+        def login = column[String](&#8220;login&#8221;)
+    
+        def * = (id, login) <> ((User.apply _).tupled, User.unapply)
+    }
+
+## Mistake #6. JodaTime support
+
+For cases where you need to use JodaTime types in Slick you should use [slick-joda-mapper](https://github.com/tototoshi/slick-joda-mapper#slick-joda-mapper).
+
+Else you have to stick to `java.sql.Date`, `java.sql.Time`, `java.sql.Timestamp` as described in [Table Rows](http://slick.typesafe.com/doc/2.1.0/schemas.html?highlight=date#table-rows) in the Slick documentation.
 
 ## Summary
 

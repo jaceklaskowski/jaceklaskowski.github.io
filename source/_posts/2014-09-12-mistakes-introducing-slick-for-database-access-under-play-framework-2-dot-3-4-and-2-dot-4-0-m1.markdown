@@ -79,7 +79,7 @@ Using two datasources required following [Advanced drivers configuration](https:
 
 I had the following in my Component:
 
-    def id = column[Int](“ID", O.PrimaryKey, O.AutoInc)
+    def id = column[Int]("ID", O.PrimaryKey, O.AutoInc)
 
 That generated a query with `"ID"` in `select` clause that in turn resulted in the following error:
 
@@ -92,7 +92,41 @@ That generated a query with `"ID"` in `select` clause that in turn resulted in t
 
 He was right - changing `ID` to `id` has indeed fixed the issue.
 
-    def id = column[Int](“ID", O.PrimaryKey, O.AutoInc)
+    def id = column[Int]("id", O.PrimaryKey, O.AutoInc)
+
+## Mistake #5. [SI-3664] Explicit case class companion does not extend Function / override toString
+
+There's a bug in the Scala compiler that stands in a way when `def * = ...` is defined for a case class as follows:
+
+    class Users(tag: Tag) extends Table[User](tag, "users") {
+        def id    = column[Int]   ("id", O.PrimaryKey, O.AutoInc)
+        def login = column[String]("login")
+
+        def * = (id, login) <> (User.tupled, User.unapply)
+    }
+
+For the `Users` class the compiler says:
+
+> value tupled is not a member of object model.User
+
+A solution is in another issue report [#11 Companion object cover method "tupled" in case class](https://github.com/VirtusLab/unicorn/issues/11) and boils down to using the following instead:
+
+    (User.apply _).tupled
+
+The mapping definition would then look as follows:
+
+    class Users(tag: Tag) extends Table[User](tag, "users") {
+        def id    = column[Int]   ("id", O.PrimaryKey, O.AutoInc)
+        def login = column[String]("login")
+    
+        def * = (id, login) <> ((User.apply _).tupled, User.unapply)
+    }
+
+## Mistake #6. JodaTime support
+
+For cases where you need to use JodaTime types in Slick you should use [slick-joda-mapper](https://github.com/tototoshi/slick-joda-mapper#slick-joda-mapper).
+
+Else you have to stick to `java.sql.Date`, `java.sql.Time`, `java.sql.Timestamp` as described in [Table Rows](http://slick.typesafe.com/doc/2.1.0/schemas.html?highlight=date#table-rows) in the Slick documentation.
 
 ## Summary
 

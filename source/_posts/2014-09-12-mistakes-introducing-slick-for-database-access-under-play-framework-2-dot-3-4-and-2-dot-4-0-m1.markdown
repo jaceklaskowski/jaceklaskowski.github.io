@@ -122,6 +122,8 @@ The mapping definition would then look as follows:
         def * = (id, login) <> ((User.apply _).tupled, User.unapply)
     }
 
+See [Mapped projection with <> to a case class with companion object in Slick](http://stackoverflow.com/q/15175659/1305344) for alternative solution.
+
 ## Mistake #6. JodaTime support
 
 For cases where you need to use JodaTime types in Slick you should use [slick-joda-mapper](https://github.com/tototoshi/slick-joda-mapper#slick-joda-mapper).

@@ -96,7 +96,7 @@ He was right - changing `ID` to `id` has indeed fixed the issue.
 
 ## Mistake #5. [SI-3664] Explicit case class companion does not extend Function / override toString
 
-There's a bug in the Scala compiler that stands in a way when `def * = ...` is defined for a case class as follows:
+There's an issue reported against the Scala compiler - [[SI-3664] Explicit case class companion does not extend Function / override toString](https://issues.scala-lang.org/browse/SI-3664) - that stands in a way for the `*` projection, i.e. `def * = ...`, in your table description:
 
     class Users(tag: Tag) extends Table[User](tag, "users") {
         def id    = column[Int]   ("id", O.PrimaryKey, O.AutoInc)
@@ -105,15 +105,16 @@ There's a bug in the Scala compiler that stands in a way when `def * = ...` is d
         def * = (id, login) <> (User.tupled, User.unapply)
     }
 
-For the `Users` class the compiler says:
+For the `Users` class above the Scala compiler fails reporting:
 
 > value tupled is not a member of object model.User
 
-A solution is in another issue report [#11 Companion object cover method "tupled" in case class](https://github.com/VirtusLab/unicorn/issues/11) and boils down to using the following instead:
+A solution is described in [Mapped Tables](http://slick.typesafe.com/doc/2.1.0/upgrade.html#mapped-tables) section of [UPGRADE GUIDES](http://slick.typesafe.com/doc/2.1.0/upgrade.html) document in the Slick manual:
 
-    (User.apply _).tupled
+> Note that `.tupled` is only available for proper Scala functions.  
+> When using a case class, the companion object extends the correct function type by default, but only if you do not define the object yourself. In that case you should provide the right supertype manually.
 
-The mapping definition would then look as follows:
+The mapping definition can look as follows:
 
     class Users(tag: Tag) extends Table[User](tag, "users") {
         def id    = column[Int]   ("id", O.PrimaryKey, O.AutoInc)
@@ -122,7 +123,7 @@ The mapping definition would then look as follows:
         def * = (id, login) <> ((User.apply _).tupled, User.unapply)
     }
 
-See [Mapped projection with <> to a case class with companion object in Slick](http://stackoverflow.com/q/15175659/1305344) for alternative solution.
+Note `(User.apply _).tupled`.
 
 ## Mistake #6. JodaTime support
 

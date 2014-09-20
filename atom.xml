@@ -4,7 +4,7 @@
   <title><![CDATA[Mastering FP and OO with Scala]]></title>
   <link href="http://blog.jaceklaskowski.pl/atom.xml" rel="self"/>
   <link href="http://blog.jaceklaskowski.pl/"/>
-  <updated>2014-09-19T13:53:42+02:00</updated>
+  <updated>2014-09-20T22:44:41+02:00</updated>
   <id>http://blog.jaceklaskowski.pl/</id>
   <author>
     <name><![CDATA[Jacek Laskowski]]></name>
@@ -12,22 +12,6 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
-  
-  <entry>
-    <title type="html"><![CDATA[Developing Web Applications With Play Framework and AngularJS - Day 2 - Angular Setup]]></title>
-    <link href="http://blog.jaceklaskowski.pl/2014/09/16/developing-web-applications-with-play-framework-and-angularjs-day-2-angular-setup.html"/>
-    <updated>2014-09-16T08:36:57+02:00</updated>
-    <id>http://blog.jaceklaskowski.pl/2014/09/16/developing-web-applications-with-play-framework-and-angularjs-day-2-angular-setup</id>
-    <content type="html"><![CDATA[<p>This is the part 2 in the series about developing applications with two web frameworks - <a href="https://www.playframework.com/">Play Framework</a> and <a href="https://angularjs.org/">AngularJS</a> - where you learn how to set up AngularJS.</p>
-
-<p>See <a href="http://blog.jaceklaskowski.pl/2014/09/08/getting-started-with-play-framework-and-angularjs-day-1.html">Getting started with Play Framework and AngularJS - Day 1</a> to read about the day 1&rsquo;s activities where the necessary software was installed and used to create a sample web application in Play.</p>
-
-<!-- more -->
-
-
-<h2>Step 1. Installing Typesafe Activator</h2>
-]]></content>
-  </entry>
   
   <entry>
     <title type="html"><![CDATA[Mistakes Introducing Slick for Database Access Under Play Framework 2.3.4 and 2.4.0-M1]]></title>
@@ -131,7 +115,7 @@ ERROR:  column s13.ID does not exist at character 8
 
 <h2>Mistake #5. [SI-3664] Explicit case class companion does not extend Function / override toString</h2>
 
-<p>There&rsquo;s a bug in the Scala compiler that stands in a way when <code>def * = ...</code> is defined for a case class as follows:</p>
+<p>There&rsquo;s an issue reported against the Scala compiler - <a href="https://issues.scala-lang.org/browse/SI-3664">[SI-3664] Explicit case class companion does not extend Function / override toString</a> - that stands in a way for the <code>*</code> projection, i.e. <code>def * = ...</code>, in your table description:</p>
 
 <pre><code>class Users(tag: Tag) extends Table[User](tag, "users") {
     def id    = column[Int]   ("id", O.PrimaryKey, O.AutoInc)
@@ -141,16 +125,16 @@ ERROR:  column s13.ID does not exist at character 8
 }
 </code></pre>
 
-<p>For the <code>Users</code> class the compiler says:</p>
+<p>For the <code>Users</code> class above the Scala compiler fails reporting:</p>
 
 <blockquote><p>value tupled is not a member of object model.User</p></blockquote>
 
-<p>A solution is in another issue report <a href="https://github.com/VirtusLab/unicorn/issues/11">#11 Companion object cover method &ldquo;tupled&rdquo; in case class</a> and boils down to using the following instead:</p>
+<p>A solution is described in <a href="http://slick.typesafe.com/doc/2.1.0/upgrade.html#mapped-tables">Mapped Tables</a> section of <a href="http://slick.typesafe.com/doc/2.1.0/upgrade.html">UPGRADE GUIDES</a> document in the Slick manual:</p>
 
-<pre><code>(User.apply _).tupled
-</code></pre>
+<blockquote><p>Note that <code>.tupled</code> is only available for proper Scala functions.<br/>
+When using a case class, the companion object extends the correct function type by default, but only if you do not define the object yourself. In that case you should provide the right supertype manually.</p></blockquote>
 
-<p>The mapping definition would then look as follows:</p>
+<p>The mapping definition can look as follows:</p>
 
 <pre><code>class Users(tag: Tag) extends Table[User](tag, "users") {
     def id    = column[Int]   ("id", O.PrimaryKey, O.AutoInc)
@@ -160,7 +144,7 @@ ERROR:  column s13.ID does not exist at character 8
 }
 </code></pre>
 
-<p>See <a href="http://stackoverflow.com/q/15175659/1305344">Mapped projection with &lt;> to a case class with companion object in Slick</a> for alternative solution.</p>
+<p>Note <code>(User.apply _).tupled</code>.</p>
 
 <h2>Mistake #6. JodaTime support</h2>
 

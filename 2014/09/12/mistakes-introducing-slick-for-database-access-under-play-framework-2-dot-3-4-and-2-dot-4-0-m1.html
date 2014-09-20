@@ -195,7 +195,7 @@ ERROR:  column s13.ID does not exist at character 8
 
 <h2>Mistake #5. [SI-3664] Explicit case class companion does not extend Function / override toString</h2>
 
-<p>There&rsquo;s a bug in the Scala compiler that stands in a way when <code>def * = ...</code> is defined for a case class as follows:</p>
+<p>There&rsquo;s an issue reported against the Scala compiler - <a href="https://issues.scala-lang.org/browse/SI-3664">[SI-3664] Explicit case class companion does not extend Function / override toString</a> - that stands in a way for the <code>*</code> projection, i.e. <code>def * = ...</code>, in your table description:</p>
 
 <pre><code>class Users(tag: Tag) extends Table[User](tag, "users") {
     def id    = column[Int]   ("id", O.PrimaryKey, O.AutoInc)
@@ -205,16 +205,16 @@ ERROR:  column s13.ID does not exist at character 8
 }
 </code></pre>
 
-<p>For the <code>Users</code> class the compiler says:</p>
+<p>For the <code>Users</code> class above the Scala compiler fails reporting:</p>
 
 <blockquote><p>value tupled is not a member of object model.User</p></blockquote>
 
-<p>A solution is in another issue report <a href="https://github.com/VirtusLab/unicorn/issues/11">#11 Companion object cover method &ldquo;tupled&rdquo; in case class</a> and boils down to using the following instead:</p>
+<p>A solution is described in <a href="http://slick.typesafe.com/doc/2.1.0/upgrade.html#mapped-tables">Mapped Tables</a> section of <a href="http://slick.typesafe.com/doc/2.1.0/upgrade.html">UPGRADE GUIDES</a> document in the Slick manual:</p>
 
-<pre><code>(User.apply _).tupled
-</code></pre>
+<blockquote><p>Note that <code>.tupled</code> is only available for proper Scala functions.<br/>
+When using a case class, the companion object extends the correct function type by default, but only if you do not define the object yourself. In that case you should provide the right supertype manually.</p></blockquote>
 
-<p>The mapping definition would then look as follows:</p>
+<p>The mapping definition can look as follows:</p>
 
 <pre><code>class Users(tag: Tag) extends Table[User](tag, "users") {
     def id    = column[Int]   ("id", O.PrimaryKey, O.AutoInc)
@@ -224,7 +224,7 @@ ERROR:  column s13.ID does not exist at character 8
 }
 </code></pre>
 
-<p>See <a href="http://stackoverflow.com/q/15175659/1305344">Mapped projection with &lt;> to a case class with companion object in Slick</a> for alternative solution.</p>
+<p>Note <code>(User.apply _).tupled</code>.</p>
 
 <h2>Mistake #6. JodaTime support</h2>
 
@@ -280,8 +280,6 @@ ERROR:  column s13.ID does not exist at character 8
         <a class="basic-alignment left" href="/2014/09/08/getting-started-with-play-framework-and-angularjs-day-1.html" title="Previous Post: Getting started with Play Framework and AngularJS - Day 1">&laquo; Getting started with Play Framework and AngularJS - Day 1</a>
       
       
-        <a class="basic-alignment right" href="/2014/09/16/developing-web-applications-with-play-framework-and-angularjs-day-2-angular-setup.html" title="Next Post: Developing web applications with Play Framework and AngularJS - Day 2 - Angular setup">Developing web applications with Play Framework and AngularJS - Day 2 - Angular setup &raquo;</a>
-      
     </p>
   </footer>
 </article>
@@ -301,10 +299,6 @@ ERROR:  column s13.ID does not exist at character 8
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/2014/09/16/developing-web-applications-with-play-framework-and-angularjs-day-2-angular-setup.html">Developing Web Applications With Play Framework and AngularJS - Day 2 - Angular Setup</a>
-      </li>
-    
-      <li class="post">
         <a href="/2014/09/12/mistakes-introducing-slick-for-database-access-under-play-framework-2-dot-3-4-and-2-dot-4-0-m1.html">Mistakes Introducing Slick for Database Access Under Play Framework 2.3.4 and 2.4.0-M1</a>
       </li>
     
@@ -318,6 +312,10 @@ ERROR:  column s13.ID does not exist at character 8
     
       <li class="post">
         <a href="/2014/07/22/trait-init-scope-in-sbt.html">Trait Init[Scope] in Sbt</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2014/07/08/contributing-to-open-source-projects-on-github-cheat-sheet.html">Contributing to Open Source Projects on GitHub - Cheat Sheet</a>
       </li>
     
   </ul>

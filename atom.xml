@@ -4,7 +4,7 @@
   <title><![CDATA[Mastering FP and OO with Scala]]></title>
   <link href="http://blog.jaceklaskowski.pl/atom.xml" rel="self"/>
   <link href="http://blog.jaceklaskowski.pl/"/>
-  <updated>2014-09-20T22:44:41+02:00</updated>
+  <updated>2014-09-28T00:58:09+02:00</updated>
   <id>http://blog.jaceklaskowski.pl/</id>
   <author>
     <name><![CDATA[Jacek Laskowski]]></name>
@@ -12,6 +12,118 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Loose Notes About Cassandra]]></title>
+    <link href="http://blog.jaceklaskowski.pl/2014/09/25/loose-notes-about-cassandra.html"/>
+    <updated>2014-09-25T09:05:39+02:00</updated>
+    <id>http://blog.jaceklaskowski.pl/2014/09/25/loose-notes-about-cassandra</id>
+    <content type="html"><![CDATA[<p>I&rsquo;ve got curious about <a href="http://cassandra.apache.org/">Cassandra</a> and more and more I&rsquo;ve been asking myself about the use cases it could be the most valuable solution for. With all the answers out there, I simply needed a place where I could <em>dump</em> the findings to ultimately build something useful as a single page (and perhaps ditch it to create something of a higher value).</p>
+
+<p>So here they are, <em>loose notes</em> about Cassandra to understand the value propositions of the database and where it could fit well. Should I ever be faced the question of using Cassandra or not, I may some day find an answer here (or know where to look for it).</p>
+
+<!-- more -->
+
+
+<p>My story with <a href="http://cassandra.apache.org/">Cassandra</a> began with the <a href="https://github.com/datastax/spark-cassandra-connector">Spark Cassandra Connector</a> project that enables <a href="https://spark.apache.org/">Apache Spark</a> to use Cassandra to have <a href="https://github.com/datastax/spark-cassandra-connector#spark-cassandra-connector-">lightning-fast cluster computing with Spark and Cassandra</a>.</p>
+
+<p>The latest version of Cassandra is <strong>2.1.0</strong>.</p>
+
+<h2>Step 1. Installation</h2>
+
+<p>I installed Cassandra using <code>brew</code> on Mac OS X. It was a mere <code>brew install cassandra</code> and took a few secs.</p>
+
+<pre><code>➜  ~  brew info cassandra
+cassandra: stable 2.1.0
+http://cassandra.apache.org
+/usr/local/Cellar/cassandra/2.1.0 (3899 files, 92M) *
+  Built from source
+From: https://github.com/Homebrew/homebrew/blob/master/Library/Formula/cassandra.rb
+==&gt; Caveats
+If you plan to use the CQL shell (cqlsh), you will need the Python CQL library
+installed. Since Homebrew prefers using pip for Python packages, you can
+install that using:
+
+  pip install cql
+
+To have launchd start cassandra at login:
+    ln -sfv /usr/local/opt/cassandra/*.plist ~/Library/LaunchAgents
+Then to load cassandra now:
+    launchctl load ~/Library/LaunchAgents/homebrew.mxcl.cassandra.plist
+</code></pre>
+
+<p>Execute <code>sudo pip install cql</code> to install the Python packages.</p>
+
+<pre><code>➜  ~  sudo pip install cql
+Downloading/unpacking cql
+  Downloading cql-1.4.0.tar.gz (76kB): 76kB downloaded
+  Running setup.py (path:/private/tmp/pip_build_root/cql/setup.py) egg_info for package cql
+
+Requirement already satisfied (use --upgrade to upgrade): thrift in /Library/Python/2.7/site-packages (from cql)
+Installing collected packages: cql
+  Running setup.py install for cql
+
+Successfully installed cql
+Cleaning up...
+</code></pre>
+
+<p>That should be all needed to get you going.</p>
+
+<h2>Step 2. Running the server</h2>
+
+<p>Start an instance using <code>cassandra -f</code>.</p>
+
+<pre><code>➜  ~  cassandra -f
+objc[43878]: Class JavaLaunchHelper is implemented in both /Library/Java/JavaVirtualMachines/Current/Contents/Home/bin/java and /Library/Java/JavaVirtualMachines/jdk1.7.0_67.jdk/Contents/Home/jre/lib/libinstrument.dylib. One of the two will be used. Which one is undefined.
+INFO  22:49:39 Hostname: japila.local
+INFO  22:49:39 Loading settings from file:/usr/local/etc/cassandra/cassandra.yaml
+...
+INFO  22:47:52 Using Netty Version: [netty-buffer=netty-buffer-4.0.20.Final.1709113, netty-codec=netty-codec-4.0.20.Final.1709113, netty-codec-http=netty-codec-http-4.0.20.Final.1709113, netty-codec-socks=netty-codec-socks-4.0.20.Final.1709113, netty-common=netty-common-4.0.20.Final.1709113, netty-handler=netty-handler-4.0.20.Final.1709113, netty-transport=netty-transport-4.0.20.Final.1709113, netty-transport-rxtx=netty-transport-rxtx-4.0.20.Final.1709113, netty-transport-sctp=netty-transport-sctp-4.0.20.Final.1709113, netty-transport-udt=netty-transport-udt-4.0.20.Final.1709113]
+INFO  22:47:52 Starting listening for CQL clients on localhost/127.0.0.1:9042...
+INFO  22:47:52 Binding thrift service to localhost/127.0.0.1:9160
+INFO  22:47:52 Listening for thrift clients...
+</code></pre>
+
+<h2>Step 3. Using cqlsh</h2>
+
+<p>In another terminal, start the Cassandra shell using <code>cqlsh</code>:</p>
+
+<pre><code>➜  ~  cqlsh
+Connected to Test Cluster at 127.0.0.1:9042.
+[cqlsh 5.0.1 | Cassandra 2.1.0 | CQL spec 3.2.0 | Native protocol v3]
+Use HELP for help.
+cqlsh&gt;
+</code></pre>
+
+<p>You may face the issue <a href="http://stackoverflow.com/q/25980774/1305344">Why does cqlsh fail with LookupError: unknown encoding?</a> that can be easily solved with setting up <code>LC_ALL</code> appropriately. Mine&rsquo;s <code>pl_pl.utf-8</code>:</p>
+
+<pre><code>export LC_ALL=pl_pl.utf-8
+</code></pre>
+
+<p>Copying <a href="http://wiki.apache.org/cassandra/GettingStarted">Step 4: Using cqlsh</a> from the official Getting Started documentation:</p>
+
+<pre><code>CREATE KEYSPACE mykeyspace
+WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 };
+
+USE mykeyspace;
+
+CREATE TABLE users (
+  user_id int PRIMARY KEY,
+  fname text,
+  lname text
+);
+
+INSERT INTO users (user_id,  fname, lname)
+  VALUES (1745, 'john', 'smith');
+INSERT INTO users (user_id,  fname, lname)
+  VALUES (1744, 'john', 'doe');
+INSERT INTO users (user_id,  fname, lname)
+  VALUES (1746, 'john', 'smith');
+
+SELECT * FROM users;
+</code></pre>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Mistakes Introducing Slick for Database Access Under Play Framework 2.3.4 and 2.4.0-M1]]></title>

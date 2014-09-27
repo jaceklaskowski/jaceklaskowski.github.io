@@ -3,6 +3,12 @@
   
   
   <url>
+    <loc>http://blog.jaceklaskowski.pl/2014/09/25/loose-notes-about-cassandra.html</loc>
+    <lastmod>2014-09-25T09:05:39+02:00</lastmod>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
     <loc>http://blog.jaceklaskowski.pl/2014/09/12/mistakes-introducing-slick-for-database-access-under-play-framework-2-dot-3-4-and-2-dot-4-0-m1.html</loc>
     <lastmod>2014-09-12T21:47:50+02:00</lastmod>
     <priority>0.8</priority>
@@ -59,14 +65,14 @@
   
   <url>
     <loc>http://blog.jaceklaskowski.pl/blog/archives/</loc>
-    <lastmod>2014-09-20T22:44:41+02:00</lastmod>
+    <lastmod>2014-09-28T00:58:09+02:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
     <loc>http://blog.jaceklaskowski.pl/</loc>
-    <lastmod>2014-09-20T22:44:41+02:00</lastmod>
+    <lastmod>2014-09-28T00:58:09+02:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Scala | Mastering FP and OO with Scala]]></title>
   <link href="http://blog.jaceklaskowski.pl/blog/categories/scala/atom.xml" rel="self"/>
   <link href="http://blog.jaceklaskowski.pl/"/>
-  <updated>2014-11-29T23:43:51+01:00</updated>
+  <updated>2014-11-29T23:47:09+01:00</updated>
   <id>http://blog.jaceklaskowski.pl/</id>
   <author>
     <name><![CDATA[Jacek Laskowski]]></name>
@@ -18,7 +18,7 @@
     <link href="http://blog.jaceklaskowski.pl/2014/11/29/sbt-dependency-graph-for-easier-dependency-management-in-sbt.html"/>
     <updated>2014-11-29T23:10:06+01:00</updated>
     <id>http://blog.jaceklaskowski.pl/2014/11/29/sbt-dependency-graph-for-easier-dependency-management-in-sbt</id>
-    <content type="html"><![CDATA[That's gonna be short and hopefully simple. If you're with [sbt](http://www.scala-sbt.org/) you're going to like it very much.
+    <content type="html"><![CDATA[That's gonna be short and hopefully simple. If you're with [sbt](http://www.scala-sbt.org/) you're going to like [sbt-dependency-graph](https://github.com/jrudolph/sbt-dependency-graph) *plugin to create a dependency graph for your project* very much.
 
 Edit `~/.sbt/0.13/plugins/sbt-dependency-graph.sbt` so it looks as follows:
 

@@ -8,7 +8,7 @@ sidebar: collapse
 keywords: scala
 published: true
 ---
-That's gonna be short and hopefully simple. If you're with [sbt](http://www.scala-sbt.org/) you're going to like it very much.
+That's gonna be short and hopefully simple. If you're with [sbt](http://www.scala-sbt.org/) you're going to like [sbt-dependency-graph](https://github.com/jrudolph/sbt-dependency-graph) *plugin to create a dependency graph for your project* very much.
 
 Edit `~/.sbt/0.13/plugins/sbt-dependency-graph.sbt` so it looks as follows:
 

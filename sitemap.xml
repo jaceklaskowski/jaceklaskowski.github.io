@@ -3,6 +3,12 @@
   
   
   <url>
+    <loc>http://blog.jaceklaskowski.pl/2014/11/29/sbt-dependency-graph-for-easier-dependency-management-in-sbt.html</loc>
+    <lastmod>2014-11-29T23:10:06+01:00</lastmod>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
     <loc>http://blog.jaceklaskowski.pl/2014/09/25/loose-notes-about-cassandra.html</loc>
     <lastmod>2014-09-25T09:05:39+02:00</lastmod>
     <priority>0.8</priority>
@@ -65,14 +71,14 @@
   
   <url>
     <loc>http://blog.jaceklaskowski.pl/blog/archives/</loc>
-    <lastmod>2014-09-28T00:58:09+02:00</lastmod>
+    <lastmod>2014-11-29T23:43:51+01:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
     <loc>http://blog.jaceklaskowski.pl/</loc>
-    <lastmod>2014-09-28T00:58:09+02:00</lastmod>
+    <lastmod>2014-11-29T23:43:51+01:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>

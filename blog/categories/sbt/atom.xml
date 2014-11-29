@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Sbt | Mastering FP and OO with Scala]]></title>
   <link href="http://blog.jaceklaskowski.pl/blog/categories/sbt/atom.xml" rel="self"/>
   <link href="http://blog.jaceklaskowski.pl/"/>
-  <updated>2014-09-28T00:58:09+02:00</updated>
+  <updated>2014-11-29T23:43:51+01:00</updated>
   <id>http://blog.jaceklaskowski.pl/</id>
   <author>
     <name><![CDATA[Jacek Laskowski]]></name>
@@ -12,6 +12,74 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Sbt-dependency-graph for Easier Dependency Management in Sbt]]></title>
+    <link href="http://blog.jaceklaskowski.pl/2014/11/29/sbt-dependency-graph-for-easier-dependency-management-in-sbt.html"/>
+    <updated>2014-11-29T23:10:06+01:00</updated>
+    <id>http://blog.jaceklaskowski.pl/2014/11/29/sbt-dependency-graph-for-easier-dependency-management-in-sbt</id>
+    <content type="html"><![CDATA[That's gonna be short and hopefully simple. If you're with [sbt](http://www.scala-sbt.org/) you're going to like it very much.
+
+Edit `~/.sbt/0.13/plugins/sbt-dependency-graph.sbt` so it looks as follows:
+
+	addSbtPlugin("net.virtual-void" % "sbt-dependency-graph" % "0.7.4")
+
+Edit `~/.sbt/0.13/global.sbt` so it looks:
+
+	net.virtualvoid.sbt.graph.Plugin.graphSettings
+
+With these two files, open `sbt` or `activator` and execute `dependencyGraph` (I used [hello-slick-specs2](https://github.com/jaceklaskowski/hello-slick-specs2) project):
+
+	> dependencyGraph
+	[info] Updating {file:/Users/jacek/dev/oss/hello-slick-specs2/}hello-slick-specs2&#8230;
+	[info] Resolving jline#jline;2.12 &#8230;
+	[info] Done updating.
+	[info]                             +&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;+
+	[info]                             |hello-slick-specs2_2.11 [S]|
+	[info]                             |          default          |
+	[info]                             |            1.0            |
+	[info]                             +&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;+
+	[info]                                    |     |   |    |
+	[info]                &#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;     |   |    &#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;-
+	[info]                |                         |   &#8212;&#8212;&#8212;&#8212;&#8212;&#8211;               |
+	[info]                v                         v                   |               |
+	[info]           +&#8212;&#8212;&#8212;+          +&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;+          |               |
+	[info]           |slf4j-nop|          |  slick_2.11 [S]  |          |               |
+	[info]           |org.slf4j|          |com.typesafe.slick|          |               |
+	[info]           |  1.7.7  |          |      2.1.0       |          |               |
+	[info]           +&#8212;&#8212;&#8212;+          +&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;+          |               |
+	[info]                |                   |   ||      |             |               |
+	[info]      &#8212;&#8212;&#8212;&#8211;                   |   ||      &#8212;&#8212;&#8212;     |               |
+	[info]      |  &#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;-   ||              |     |               |
+	[info]      |  |             &#8212;&#8212;&#8212;&#8212;&#8212;&#8212;|              |     |               |
+	[info]      |  |             |                 |              |     |               |
+	[info]      v  v             v                 v              v     v               v
+	[info]  +&#8212;&#8212;&#8212;+ +&#8212;&#8212;&#8212;&#8212;&#8212;&#8211;+ +&#8212;&#8212;&#8212;&#8212;+ +&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;+ +&#8212;&#8212;&#8212;&#8212;&#8211;+
+	[info]  |slf4j-api| |    slf4j-api    | |   config   | |  scala-library   | |      h2      |
+	[info]  |org.slf4j| |    org.slf4j    | |com.typesafe| |  org.scala-lang  | |com.h2database|
+	[info]  |  1.7.7  | |      1.6.4      | |   1.2.1    | |      2.11.1      | |   1.4.182    |
+	[info]  +&#8212;&#8212;&#8212;+ |evicted by: 1.7.7| +&#8212;&#8212;&#8212;&#8212;+ |evicted by: 2.11.4| +&#8212;&#8212;&#8212;&#8212;&#8211;+
+	[info]              +&#8212;&#8212;&#8212;&#8212;&#8212;&#8211;+                +&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;+
+	[info] Note: The old tree layout is still available by using `dependency-tree`
+	[success] Total time: 0 s, completed Nov 29, 2014 11:19:30 PM
+
+Neat, isn&#8217;t it?
+
+You may also want to execute `dependencyGraphMl`:
+
+	> dependencyGraphMl
+	[info] Wrote dependency graph to &#8216;/Users/jacek/dev/oss/hello-slick-specs2/target/dependencies-compile.graphml&#8217;
+	[success] Total time: 0 s, completed Nov 29, 2014 11:21:46 PM
+
+Install [yEd](http://www.yworks.com/en/products/yfiles/yed/) and open the graph:
+
+	> eval &#8220;open target/dependencies-compile.graphml&#8221; !
+	[info] ans: Int = 0
+
+<img src="/images/hello-slick-specs2-yed-graph.png" title="yEd graph of compile dependencies" >
+
+I really wish I&#8217;d known it earlier. It&#8217;d surely have saved me a lot of time.]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Trait Init[Scope] in Sbt]]></title>
@@ -36,13 +104,16 @@ Create an instance of trait `Init[Scope]`.
 
 ## Solution
 
-&#8220;`
-val init = new Init[Int] {
-  def showFullKey: Show[ScopedKey[_]] = Show { (sk: ScopedKey[_]) => 
-    s&#8221;${sk.scope}:${sk.key}&#8230;${sk.scopedKey}&#8221;
-  }
-}
-&#8220;`
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>val init = new Init[Int] {
+</span><span class='line'>  def showFullKey: Show[ScopedKey[_]] = Show { (sk: ScopedKey[_]) =&gt; 
+</span><span class='line'>    s"${sk.scope}:${sk.key}...${sk.scopedKey}"
+</span><span class='line'>  }
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
 Run `sbt` and then execute the command `consoleProject` to open sbt&#8217;s Scala REPL with all the necessary types of sbt loaded.
 
 ## Mental issues encountered
@@ -58,24 +129,38 @@ Run `sbt` and then execute the command `consoleProject` to open sbt&#8217;s Scal
 ## consoleProject in sbt
 
 If you happened to want to see the code in action, execute `sbt consoleProject` and give the following a try:
-&#8220;`
-// (attribute) key that points at Int value
-scala> val number = AttributeKey[Int](&#8220;number&#8221;, &#8220;number stringified&#8221;)
-number: sbt.AttributeKey[Int] = number
- 
-scala> val init = new Init[Int] {
-     |   def showFullKey: Show[ScopedKey[_]] = Show { (sk: ScopedKey[_]) =>
-     |     s&#8221;${sk.scope}:${sk.key}&#8230;${sk.scopedKey}&#8221;
-     |   }
-     | }
-init: sbt.Init[Int] = $anon$1@1f95802
- 
-scala> val sfk: Show[init.ScopedKey[_]] = init.showFullKey
-sfk: sbt.Show[init.ScopedKey[_]] = sbt.Show$$anon$1@7f54be72
-
-scala> val s = sfk(init.ScopedKey[Int](scope=5, key=number))
-s: String = 5:number&#8230;ScopedKey(5,number)
-&#8220;`]]></content>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>// (attribute) key that points at Int value
+</span><span class='line'>scala&gt; val number = AttributeKey[Int]("number", "number stringified")
+</span><span class='line'>number: sbt.AttributeKey[Int] = number
+</span><span class='line'> 
+</span><span class='line'>scala&gt; val init = new Init[Int] {
+</span><span class='line'>     |   def showFullKey: Show[ScopedKey[_]] = Show { (sk: ScopedKey[_]) =&gt;
+</span><span class='line'>     |     s"${sk.scope}:${sk.key}...${sk.scopedKey}"
+</span><span class='line'>     |   }
+</span><span class='line'>     | }
+</span><span class='line'>init: sbt.Init[Int] = $anon$1@1f95802
+</span><span class='line'> 
+</span><span class='line'>scala&gt; val sfk: Show[init.ScopedKey[_]] = init.showFullKey
+</span><span class='line'>sfk: sbt.Show[init.ScopedKey[_]] = sbt.Show$$anon$1@7f54be72
+</span><span class='line'>
+</span><span class='line'>scala&gt; val s = sfk(init.ScopedKey[Int](scope=5, key=number))
+</span><span class='line'>s: String = 5:number...ScopedKey(5,number)</span></code></pre></td></tr></table></div></figure>]]></content>
   </entry>
   
   <entry>
@@ -83,15 +168,15 @@ s: String = 5:number&#8230;ScopedKey(5,number)
     <link href="http://blog.jaceklaskowski.pl/2013/12/07/beginner-guide-to-sbt-0-dot-13-and-intellij-idea-13.html"/>
     <updated>2013-12-07T16:39:37+01:00</updated>
     <id>http://blog.jaceklaskowski.pl/2013/12/07/beginner-guide-to-sbt-0-dot-13-and-intellij-idea-13</id>
-    <content type="html"><![CDATA[<img class="left" src="/images/intellij-idea-13-new-logo.png" title="The logo of IntelliJ IDEA 13" > It has not been very long ago when the only way to work with [sbt](http://www.scala-sbt.org/) projects in [IntelliJ IDEA](http://www.jetbrains.com/idea/) was to use the [sbt-idea](https://github.com/mpeltonen/sbt-idea) plugin that aimed at *"creating IntelliJ IDEA project files"*.
+    <content type="html"><![CDATA[<img class="left" src="/images/intellij-idea-13-new-logo.png" title="The logo of IntelliJ IDEA 13" > It has not been very long ago when the only way to work with [sbt](http://www.scala-sbt.org/) projects in [IntelliJ IDEA](http://www.jetbrains.com/idea/) was to use the [sbt-idea](https://github.com/mpeltonen/sbt-idea) plugin that aimed at *&#8221;creating IntelliJ IDEA project files&#8221;*.
 
-[With the recent release of IntelliJ IDEA 13](http://www.jetbrains.com/idea/whatsnew/) (build: 133.193,  released: December 3, 2013) it's no longer true - the version comes with built-in sbt support and the support is available in [the free Community Edition](http://www.jetbrains.com/idea/download/index.html), too.
+[With the recent release of IntelliJ IDEA 13](http://www.jetbrains.com/idea/whatsnew/) (build: 133.193,  released: December 3, 2013) it&#8217;s no longer true - the version comes with built-in sbt support and the support is available in [the free Community Edition](http://www.jetbrains.com/idea/download/index.html), too.
 
-My recent, rather quite frequent visits on [StackOverflow](http://stackoverflow.com/) have showed that there's one question very often asked - **How to start using sbt with IntelliJ IDEA?** It turns out that the latest version of IntelliJ IDEA 13 squashed it pretty neatly and the built-in sbt support made the question irrelevant.
+My recent, rather quite frequent visits on [StackOverflow](http://stackoverflow.com/) have showed that there&#8217;s one question very often asked - **How to start using sbt with IntelliJ IDEA?** It turns out that the latest version of IntelliJ IDEA 13 squashed it pretty neatly and the built-in sbt support made the question irrelevant.
 
-Unless it changes, the page remains empty[^1]. What a surprise, isn't it? I've always been thinking about writing the best beginner guide and here it is...at long last!
+Unless it changes, the page remains empty[^1]. What a surprise, isn&#8217;t it? I&#8217;ve always been thinking about writing the best beginner guide and here it is&#8230;at long last!
 
-On to querying [StackOverflow's #sbt tag](http://stackoverflow.com/questions/tagged/sbt) for questions about *a* sbt support in IntelliJ IDEA 13.
+On to querying [StackOverflow&#8217;s #sbt tag](http://stackoverflow.com/questions/tagged/sbt) for questions about *a* sbt support in IntelliJ IDEA 13.
 
 [^1]: as a kind of placeholder for future tips and tricks]]></content>
   </entry>

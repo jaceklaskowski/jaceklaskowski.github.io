@@ -117,7 +117,7 @@
 
 <h2>Solution</h2>
 
-<div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -126,7 +126,7 @@
 </span><span class='line'>  def showFullKey: Show[ScopedKey[_]] = Show { (sk: ScopedKey[_]) =&gt; 
 </span><span class='line'>    s"${sk.scope}:${sk.key}...${sk.scopedKey}"
 </span><span class='line'>  }
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure></notextile></div>
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
 
 
 <p>Run <code>sbt</code> and then execute the command <code>consoleProject</code> to open sbt&rsquo;s Scala REPL with all the necessary types of sbt loaded.</p>
@@ -147,7 +147,7 @@
 
 <p>If you happened to want to see the code in action, execute <code>sbt consoleProject</code> and give the following a try:</p>
 
-<div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -178,7 +178,7 @@
 </span><span class='line'>sfk: sbt.Show[init.ScopedKey[_]] = sbt.Show$$anon$1@7f54be72
 </span><span class='line'>
 </span><span class='line'>scala&gt; val s = sfk(init.ScopedKey[Int](scope=5, key=number))
-</span><span class='line'>s: String = 5:number...ScopedKey(5,number)</span></code></pre></td></tr></table></div></figure></notextile></div>
+</span><span class='line'>s: String = 5:number...ScopedKey(5,number)</span></code></pre></td></tr></table></div></figure>
 
 </div>
 
@@ -246,6 +246,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2014/11/29/sbt-dependency-graph-for-easier-dependency-management-in-sbt.html">Sbt-dependency-graph for Easier Dependency Management in Sbt</a>
+      </li>
+    
+      <li class="post">
         <a href="/2014/09/25/loose-notes-about-cassandra.html">Loose Notes About Cassandra</a>
       </li>
     
@@ -261,17 +265,13 @@
         <a href="/2014/09/02/json-in-play-framework-with-jsvalue-and-reads.html">JSON in Play Framework With JsValue and Reads</a>
       </li>
     
-      <li class="post">
-        <a href="/2014/07/22/trait-init-scope-in-sbt.html">Trait Init[Scope] in Sbt</a>
-      </li>
-    
   </ul>
 </section>
 
 <section>
   <h1>GitHub Repos</h1>
   <ul id="gh_repos">
-    <li class="loading">Status updating...</li>
+    <li class="loading">Status updating&#8230;</li>
   </ul>
   
   <a href="https://github.com/jaceklaskowski">@jaceklaskowski</a> on GitHub
@@ -301,7 +301,7 @@
 <section>
   <h1>Latest Tweets</h1>
   <ul id="tweets">
-    <li class="loading">Status updating...</li>
+    <li class="loading">Status updating&#8230;</li>
   </ul>
   <script type="text/javascript">
     $.domReady(function(){

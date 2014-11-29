@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Intellij-idea | Mastering FP and OO with Scala]]></title>
   <link href="http://blog.jaceklaskowski.pl/blog/categories/intellij-idea/atom.xml" rel="self"/>
   <link href="http://blog.jaceklaskowski.pl/"/>
-  <updated>2014-09-28T00:58:09+02:00</updated>
+  <updated>2014-11-29T23:43:51+01:00</updated>
   <id>http://blog.jaceklaskowski.pl/</id>
   <author>
     <name><![CDATA[Jacek Laskowski]]></name>
@@ -18,15 +18,15 @@
     <link href="http://blog.jaceklaskowski.pl/2013/12/07/beginner-guide-to-sbt-0-dot-13-and-intellij-idea-13.html"/>
     <updated>2013-12-07T16:39:37+01:00</updated>
     <id>http://blog.jaceklaskowski.pl/2013/12/07/beginner-guide-to-sbt-0-dot-13-and-intellij-idea-13</id>
-    <content type="html"><![CDATA[<img class="left" src="/images/intellij-idea-13-new-logo.png" title="The logo of IntelliJ IDEA 13" > It has not been very long ago when the only way to work with [sbt](http://www.scala-sbt.org/) projects in [IntelliJ IDEA](http://www.jetbrains.com/idea/) was to use the [sbt-idea](https://github.com/mpeltonen/sbt-idea) plugin that aimed at *"creating IntelliJ IDEA project files"*.
+    <content type="html"><![CDATA[<img class="left" src="/images/intellij-idea-13-new-logo.png" title="The logo of IntelliJ IDEA 13" > It has not been very long ago when the only way to work with [sbt](http://www.scala-sbt.org/) projects in [IntelliJ IDEA](http://www.jetbrains.com/idea/) was to use the [sbt-idea](https://github.com/mpeltonen/sbt-idea) plugin that aimed at *&#8221;creating IntelliJ IDEA project files&#8221;*.
 
-[With the recent release of IntelliJ IDEA 13](http://www.jetbrains.com/idea/whatsnew/) (build: 133.193,  released: December 3, 2013) it's no longer true - the version comes with built-in sbt support and the support is available in [the free Community Edition](http://www.jetbrains.com/idea/download/index.html), too.
+[With the recent release of IntelliJ IDEA 13](http://www.jetbrains.com/idea/whatsnew/) (build: 133.193,  released: December 3, 2013) it&#8217;s no longer true - the version comes with built-in sbt support and the support is available in [the free Community Edition](http://www.jetbrains.com/idea/download/index.html), too.
 
-My recent, rather quite frequent visits on [StackOverflow](http://stackoverflow.com/) have showed that there's one question very often asked - **How to start using sbt with IntelliJ IDEA?** It turns out that the latest version of IntelliJ IDEA 13 squashed it pretty neatly and the built-in sbt support made the question irrelevant.
+My recent, rather quite frequent visits on [StackOverflow](http://stackoverflow.com/) have showed that there&#8217;s one question very often asked - **How to start using sbt with IntelliJ IDEA?** It turns out that the latest version of IntelliJ IDEA 13 squashed it pretty neatly and the built-in sbt support made the question irrelevant.
 
-Unless it changes, the page remains empty[^1]. What a surprise, isn't it? I've always been thinking about writing the best beginner guide and here it is...at long last!
+Unless it changes, the page remains empty[^1]. What a surprise, isn&#8217;t it? I&#8217;ve always been thinking about writing the best beginner guide and here it is&#8230;at long last!
 
-On to querying [StackOverflow's #sbt tag](http://stackoverflow.com/questions/tagged/sbt) for questions about *a* sbt support in IntelliJ IDEA 13.
+On to querying [StackOverflow&#8217;s #sbt tag](http://stackoverflow.com/questions/tagged/sbt) for questions about *a* sbt support in IntelliJ IDEA 13.
 
 [^1]: as a kind of placeholder for future tips and tricks]]></content>
   </entry>

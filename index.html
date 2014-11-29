@@ -9,7 +9,7 @@
   <meta name="author" content="Jacek Laskowski">
 
   
-  <meta name="description" content="I&rsquo;ve got curious about Cassandra and more and more I&rsquo;ve been asking myself about the use cases it could be the most valuable solution for &hellip;">
+  <meta name="description" content="That&rsquo;s gonna be short and hopefully simple. If you&rsquo;re with sbt you&rsquo;re going to like it very much. Edit ~/.sbt/0.13/plugins/sbt- &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +79,100 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2014/11/29/sbt-dependency-graph-for-easier-dependency-management-in-sbt.html">Sbt-dependency-graph for Easier Dependency Management in Sbt</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-11-29T23:10:06+01:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>29</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>11:10 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>That&rsquo;s gonna be short and hopefully simple. If you&rsquo;re with <a href="http://www.scala-sbt.org/">sbt</a> you&rsquo;re going to like it very much.</p>
+
+<p>Edit <code>~/.sbt/0.13/plugins/sbt-dependency-graph.sbt</code> so it looks as follows:</p>
+
+<pre><code>addSbtPlugin("net.virtual-void" % "sbt-dependency-graph" % "0.7.4")
+</code></pre>
+
+<p>Edit <code>~/.sbt/0.13/global.sbt</code> so it looks:</p>
+
+<pre><code>net.virtualvoid.sbt.graph.Plugin.graphSettings
+</code></pre>
+
+<p>With these two files, open <code>sbt</code> or <code>activator</code> and execute <code>dependencyGraph</code> (I used <a href="https://github.com/jaceklaskowski/hello-slick-specs2">hello-slick-specs2</a> project):</p>
+
+<pre><code>&gt; dependencyGraph
+[info] Updating {file:/Users/jacek/dev/oss/hello-slick-specs2/}hello-slick-specs2...
+[info] Resolving jline#jline;2.12 ...
+[info] Done updating.
+[info]                             +---------------------------+
+[info]                             |hello-slick-specs2_2.11 [S]|
+[info]                             |          default          |
+[info]                             |            1.0            |
+[info]                             +---------------------------+
+[info]                                    |     |   |    |
+[info]                ---------------------     |   |    ----------------------------
+[info]                |                         |   -----------------               |
+[info]                v                         v                   |               |
+[info]           +---------+          +------------------+          |               |
+[info]           |slf4j-nop|          |  slick_2.11 [S]  |          |               |
+[info]           |org.slf4j|          |com.typesafe.slick|          |               |
+[info]           |  1.7.7  |          |      2.1.0       |          |               |
+[info]           +---------+          +------------------+          |               |
+[info]                |                   |   ||      |             |               |
+[info]      -----------                   |   ||      ---------     |               |
+[info]      |  ----------------------------   ||              |     |               |
+[info]      |  |             ------------------|              |     |               |
+[info]      |  |             |                 |              |     |               |
+[info]      v  v             v                 v              v     v               v
+[info]  +---------+ +-----------------+ +------------+ +------------------+ +--------------+
+[info]  |slf4j-api| |    slf4j-api    | |   config   | |  scala-library   | |      h2      |
+[info]  |org.slf4j| |    org.slf4j    | |com.typesafe| |  org.scala-lang  | |com.h2database|
+[info]  |  1.7.7  | |      1.6.4      | |   1.2.1    | |      2.11.1      | |   1.4.182    |
+[info]  +---------+ |evicted by: 1.7.7| +------------+ |evicted by: 2.11.4| +--------------+
+[info]              +-----------------+                +------------------+
+[info] Note: The old tree layout is still available by using `dependency-tree`
+[success] Total time: 0 s, completed Nov 29, 2014 11:19:30 PM
+</code></pre>
+
+<p>Neat, isn&rsquo;t it?</p>
+
+<p>You may also want to execute <code>dependencyGraphMl</code>:</p>
+
+<pre><code>&gt; dependencyGraphMl
+[info] Wrote dependency graph to '/Users/jacek/dev/oss/hello-slick-specs2/target/dependencies-compile.graphml'
+[success] Total time: 0 s, completed Nov 29, 2014 11:21:46 PM
+</code></pre>
+
+<p>Install <a href="http://www.yworks.com/en/products/yfiles/yed/">yEd</a> and open the graph:</p>
+
+<pre><code>&gt; eval "open target/dependencies-compile.graphml" !
+[info] ans: Int = 0
+</code></pre>
+
+<p><img src="/images/hello-slick-specs2-yed-graph.png" title="yEd graph of compile dependencies" ></p>
+
+<p>I really wish I&rsquo;d known it earlier. It&rsquo;d surely have saved me a lot of time.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -347,7 +441,7 @@
       
   <header>
     
-      <h1 class="entry-title"><a href="/2013/12/07/beginner-guide-to-sbt-0-dot-13-and-intellij-idea-13.html">Beginner "Guide" to Sbt 0.13 and IntelliJ IDEA 13</a></h1>
+      <h1 class="entry-title"><a href="/2013/12/07/beginner-guide-to-sbt-0-dot-13-and-intellij-idea-13.html">Beginner &#8220;Guide&#8221; to Sbt 0.13 and IntelliJ IDEA 13</a></h1>
     
     
       <p class="meta">
@@ -421,36 +515,9 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2013/11/21/day-with-scala-dot-list.html">Day With scala.List</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2013-11-21T21:22:12+01:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>21</span><span class='date-suffix'>st</span>, <span class='date-year'>2013</span></span> <span class='time'>9:22 pm</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>How could you make an use of scala.List&hellip;</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
+    
+      <a class="prev" href="/posts/2">&larr; Older</a>
     
     <a href="/blog/archives">Blog Archives</a>
     
@@ -461,6 +528,10 @@
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2014/11/29/sbt-dependency-graph-for-easier-dependency-management-in-sbt.html">Sbt-dependency-graph for Easier Dependency Management in Sbt</a>
+      </li>
     
       <li class="post">
         <a href="/2014/09/25/loose-notes-about-cassandra.html">Loose Notes About Cassandra</a>
@@ -478,17 +549,13 @@
         <a href="/2014/09/02/json-in-play-framework-with-jsvalue-and-reads.html">JSON in Play Framework With JsValue and Reads</a>
       </li>
     
-      <li class="post">
-        <a href="/2014/07/22/trait-init-scope-in-sbt.html">Trait Init[Scope] in Sbt</a>
-      </li>
-    
   </ul>
 </section>
 
 <section>
   <h1>GitHub Repos</h1>
   <ul id="gh_repos">
-    <li class="loading">Status updating...</li>
+    <li class="loading">Status updating&#8230;</li>
   </ul>
   
   <a href="https://github.com/jaceklaskowski">@jaceklaskowski</a> on GitHub
@@ -518,7 +585,7 @@
 <section>
   <h1>Latest Tweets</h1>
   <ul id="tweets">
-    <li class="loading">Status updating...</li>
+    <li class="loading">Status updating&#8230;</li>
   </ul>
   <script type="text/javascript">
     $.domReady(function(){

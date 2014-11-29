@@ -5,11 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Calculate Profit in Scala With foldLeft - Mastering FP and OO with Scala</title>
+  <title>Mastering FP and OO with Scala</title>
   <meta name="author" content="Jacek Laskowski">
 
   
-  <meta name="description" content="With a credit in a foreign currency one may want to hedge to offset the foreign currency getting stronger, and hence increasing the cost of the &hellip;">
+  <meta name="description" content="How could you make an use of scala.List&hellip;
+">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +19,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://blog.jaceklaskowski.pl/2014/06/26/calculate-profit-in-scala-with-foldLeft.html">
+  <link rel="canonical" href="http://blog.jaceklaskowski.pl/posts/2/index.html">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="http://feeds.feedburner.com/MasteringFpWithScala" rel="alternate" title="Mastering FP and OO with Scala" type="application/atom+xml">
@@ -46,7 +47,7 @@
 
 </head>
 
-<body    class="collapse-sidebar sidebar-footer" >
+<body   >
   <header role="banner"><hgroup>
   <h1><a href="/">Mastering FP and OO with Scala</a></h1>
   
@@ -77,12 +78,15 @@
 </nav>
   <div id="main">
     <div id="content">
-      <div>
-<article class="hentry" role="article">
+      <div class="blog-index">
   
+  
+  
+    <article>
+      
   <header>
     
-      <h1 class="entry-title">Calculate Profit in Scala With foldLeft</h1>
+      <h1 class="entry-title"><a href="/2013/11/21/day-with-scala-dot-list.html">Day With scala.List</a></h1>
     
     
       <p class="meta">
@@ -91,96 +95,29 @@
 
 
 
-<time class='entry-date' datetime='2014-06-26T22:57:00+02:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>26</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>10:57 pm</span></time>
+<time class='entry-date' datetime='2013-11-21T21:22:12+01:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>21</span><span class='date-suffix'>st</span>, <span class='date-year'>2013</span></span> <span class='time'>9:22 pm</span></time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>With a credit in a foreign currency one may want to hedge to offset the foreign currency getting stronger, and hence increasing the cost of the credit.</p>
-
-<p>Say, you bought 589 CHF when it costed 3.4007 PLN and then 593 for 3.3704. How much would you profit when the price of selling CHF rose to 3.4107 PLN?</p>
-
-<!-- more -->
-
-
-<p>The question of how much profit you earned with a series of pairs <code>(quantity, price)</code> against a given CHF price can be calculated as follows:</p>
-
-<pre><code>def calculateProfit(series: Seq[(Int, Double)], currentPrice: Double): Double =
-  series.foldLeft(0.0) {
-    case (acc, (qty, price)) =&gt; acc + (currentPrice - price) * qty
-  }
-
-val qtyPriceSeries = Seq((589,3.4007),(593,3.3704))
-val currPrice = 3.4107
-
-scala&gt; calculateProfit(qtyPriceSeries, currPrice)
-res0: Double = 29.787899999999745
-</code></pre>
-
-<p>It gives you ca 30 PLN.</p>
-
-<p>It&rsquo;d be nice to have a series with the date when a given pair was made, and then compare it with other means of gaining profits. A web app developed in <a href="http://www.playframework.com/">Play</a> and deployed to <a href="https://www.heroku.com/">Heroku</a> or <a href="http://www.cloudbees.com/">CloudBees</a> might be of help, wouldn&rsquo;t it?</p>
+  <div class="entry-content"><p>How could you make an use of scala.List&hellip;</p>
 </div>
-
-
-  <footer>
-    <p class="meta">
-      
+  
   
 
-<span class="byline author vcard">Posted by <span class="fn">Jacek Laskowski</span></span>
 
-      
-
-
-
-
-<time class='entry-date' datetime='2014-06-26T22:57:00+02:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>26</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>10:57 pm</span></time>
-      
-
-<span class="categories">
+    </article>
   
-    <a class='category' href='/blog/categories/scala/'>scala</a>
-  
-</span>
-
-
-    </p>
+  <div class="pagination">
     
-      <div class="sharing">
-  
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://blog.jaceklaskowski.pl/2014/06/26/calculate-profit-in-scala-with-foldLeft.html" data-via="jaceklaskowski" data-counturl="http://blog.jaceklaskowski.pl/2014/06/26/calculate-profit-in-scala-with-foldLeft.html" >Tweet</a>
-  
-  
-  <div class="g-plusone" data-size="medium"></div>
-  
-  
-    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
-  
-</div>
-
+    <a href="/blog/archives">Blog Archives</a>
     
-    <p class="meta">
-      
-        <a class="basic-alignment left" href="/2013/12/07/beginner-guide-to-sbt-0-dot-13-and-intellij-idea-13.html" title="Previous Post: Beginner "guide" to sbt 0.13 and IntelliJ IDEA 13">&laquo; Beginner &#8220;guide&#8221; to sbt 0.13 and IntelliJ IDEA 13</a>
-      
-      
-        <a class="basic-alignment right" href="/2014/07/08/contributing-to-open-source-projects-on-github-cheat-sheet.html" title="Next Post: Contributing to open source projects on GitHub - Cheat Sheet">Contributing to open source projects on GitHub - Cheat Sheet &raquo;</a>
-      
-    </p>
-  </footer>
-</article>
-
-  <section>
-    <h1>Comments</h1>
-    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a class="next" href="/index.html">Newer &rarr;</a>
+    
+  </div>
 </div>
-  </section>
-
-</div>
-
 <aside class="sidebar">
   
     <section>
@@ -300,7 +237,6 @@ res0: Double = 29.787899999999745
   
 </aside>
 
-
     </div>
   </div>
   <footer role="contentinfo"><p>
@@ -315,10 +251,7 @@ res0: Double = 29.787899999999745
       var disqus_shortname = 'jaceklaskowski';
       
         
-        // var disqus_developer = 1;
-        var disqus_identifier = 'http://blog.jaceklaskowski.pl/2014/06/26/calculate-profit-in-scala-with-foldLeft.html';
-        var disqus_url = 'http://blog.jaceklaskowski.pl/2014/06/26/calculate-profit-in-scala-with-foldLeft.html';
-        var disqus_script = 'embed.js';
+        var disqus_script = 'count.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

@@ -4,7 +4,7 @@
   <title><![CDATA[Mastering FP and OO with Scala]]></title>
   <link href="http://blog.jaceklaskowski.pl/atom.xml" rel="self"/>
   <link href="http://blog.jaceklaskowski.pl/"/>
-  <updated>2014-11-29T23:47:09+01:00</updated>
+  <updated>2015-02-13T01:47:21+01:00</updated>
   <id>http://blog.jaceklaskowski.pl/</id>
   <author>
     <name><![CDATA[Jacek Laskowski]]></name>
@@ -12,6 +12,96 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[REST Clients (for Working With REST Microservices)]]></title>
+    <link href="http://blog.jaceklaskowski.pl/2015/02/11/rest-clients-for-working-with-rest-microservices.html"/>
+    <updated>2015-02-11T23:02:42+01:00</updated>
+    <id>http://blog.jaceklaskowski.pl/2015/02/11/rest-clients-for-working-with-rest-microservices</id>
+    <content type="html"><![CDATA[<p>It&rsquo;s so engaging to learn things while learning others. So is the case with the new architectural style <strong>REST microservices</strong> and developing them using <a href="http://www.scala-lang.org/">Scala</a> language and tools.</p>
+
+<p>As there are a lot of REST interactions &ndash; sending requests to and receiving them from REST microservices &ndash; as much as I&rsquo;m not really in need to comprehend every bit of the communication format, I do need tools to work with them effectively, i.e. be able to create and consume HTTP packets with JSON payload with little to no effort.</p>
+
+<!-- more -->
+
+
+<h2>HTTPie (pronounced <em>aych-tee-tee-pie</em>)</h2>
+
+<p>I&rsquo;ve been using <code>curl</code> for so long that I hardly remember when it all began. It&rsquo;s a very handy tool, alas too complex at times.</p>
+
+<p>Not so long ago I stumbled upon another command-line tool called <a href="http://httpie.org">HTTPie</a>. Installation on MacOS X with <code>brew</code> was just <code>brew install httpie</code> away.</p>
+
+<pre><code>➜  ~  brew install httpie
+Warning: httpie-0.9.1 already installed
+</code></pre>
+
+<p><code>HTTPie</code> <a href="http://httpie.org">describes itself as</a>:</p>
+
+<blockquote><p>HTTPie (pronounced <em>aych-tee-tee-pie</em>) is a <strong>command line HTTP client</strong>. Its goal is to make CLI interaction with web services as <strong>human-friendly</strong> as possible. It provides a simple <code>http</code> command that allows for sending arbitrary HTTP requests using a simple and natural syntax, and displays colorized responses.</p></blockquote>
+
+<p>The tool&rsquo;s so simple and intuitive that I&rsquo;m still fighting with my thoughts to believe that people could still be using <code>curl</code>. I for one was using <code>curl</code> for so long that I almost lost the ability to sense how much pain I was experiencing with <code>curl</code>. I did get used to it and didn&rsquo;t notice I&rsquo;m sufferring an enormous pain.</p>
+
+<p><code>GET</code> requests are pretty similar in both tools (still think <code>httpie</code> is simpler).</p>
+
+<pre><code>http -v --json localhost:9000/api/person
+</code></pre>
+
+<p>Where the difference shows up is to send <code>POST</code> requests with JSON payload as <code>application/json</code> (<code>-v</code> is to verbose the communication):</p>
+
+<pre><code>➜  ~  http -v localhost:9000/api/person name=jacek
+POST /api/person HTTP/1.1
+Accept: application/json
+Accept-Encoding: gzip, deflate
+Connection: keep-alive
+Content-Length: 17
+Content-Type: application/json; charset=utf-8
+Host: localhost:9000
+User-Agent: HTTPie/0.9.1
+
+{
+    "name": "jacek"
+}
+
+HTTP/1.1 200 OK
+Content-Length: 21
+Content-Type: application/json; charset=UTF-8
+Date: Thu, 12 Feb 2015 09:35:46 GMT
+Server: tmprl
+
+{
+    "name": "jacek"
+}
+</code></pre>
+
+<p>First, I don&rsquo;t have to express it <em>explicitly</em> that I&rsquo;m going to send a POST request since the <code>key=value</code> pair (in the example earlier <code>name=jacek</code>, and there could be more) implies so. Less typing, less errors.</p>
+
+<p>Second, I don&rsquo;t have to build the JSON payload myself, <code>key=value</code> pairs are enough to inform the tool to create one for me. Less typing, again.</p>
+
+<p>And the last but not least, colorized responses (aka formatted and colorized terminal output). That could&rsquo;ve made a difference and it did!</p>
+
+<p>Just these three features made <code>httpie</code> an indispensable tool for me.</p>
+
+<p><code>httpie</code> has changed how I test my REST microservices using JSON now. As is JSON to REST microservices, so is <code>httpie</code> to the new architecture.</p>
+
+<h2>Postman</h2>
+
+<p>It appears that command-line tools are not always at a premium, and having few GUI tools might be of help at times.</p>
+
+<p>Just a couple of days ago I saw <a href="http://www.getpostman.com/">Postman - REST Client</a> being used by a teammate. And it wouldn&rsquo;t have been any special if I had not heard about the tool from another person during my presentation about REST microservices with JSON &ndash; just a day after I&rsquo;d seen it the very first time (!) Coincidence? Don&rsquo;t think so!</p>
+
+<p>Postman is a plugin for Google Chrome so the installation went smoothly. Just a click and it&rsquo;s done. You should give it a go, too (unless you&rsquo;ve already done and have few remarks to share in the comments to the blog post - I&rsquo;d appreciate it very much).</p>
+
+<h2>Advanced REST client</h2>
+
+<p>What made the situation more interesting was that even though Postman was mentioned few times here and there, it seems that <a href="https://code.google.com/p/chrome-rest-client/">Advanced REST client</a> beats Postman by the number of stars - 6791 vs 2635. Why is so?! It&rsquo;s over 200%! How could that be that Postman is more famous (in my circles) without Advanced REST client being even mentioned?!</p>
+
+<p><img class="center" src="http://blog.jaceklaskowski.pl/images/postman-rest-client-vs-advanced-rest-client.png" title="Postman REST client vs Advanced REST client" ></p>
+
+<p>It&rsquo;s installed and I&rsquo;m going to give it a whirl, too.</p>
+
+<p>What are your tools to work with REST microservices with JSON as the data format? Let me know in the comments!</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Sbt-dependency-graph for Easier Dependency Management in Sbt]]></title>

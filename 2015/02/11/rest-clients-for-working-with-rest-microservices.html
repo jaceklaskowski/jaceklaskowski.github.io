@@ -5,12 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Mastering FP and OO with Scala</title>
+  <title>REST Clients (for Working With REST Microservices) - Mastering FP and OO with Scala</title>
   <meta name="author" content="Jacek Laskowski">
 
   
-  <meta name="description" content="Have you ever wondered how much you should understand the concept of eta expansion to master Scala? I have and hence the page in which I&rsquo;m &hellip;">
-  
+  <meta name="description" content="It&rsquo;s so engaging to learn things while learning others. So is the case with the new architectural style REST microservices and developing them &hellip;">
+  <meta name="keywords" content="rest, microservices">
 
   <!-- http://t.co/dKP3o1e -->
   <meta name="HandheldFriendly" content="True">
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://blog.jaceklaskowski.pl/posts/2/index.html">
+  <link rel="canonical" href="http://blog.jaceklaskowski.pl/2015/02/11/rest-clients-for-working-with-rest-microservices.html">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="http://feeds.feedburner.com/MasteringFpWithScala" rel="alternate" title="Mastering FP and OO with Scala" type="application/atom+xml">
@@ -46,7 +46,7 @@
 
 </head>
 
-<body   >
+<body    class="collapse-sidebar sidebar-footer" >
   <header role="banner"><hgroup>
   <h1><a href="/">Mastering FP and OO with Scala</a></h1>
   
@@ -77,15 +77,12 @@
 </nav>
   <div id="main">
     <div id="content">
-      <div class="blog-index">
+      <div>
+<article class="hentry" role="article">
   
-  
-  
-    <article>
-      
   <header>
     
-      <h1 class="entry-title"><a href="/2013/11/23/how-much-one-ought-to-know-eta-expansion.html">How Much One Ought to Know Eta Expansion</a></h1>
+      <h1 class="entry-title">REST Clients (for Working With REST Microservices)</h1>
     
     
       <p class="meta">
@@ -94,63 +91,152 @@
 
 
 
-<time class='entry-date' datetime='2013-11-23T22:20:23+01:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>23</span><span class='date-suffix'>rd</span>, <span class='date-year'>2013</span></span> <span class='time'>10:20 pm</span></time>
+<time class='entry-date' datetime='2015-02-11T23:02:42+01:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>11</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>11:02 pm</span></time>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><p>Have you ever wondered how much you should understand the concept of <strong>eta expansion</strong> to master <a href="http://scala-lang.org/">Scala</a>? I have and hence the page in which I&rsquo;m going to collect the wisdom (dug out of Internet) with its applications.</p>
+<div class="entry-content"><p>It&rsquo;s so engaging to learn things while learning others. So is the case with the new architectural style <strong>REST microservices</strong> and developing them using <a href="http://www.scala-lang.org/">Scala</a> language and tools.</p>
 
+<p>As there are a lot of REST interactions &ndash; sending requests to and receiving them from REST microservices &ndash; as much as I&rsquo;m not really in need to comprehend every bit of the communication format, I do need tools to work with them effectively, i.e. be able to create and consume HTTP packets with JSON payload with little to no effort.</p>
+
+<!-- more -->
+
+
+<h2>HTTPie (pronounced <em>aych-tee-tee-pie</em>)</h2>
+
+<p>I&rsquo;ve been using <code>curl</code> for so long that I hardly remember when it all began. It&rsquo;s a very handy tool, alas too complex at times.</p>
+
+<p>Not so long ago I stumbled upon another command-line tool called <a href="http://httpie.org">HTTPie</a>. Installation on MacOS X with <code>brew</code> was just <code>brew install httpie</code> away.</p>
+
+<pre><code>➜  ~  brew install httpie
+Warning: httpie-0.9.1 already installed
+</code></pre>
+
+<p><code>HTTPie</code> <a href="http://httpie.org">describes itself as</a>:</p>
+
+<blockquote><p>HTTPie (pronounced <em>aych-tee-tee-pie</em>) is a <strong>command line HTTP client</strong>. Its goal is to make CLI interaction with web services as <strong>human-friendly</strong> as possible. It provides a simple <code>http</code> command that allows for sending arbitrary HTTP requests using a simple and natural syntax, and displays colorized responses.</p></blockquote>
+
+<p>The tool&rsquo;s so simple and intuitive that I&rsquo;m still fighting with my thoughts to believe that people could still be using <code>curl</code>. I for one was using <code>curl</code> for so long that I almost lost the ability to sense how much pain I was experiencing with <code>curl</code>. I did get used to it and didn&rsquo;t notice I&rsquo;m sufferring an enormous pain.</p>
+
+<p><code>GET</code> requests are pretty similar in both tools (still think <code>httpie</code> is simpler).</p>
+
+<pre><code>http -v --json localhost:9000/api/person
+</code></pre>
+
+<p>Where the difference shows up is to send <code>POST</code> requests with JSON payload as <code>application/json</code> (<code>-v</code> is to verbose the communication):</p>
+
+<pre><code>➜  ~  http -v localhost:9000/api/person name=jacek
+POST /api/person HTTP/1.1
+Accept: application/json
+Accept-Encoding: gzip, deflate
+Connection: keep-alive
+Content-Length: 17
+Content-Type: application/json; charset=utf-8
+Host: localhost:9000
+User-Agent: HTTPie/0.9.1
+
+{
+    "name": "jacek"
+}
+
+HTTP/1.1 200 OK
+Content-Length: 21
+Content-Type: application/json; charset=UTF-8
+Date: Thu, 12 Feb 2015 09:35:46 GMT
+Server: tmprl
+
+{
+    "name": "jacek"
+}
+</code></pre>
+
+<p>First, I don&rsquo;t have to express it <em>explicitly</em> that I&rsquo;m going to send a POST request since the <code>key=value</code> pair (in the example earlier <code>name=jacek</code>, and there could be more) implies so. Less typing, less errors.</p>
+
+<p>Second, I don&rsquo;t have to build the JSON payload myself, <code>key=value</code> pairs are enough to inform the tool to create one for me. Less typing, again.</p>
+
+<p>And the last but not least, colorized responses (aka formatted and colorized terminal output). That could&rsquo;ve made a difference and it did!</p>
+
+<p>Just these three features made <code>httpie</code> an indispensable tool for me.</p>
+
+<p><code>httpie</code> has changed how I test my REST microservices using JSON now. As is JSON to REST microservices, so is <code>httpie</code> to the new architecture.</p>
+
+<h2>Postman</h2>
+
+<p>It appears that command-line tools are not always at a premium, and having few GUI tools might be of help at times.</p>
+
+<p>Just a couple of days ago I saw <a href="http://www.getpostman.com/">Postman - REST Client</a> being used by a teammate. And it wouldn&rsquo;t have been any special if I had not heard about the tool from another person during my presentation about REST microservices with JSON &ndash; just a day after I&rsquo;d seen it the very first time (!) Coincidence? Don&rsquo;t think so!</p>
+
+<p>Postman is a plugin for Google Chrome so the installation went smoothly. Just a click and it&rsquo;s done. You should give it a go, too (unless you&rsquo;ve already done and have few remarks to share in the comments to the blog post - I&rsquo;d appreciate it very much).</p>
+
+<h2>Advanced REST client</h2>
+
+<p>What made the situation more interesting was that even though Postman was mentioned few times here and there, it seems that <a href="https://code.google.com/p/chrome-rest-client/">Advanced REST client</a> beats Postman by the number of stars - 6791 vs 2635. Why is so?! It&rsquo;s over 200%! How could that be that Postman is more famous (in my circles) without Advanced REST client being even mentioned?!</p>
+
+<p><img class="center" src="/images/postman-rest-client-vs-advanced-rest-client.png" title="Postman REST client vs Advanced REST client" ></p>
+
+<p>It&rsquo;s installed and I&rsquo;m going to give it a whirl, too.</p>
+
+<p>What are your tools to work with REST microservices with JSON as the data format? Let me know in the comments!</p>
 </div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/2013/11/23/how-much-one-ought-to-know-eta-expansion.html">Read on &rarr;</a>
-    </footer>
-  
 
 
-    </article>
-  
-  
-    <article>
+  <footer>
+    <p class="meta">
       
-  <header>
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Jacek Laskowski</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-02-11T23:02:42+01:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>11</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>11:02 pm</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/microservices/'>microservices</a>, <a class='category' href='/blog/categories/rest/'>rest</a>
+  
+</span>
+
+
+    </p>
     
-      <h1 class="entry-title"><a href="/2013/11/21/day-with-scala-dot-list.html">Day With scala.List</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2013-11-21T21:22:12+01:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>21</span><span class='date-suffix'>st</span>, <span class='date-year'>2013</span></span> <span class='time'>9:22 pm</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>How could you make an use of scala.List&hellip;</p>
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://blog.jaceklaskowski.pl/2015/02/11/rest-clients-for-working-with-rest-microservices.html" data-via="jaceklaskowski" data-counturl="http://blog.jaceklaskowski.pl/2015/02/11/rest-clients-for-working-with-rest-microservices.html" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
 </div>
-  
-  
 
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/2014/11/29/sbt-dependency-graph-for-easier-dependency-management-in-sbt.html" title="Previous Post: sbt-dependency-graph for easier dependency management in sbt">&laquo; sbt-dependency-graph for easier dependency management in sbt</a>
+      
+      
+    </p>
+  </footer>
+</article>
 
-    </article>
-  
-  <div class="pagination">
-    
-    <a href="/blog/archives">Blog Archives</a>
-    
-    <a class="next" href="/index.html">Newer &rarr;</a>
-    
-  </div>
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 </div>
+  </section>
+
+</div>
+
 <aside class="sidebar">
   
     <section>
@@ -270,6 +356,7 @@
   
 </aside>
 
+
     </div>
   </div>
   <footer role="contentinfo"><p>
@@ -284,7 +371,10 @@
       var disqus_shortname = 'jaceklaskowski';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://blog.jaceklaskowski.pl/2015/02/11/rest-clients-for-working-with-rest-microservices.html';
+        var disqus_url = 'http://blog.jaceklaskowski.pl/2015/02/11/rest-clients-for-working-with-rest-microservices.html';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

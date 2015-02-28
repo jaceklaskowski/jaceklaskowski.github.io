@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Zsh | Mastering FP and OO with Scala]]></title>
+  <link href="http://blog.jaceklaskowski.pl/blog/categories/zsh/atom.xml" rel="self"/>
+  <link href="http://blog.jaceklaskowski.pl/"/>
+  <updated>2015-02-28T21:10:24+01:00</updated>
+  <id>http://blog.jaceklaskowski.pl/</id>
+  <author>
+    <name><![CDATA[Jacek Laskowski]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Oh My Zsh's Plugins to Boost Happiness From Using Git]]></title>
+    <link href="http://blog.jaceklaskowski.pl/2015/02/28/oh-my-zshs-plugins-to-boost-happiness-from-using-git.html"/>
+    <updated>2015-02-28T20:26:40+01:00</updated>
+    <id>http://blog.jaceklaskowski.pl/2015/02/28/oh-my-zshs-plugins-to-boost-happiness-from-using-git</id>
+    <content type="html"><![CDATA[From the website of the very useful and must-have addition to your terminal - [Oh-My-Zsh](http://ohmyz.sh/):
+
+> Oh-My-Zsh is an open source, community-driven framework for managing your ZSH configuration. It comes bundled with a ton of helpful functions, helpers, plugins, themes, and a few things that make you shout&#8230;**&#8221;Oh My ZSH!&#8221;**
+
+As I&#8217;m using the ZSH configuration framework so often that I can&#8217;t believe I could&#8217;ve lived without it for so long here&#8217;s a collection of the plugins to cut the number of keystrokes while working with git repositories. To my great surprise there are quite a few plugins for git and the list below is my humble summary to get it remembered as much as to spread a word (as I&#8217;ve been meeting people unaware of Oh-My-Zsh far too often).
+
+**FIXME** Consider the blog post complete after the line&#8217;s gone. It&#8217;s always in readable state, though.
+
+<!-- more -->
+
+## Oh Mom, there are 10 plugins for git!
+
+I was very surprised to have been presented with **10** plugins for git when I hit `TAB` to complete the `~/.oh-my-zsh/plugins/git` path:
+
+* **git** = (quoting README.md) *this plugin adds several git aliases and increase the completion function provided by zsh*
+* **git-extras** = ??? (*aka* unsure what it does - yet to be discovered)
+* **git-flow** = (quoting the plugin&#8217;s sources) *git-flow completion nirvana*
+* **git-flow-avh** = unsure how it&#8217;s different from the `git-flow` plugin
+* **git-hubflow** = unsure how it&#8217;s different from the `git-flow` plugin
+* **git-prompt** = (quoting the plugin&#8217;s sources) *ZSH Git Prompt Plugin*
+* **git-remote-branch** = ??? (*aka* unsure what it does - yet to be discovered)
+* **gitfast** = ??? (*aka* unsure what it does - yet to be discovered)
+* **github** = ??? (*aka* unsure what it does - yet to be discovered)
+* **gitignore** = ??? (*aka* unsure what it does - yet to be discovered)
+
+I *just* assume they are all plugins to ease my work with git repositories and am going to review them all one by one and *amend* the blog post afterwards.
+
+The commands I&#8217;ve managed to master so far:
+
+* `gco`   = `git checkout`
+* `glo`   = `git log &#8211;oneline &#8211;decorate &#8211;color`
+* `glgga` = `git log &#8211;graph &#8211;decorate &#8211;all`
+* `gcm`   = `git checkout master`
+* `gd`    = `git diff`
+* `gdc`   = `git diff &#8211;cached`
+* `gc!`   = `git commit -v &#8211;amend`
+* `gcp`   = `git cherry-pick`
+* `gl`    = `git pull`
+* `gst`   = `git status`
+* `grba`  = `git rebase &#8211;abort`
+* `grbi`  = `git rebase -i`
+* `grbc`  = `git rebase &#8211;continue`
+* `grh`   = `git reset HEAD`
+* `grhh`  = `git reset HEAD &#8211;hard`
+* `grv`   = `git remote -v`
+
+Read the official [Plugins](https://github.com/robbyrussell/oh-my-zsh/wiki/Plugins) page to learn how to enable plugins in your configuration.
+
+The configuration of mine includes the following plugins, `git` including:
+
+	➜  ~  grep -e &#8220;plugins=(&#8221; ~/.zshrc | grep -e &#8220;^[^#]&#8221;
+	plugins=(git osx brew common-aliases)
+
+I&#8217;m totally aware that there&#8217;s plenty of room for improvement here. Let me know what I&#8217;m missing (and where I&#8217;m wasting my time still). I&#8217;d wholeheartedly appreciate any time savings.
+]]></content>
+  </entry>
+  
+</feed>

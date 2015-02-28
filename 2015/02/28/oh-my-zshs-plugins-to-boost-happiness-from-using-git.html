@@ -5,12 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Category: Github - Mastering FP and OO with Scala</title>
+  <title>Oh My Zsh&#8217;s Plugins to Boost Happiness From Using Git - Mastering FP and OO with Scala</title>
   <meta name="author" content="Jacek Laskowski">
 
   
-  <meta name="description" content="Category: github">
-  
+  <meta name="description" content="From the website of the very useful and must-have addition to your terminal - Oh-My-Zsh: Oh-My-Zsh is an open source, community-driven framework for &hellip;">
+  <meta name="keywords" content="git, zsh, command line">
 
   <!-- http://t.co/dKP3o1e -->
   <meta name="HandheldFriendly" content="True">
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://blog.jaceklaskowski.pl/blog/categories/github/index.html">
+  <link rel="canonical" href="http://blog.jaceklaskowski.pl/2015/02/28/oh-my-zshs-plugins-to-boost-happiness-from-using-git.html">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="http://feeds.feedburner.com/MasteringFpWithScala" rel="alternate" title="Mastering FP and OO with Scala" type="application/atom+xml">
@@ -46,7 +46,7 @@
 
 </head>
 
-<body   >
+<body    class="collapse-sidebar sidebar-footer" >
   <header role="banner"><hgroup>
   <h1><a href="/">Mastering FP and OO with Scala</a></h1>
   
@@ -78,36 +78,142 @@
   <div id="main">
     <div id="content">
       <div>
-<article role="article">
+<article class="hentry" role="article">
   
   <header>
-    <h1 class="entry-title">Category: Github</h1>
+    
+      <h1 class="entry-title">Oh My Zsh&#8217;s Plugins to Boost Happiness From Using Git</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-02-28T20:26:40+01:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>28</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>8:26 pm</span></time>
+        
+      </p>
     
   </header>
-  
-  <div id="blog-archives" class="category">
 
 
+<div class="entry-content"><p>From the website of the very useful and must-have addition to your terminal - <a href="http://ohmyz.sh/">Oh-My-Zsh</a>:</p>
 
-  
-  <h2>2014</h2>
+<blockquote><p>Oh-My-Zsh is an open source, community-driven framework for managing your ZSH configuration. It comes bundled with a ton of helpful functions, helpers, plugins, themes, and a few things that make you shout&hellip;<strong>&ldquo;Oh My ZSH!&rdquo;</strong></p></blockquote>
 
-<article>
-  
-<h1><a href="/2014/07/08/contributing-to-open-source-projects-on-github-cheat-sheet.html">Contributing to Open Source Projects on GitHub - Cheat Sheet</a></h1>
-<time datetime="2014-07-08T01:24:32+02:00" pubdate><span class='month'>Jul</span> <span class='day'>08</span> <span class='year'>2014</span></time>
+<p>As I&rsquo;m using the ZSH configuration framework so often that I can&rsquo;t believe I could&rsquo;ve lived without it for so long here&rsquo;s a collection of the plugins to cut the number of keystrokes while working with git repositories. To my great surprise there are quite a few plugins for git and the list below is my humble summary to get it remembered as much as to spread a word (as I&rsquo;ve been meeting people unaware of Oh-My-Zsh far too often).</p>
 
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/github/'>github</a></span>
-</footer>
+<p><strong>FIXME</strong> Consider the blog post complete after the line&rsquo;s gone. It&rsquo;s always in readable state, though.</p>
+
+<!-- more -->
 
 
-</article>
+<h2>Oh Mom, there are 10 plugins for git!</h2>
 
+<p>I was very surprised to have been presented with <strong>10</strong> plugins for git when I hit <code>TAB</code> to complete the <code>~/.oh-my-zsh/plugins/git</code> path:</p>
+
+<ul>
+<li><strong>git</strong> = (quoting README.md) <em>this plugin adds several git aliases and increase the completion function provided by zsh</em></li>
+<li><strong>git-extras</strong> = ??? (<em>aka</em> unsure what it does - yet to be discovered)</li>
+<li><strong>git-flow</strong> = (quoting the plugin&rsquo;s sources) <em>git-flow completion nirvana</em></li>
+<li><strong>git-flow-avh</strong> = unsure how it&rsquo;s different from the <code>git-flow</code> plugin</li>
+<li><strong>git-hubflow</strong> = unsure how it&rsquo;s different from the <code>git-flow</code> plugin</li>
+<li><strong>git-prompt</strong> = (quoting the plugin&rsquo;s sources) <em>ZSH Git Prompt Plugin</em></li>
+<li><strong>git-remote-branch</strong> = ??? (<em>aka</em> unsure what it does - yet to be discovered)</li>
+<li><strong>gitfast</strong> = ??? (<em>aka</em> unsure what it does - yet to be discovered)</li>
+<li><strong>github</strong> = ??? (<em>aka</em> unsure what it does - yet to be discovered)</li>
+<li><strong>gitignore</strong> = ??? (<em>aka</em> unsure what it does - yet to be discovered)</li>
+</ul>
+
+
+<p>I <em>just</em> assume they are all plugins to ease my work with git repositories and am going to review them all one by one and <em>amend</em> the blog post afterwards.</p>
+
+<p>The commands I&rsquo;ve managed to master so far:</p>
+
+<ul>
+<li><code>gco</code>   = <code>git checkout</code></li>
+<li><code>glo</code>   = <code>git log --oneline --decorate --color</code></li>
+<li><code>glgga</code> = <code>git log --graph --decorate --all</code></li>
+<li><code>gcm</code>   = <code>git checkout master</code></li>
+<li><code>gd</code>    = <code>git diff</code></li>
+<li><code>gdc</code>   = <code>git diff --cached</code></li>
+<li><code>gc!</code>   = <code>git commit -v --amend</code></li>
+<li><code>gcp</code>   = <code>git cherry-pick</code></li>
+<li><code>gl</code>    = <code>git pull</code></li>
+<li><code>gst</code>   = <code>git status</code></li>
+<li><code>grba</code>  = <code>git rebase --abort</code></li>
+<li><code>grbi</code>  = <code>git rebase -i</code></li>
+<li><code>grbc</code>  = <code>git rebase --continue</code></li>
+<li><code>grh</code>   = <code>git reset HEAD</code></li>
+<li><code>grhh</code>  = <code>git reset HEAD --hard</code></li>
+<li><code>grv</code>   = <code>git remote -v</code></li>
+</ul>
+
+
+<p>Read the official <a href="https://github.com/robbyrussell/oh-my-zsh/wiki/Plugins">Plugins</a> page to learn how to enable plugins in your configuration.</p>
+
+<p>The configuration of mine includes the following plugins, <code>git</code> including:</p>
+
+<pre><code>➜  ~  grep -e "plugins=(" ~/.zshrc | grep -e "^[^#]"
+plugins=(git osx brew common-aliases)
+</code></pre>
+
+<p>I&rsquo;m totally aware that there&rsquo;s plenty of room for improvement here. Let me know what I&rsquo;m missing (and where I&rsquo;m wasting my time still). I&rsquo;d wholeheartedly appreciate any time savings.</p>
 </div>
 
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">Jacek Laskowski</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-02-28T20:26:40+01:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>28</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>8:26 pm</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/git/'>git</a>, <a class='category' href='/blog/categories/zsh/'>zsh</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://blog.jaceklaskowski.pl/2015/02/28/oh-my-zshs-plugins-to-boost-happiness-from-using-git.html" data-via="jaceklaskowski" data-counturl="http://blog.jaceklaskowski.pl/2015/02/28/oh-my-zshs-plugins-to-boost-happiness-from-using-git.html" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/2015/02/11/rest-clients-for-working-with-rest-microservices.html" title="Previous Post: REST clients (for working with REST microservices)">&laquo; REST clients (for working with REST microservices)</a>
+      
+      
+    </p>
+  </footer>
 </article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
 
 </div>
 
@@ -245,7 +351,10 @@
       var disqus_shortname = 'jaceklaskowski';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://blog.jaceklaskowski.pl/2015/02/28/oh-my-zshs-plugins-to-boost-happiness-from-using-git.html';
+        var disqus_url = 'http://blog.jaceklaskowski.pl/2015/02/28/oh-my-zshs-plugins-to-boost-happiness-from-using-git.html';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

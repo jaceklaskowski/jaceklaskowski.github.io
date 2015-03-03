@@ -3,7 +3,7 @@ layout: post
 title: "Contributing to open source projects on GitHub - Cheat Sheet"
 date: 2014-07-08 01:24:32 +0200
 comments: true
-categories: GitHub
+categories: GitHub wip
 sidebar: collapse
 ---
 I've been contributing to many open source projects over the past couple of years and I found [GitHub](https://github.com/jaceklaskowski) pleasantly helpful to continue the gig in the years to come. I've learnt few techniques along the way (from many sources I'm including after the section they appply to).

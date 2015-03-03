@@ -3,7 +3,7 @@ layout: post
 title: "Getting started with Play Framework and AngularJS - Day 1"
 date: 2014-09-08 12:42:49 +0200
 comments: true
-categories: [Play Framework, AngularJS, Scala, Tutorial]
+categories: [Play Framework, AngularJS, Scala, Tutorial, wip]
 sidebar: collapse
 keywords: tutorial,development,play framework,scala,angular,angularjs
 published: true

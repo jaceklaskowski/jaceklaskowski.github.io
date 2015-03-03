@@ -3,7 +3,7 @@ layout: post
 title: "trait Init[Scope] in sbt"
 date: 2014-07-22 13:19:54 +0200
 comments: true
-categories: scala sbt
+categories: scala sbt wip
 sidebar: collapse
 ---
 It's been my wish to master [Scala](http://scala-lang.org/) recently and since I've been spending more time with [sbt](http://www.scala-sbt.org/) I've made the decision to use one to master the other (in no particular order). There are quite a few sophisticated projects in Scala out there, but sbt is enough for my needs.

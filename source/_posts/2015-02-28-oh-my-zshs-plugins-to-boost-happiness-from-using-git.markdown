@@ -3,7 +3,7 @@ layout: post
 title: "Oh My Zsh's plugins to boost happiness from using git"
 date: 2015-02-28 20:26:40 +0100
 comments: true
-categories: [git,zsh]
+categories: [git,zsh,wip]
 sidebar: collapse
 keywords: git, zsh, command line
 published: true
@@ -46,6 +46,7 @@ The commands I've managed to master so far:
 * `gc!`   = `git commit -v --amend`
 * `gcp`   = `git cherry-pick`
 * `gl`    = `git pull`
+* `gp`    = `git push`
 * `gst`   = `git status`
 * `grba`  = `git rebase --abort`
 * `grbi`  = `git rebase -i`

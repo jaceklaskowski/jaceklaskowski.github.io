@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Sbt | Mastering FP and OO with Scala]]></title>
   <link href="http://blog.jaceklaskowski.pl/blog/categories/sbt/atom.xml" rel="self"/>
   <link href="http://blog.jaceklaskowski.pl/"/>
-  <updated>2015-02-28T21:57:02+01:00</updated>
+  <updated>2015-03-03T10:05:41+01:00</updated>
   <id>http://blog.jaceklaskowski.pl/</id>
   <author>
     <name><![CDATA[Jacek Laskowski]]></name>
@@ -20,9 +20,11 @@
     <id>http://blog.jaceklaskowski.pl/2014/11/29/sbt-dependency-graph-for-easier-dependency-management-in-sbt</id>
     <content type="html"><![CDATA[That's gonna be short and hopefully simple. If you're with [sbt](http://www.scala-sbt.org/) you're going to like [sbt-dependency-graph](https://github.com/jrudolph/sbt-dependency-graph) *plugin to create a dependency graph for your project* very much.
 
+<!-- more -->
+
 Edit `~/.sbt/0.13/plugins/sbt-dependency-graph.sbt` so it looks as follows:
 
-	addSbtPlugin("net.virtual-void" % "sbt-dependency-graph" % "0.7.4")
+	addSbtPlugin(&#8220;net.virtual-void&#8221; % &#8220;sbt-dependency-graph&#8221; % &#8220;0.7.4&#8221;)
 
 Edit `~/.sbt/0.13/global.sbt` so it looks:
 

@@ -4,7 +4,7 @@
   <title><![CDATA[Mastering FP and OO with Scala]]></title>
   <link href="http://blog.jaceklaskowski.pl/atom.xml" rel="self"/>
   <link href="http://blog.jaceklaskowski.pl/"/>
-  <updated>2015-02-28T21:57:02+01:00</updated>
+  <updated>2015-03-03T10:05:41+01:00</updated>
   <id>http://blog.jaceklaskowski.pl/</id>
   <author>
     <name><![CDATA[Jacek Laskowski]]></name>
@@ -61,6 +61,7 @@
 <li><code>gc!</code>   = <code>git commit -v --amend</code></li>
 <li><code>gcp</code>   = <code>git cherry-pick</code></li>
 <li><code>gl</code>    = <code>git pull</code></li>
+<li><code>gp</code>    = <code>git push</code></li>
 <li><code>gst</code>   = <code>git status</code></li>
 <li><code>grba</code>  = <code>git rebase --abort</code></li>
 <li><code>grbi</code>  = <code>git rebase -i</code></li>
@@ -179,6 +180,9 @@ Server: tmprl
     <updated>2014-11-29T23:10:06+01:00</updated>
     <id>http://blog.jaceklaskowski.pl/2014/11/29/sbt-dependency-graph-for-easier-dependency-management-in-sbt</id>
     <content type="html"><![CDATA[<p>That&rsquo;s gonna be short and hopefully simple. If you&rsquo;re with <a href="http://www.scala-sbt.org/">sbt</a> you&rsquo;re going to like <a href="https://github.com/jrudolph/sbt-dependency-graph">sbt-dependency-graph</a> <em>plugin to create a dependency graph for your project</em> very much.</p>
+
+<!-- more -->
+
 
 <p>Edit <code>~/.sbt/0.13/plugins/sbt-dependency-graph.sbt</code> so it looks as follows:</p>
 

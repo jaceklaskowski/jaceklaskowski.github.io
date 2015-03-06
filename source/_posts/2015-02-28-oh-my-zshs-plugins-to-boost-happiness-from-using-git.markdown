@@ -37,6 +37,7 @@ I *just* assume they are all plugins to ease my work with git repositories and a
 
 The commands I've managed to master so far:
 
+* `gaa`   = `git add --all`
 * `gco`   = `git checkout`
 * `glo`   = `git log --oneline --decorate --color`
 * `glgga` = `git log --graph --decorate --all`
@@ -54,6 +55,7 @@ The commands I've managed to master so far:
 * `grh`   = `git reset HEAD`
 * `grhh`  = `git reset HEAD --hard`
 * `grv`   = `git remote -v`
+* `gwc`   = `git whatchanged -p --abbrev-commit --pretty=medium`
 
 Read the official [Plugins](https://github.com/robbyrussell/oh-my-zsh/wiki/Plugins) page to learn how to enable plugins in your configuration.
 

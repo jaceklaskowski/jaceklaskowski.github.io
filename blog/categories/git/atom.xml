@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Git | Mastering FP and OO with Scala]]></title>
   <link href="http://blog.jaceklaskowski.pl/blog/categories/git/atom.xml" rel="self"/>
   <link href="http://blog.jaceklaskowski.pl/"/>
-  <updated>2015-03-03T10:05:41+01:00</updated>
+  <updated>2015-03-06T23:38:43+01:00</updated>
   <id>http://blog.jaceklaskowski.pl/</id>
   <author>
     <name><![CDATA[Jacek Laskowski]]></name>
@@ -47,6 +47,7 @@ I *just* assume they are all plugins to ease my work with git repositories and a
 
 The commands I&#8217;ve managed to master so far:
 
+* `gaa`   = `git add &#8211;all`
 * `gco`   = `git checkout`
 * `glo`   = `git log &#8211;oneline &#8211;decorate &#8211;color`
 * `glgga` = `git log &#8211;graph &#8211;decorate &#8211;all`
@@ -64,6 +65,7 @@ The commands I&#8217;ve managed to master so far:
 * `grh`   = `git reset HEAD`
 * `grhh`  = `git reset HEAD &#8211;hard`
 * `grv`   = `git remote -v`
+* `gwc`   = `git whatchanged -p &#8211;abbrev-commit &#8211;pretty=medium`
 
 Read the official [Plugins](https://github.com/robbyrussell/oh-my-zsh/wiki/Plugins) page to learn how to enable plugins in your configuration.
 

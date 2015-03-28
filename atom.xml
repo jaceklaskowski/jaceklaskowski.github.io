@@ -4,7 +4,7 @@
   <title><![CDATA[Mastering FP and OO with Scala]]></title>
   <link href="http://blog.jaceklaskowski.pl/atom.xml" rel="self"/>
   <link href="http://blog.jaceklaskowski.pl/"/>
-  <updated>2015-03-06T23:38:43+01:00</updated>
+  <updated>2015-03-28T19:51:52+01:00</updated>
   <id>http://blog.jaceklaskowski.pl/</id>
   <author>
     <name><![CDATA[Jacek Laskowski]]></name>
@@ -12,6 +12,108 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Daily Routines to Learn Scala With IntelliJ IDEA]]></title>
+    <link href="http://blog.jaceklaskowski.pl/2015/03/28/daily-routines-to-learn-scala-with-intellij-idea.html"/>
+    <updated>2015-03-28T12:54:28+01:00</updated>
+    <id>http://blog.jaceklaskowski.pl/2015/03/28/daily-routines-to-learn-scala-with-intellij-idea</id>
+    <content type="html"><![CDATA[<p><a href="http://blog.jetbrains.com/idea/2015/03/intellij-idea-14-1-is-here/"><img class="left" src="http://blog.jaceklaskowski.pl/images/scala-idea-intellij-idea-14-1.png" title="IntelliJ IDEA 14.1 is Here!" ></a> So, you&rsquo;ve got a moment to learn <a href="http://www.scala-lang.org/">Scala</a> and have <a href="https://www.jetbrains.com/idea/">IntelliJ IDEA</a> with <a href="https://plugins.jetbrains.com/plugin/?id=1347">Scala plugin</a> installed. Your wish is to <em>maximize</em> the mental outcome given the time at hand with <em>little to no effort</em> to set up a productive working environment. You may even think you may have gotten one, but, unless you&rsquo;re doing what I&rsquo;m describing here, you&rsquo;re actually far from truly having it. I&rsquo;m asking you to go <em>the extra mile</em>!</p>
+
+<p>In this blog post I&rsquo;m introducing you to two modes in the recently-shipped <a href="http://blog.jetbrains.com/idea/2015/03/intellij-idea-14-1-is-here/">IntelliJ IDEA 14.1</a> &ndash; <strong>Full Screen</strong> and <strong>Distraction Free</strong> modes &ndash; and the few keystrokes I use in the development environment to have a comfortable place to learn Scala. I&rsquo;m sure you&rsquo;ll have found few ideas to improve your way into your own personal Scala nirvana.</p>
+
+<p>Let&rsquo;s go minimalistic, full screen, distraction-free, mouse- and touchpad-less!</p>
+
+<p>You may find the blog post <a href="http://blog.jetbrains.com/scala/2015/03/26/what-to-check-out-in-scala-plugin-1-4-x-for-intellij-idea-14-14-1/">What to Check Out in Scala Plugin 1.4.x for IntelliJ IDEA 14 &amp; 14.1</a> helpful, too.</p>
+
+<p><em>Side note</em> It came as a complete surprise to me to have noticed that I&rsquo;ve been writing the blog post exactly a month after the last one.</p>
+
+<!-- more -->
+
+
+<h2>Why I&rsquo;m using IntelliJ IDEA to learn Scala?</h2>
+
+<p>I&rsquo;m using IntelliJ IDEA daily.</p>
+
+<p>I begin a day switching to the desktop where the IDE awaits my attention and keep it open (until a mandatory reboot following a system update). I was using other IDEs &ndash; NetBeans IDE or Eclipse IDE &ndash; in the past to develop applications in Java or Java EE, but things have changed since I switched focus on Scala entirely.</p>
+
+<p>The reason for the switch was to master the Scala language not the other available IDEs, and given IntelliJ IDEA have always been receiving positive marks it&rsquo;s with me nowadays. When I need a full-blown IDE, it&rsquo;s IntelliJ IDEA with the Scala plugin. Period.</p>
+
+<p>There&rsquo;s another tool that supports learning Scala beautifully &ndash; <strong>Scala REPL</strong>. However it&rsquo;s often too rudimentary and limiting, for quick rendezvous I prefer it with Sublime Text 3 and sbt. For more advanced sessions nothing beats the beloved IDE - IntelliJ IDEA.</p>
+
+<p>I think it was <a href="http://www.nurkiewicz.com/">Tomasz Nurkiewicz</a> &ndash; <a href="http://blog.jetbrains.com/idea/2014/05/annotated-java-monthly-april-2014/">an IntelliJ IDEA expert</a> &ndash; who first showed the beauty of using IntelliJ IDEA mouse- and touchpad-less. Thanks Tomek!</p>
+
+<h2>Minimalistic workspace</h2>
+
+<p><a href="https://twitter.com/adrgrunt/status/552479034031239168">I remember the tweet from Adrian Gruntkowski</a> very well when the need to go minimalistic was first planted in my head. Adrian mentioned a user guide to set up a minimalistic workspace in IntelliJ IDEA (though it was for CursiveClojure) and the story began.</p>
+
+<p><img class="center" src="http://blog.jaceklaskowski.pl/images/scala-idea-tweet-minimalistic-workspace.png" title="Adrian mentions minimalistic workspace" ></p>
+
+<p>It took me a while to get used to it, but it was worth it! I just needed a mixture of <a href="http://www.sublimetext.com/3">Sublime Text 3</a> and IntelliJ IDEA as the Scala development environment and think I&rsquo;ve found mine already.</p>
+
+<h2>A day with Scala and IntelliJ IDEA</h2>
+
+<p>Be warned that I&rsquo;m working on Mac OS X with <code>Mac OS X 10.5+</code> keymap so your milleage may vary.</p>
+
+<p>The blog post assumes you&rsquo;ve got a Scala project imported or created from scratch already. I don&rsquo;t bother explaining how to do it. In either case, IntelliJ IDEA should open with a Scala project so switching between files makes sense.</p>
+
+<h3>Minimalistic IntelliJ IDEA</h3>
+
+<p>Follow <a href="https://cursiveclojure.com/userguide/ui.html">CursiveClojure UI</a> to have a minimalistic, clutter-free workspace. It&rsquo;s a good start and boils down to turning off the toolbars, deselecting Toolbar and Navigation Bars in the View menu and finally disabling the Editor Tabs. That&rsquo;s a very good start.</p>
+
+<p>Start by pressing <code>Cmd + Ctrl + F</code> to enter full screen.</p>
+
+<p>You should have the IDE looked like as in the following screenshot.</p>
+
+<p><img class="center" src="http://blog.jaceklaskowski.pl/images/scala-idea-minimalistic-workspace.png" title="Minimalistic workspace following CursiveClojure UI" ></p>
+
+<p>Press <code>Shift</code> key twice to open <strong>Search everywhere</strong> popup.</p>
+
+<p><img class="center" src="http://blog.jaceklaskowski.pl/images/scala-idea-search-action-popup.png" title="Search action popup" ></p>
+
+<p>You may also want to use <code>Cmd + Shift + A</code> to search for actions only.</p>
+
+<p><img class="center" src="http://blog.jaceklaskowski.pl/images/scala-idea-search-actions-only.png" title="Search actions only popup" ></p>
+
+<p>Type in <strong>pre mod</strong> or (better) <strong>preMod</strong> to execute <strong>Enter Presentation Mode</strong> action. In IDEA 14.1 there&rsquo;s far more productive mode - <strong>Distraction Free Mode</strong> so type in <strong>distMod</strong> instead.</p>
+
+<p><img class="center" src="http://blog.jaceklaskowski.pl/images/scala-idea-search-action-enter-distration-free-mode.png" title="Enter Distraction Free Mode" ></p>
+
+<p>Either way &ndash; Presentation or Distraction mode &ndash; you&rsquo;ve got a clean desk and should concentrate on Scala much easier (with the goodies of IntelliJ IDEA at your fingertips).</p>
+
+<p>Following the advice in the empty workspace of IntelliJ IDEA, use <code>Cmd + E</code> to switch between files or <code>Cmd + Shift + E</code> to switch between files that were recently edited.</p>
+
+<p><img class="center" src="http://blog.jaceklaskowski.pl/images/scala-idea-recently-edited-files.png" title="Recently Edited Files popup" ></p>
+
+<p>Use <code>Cmd + O</code> to open traits or classes. Use <code>Cmd + Shift + O</code> to open any file like <code>build.sbt</code> or project resources.</p>
+
+<p><img class="center" src="http://blog.jaceklaskowski.pl/images/scala-idea-enter-file-name-build-sbt.png" title="Enter file name popup" ></p>
+
+<p>And the last but not least, install <a href="https://plugins.jetbrains.com/plugin/4230">BashSupport plugin</a> to have a fully-supported terminal inside IntelliJ IDEA. Use <code>Alt + F12</code> to open a terminal session. I use it to have sbt shell open for <code>~ test</code> to have the tests executed every time the main and test sources change.</p>
+
+<p><img class="center" src="http://blog.jaceklaskowski.pl/images/scala-idea-terminal-window-sbt-test.png" title="Terminal window with sbt test" ></p>
+
+<p>I use the terminal to open Scala REPL when I need to try out a new API.</p>
+
+<p><img class="center" src="http://blog.jaceklaskowski.pl/images/scala-idea-terminal-window-scala-repl.png" title="Terminal window with Scala REPL" ></p>
+
+<p>There are also <code>Cmd + KeyUp</code> to select files from other directories in a project, or just switch to Project view with <code>Cmd + 1</code>. You could use <code>Alt + F1</code> to select the target to view the currently open file.</p>
+
+<p><img class="center" src="http://blog.jaceklaskowski.pl/images/scala-idea-change-directory-cmd-keyup.png" title="Cmd + KeyUp" ></p>
+
+<h2>Summary</h2>
+
+<p>There are plenty of ways and tools to help you learn Scala in a pleasant environment. I&rsquo;ve been using Sublime Text 3 and sbt for quite some time, and found myself very productive with this combo. In my case, though, <em>enough</em> turned out to be <em>lazy to learn more advanced developer tools</em>, i.e. IntelliJ IDEA.</p>
+
+<p>Once I switched to IntelliJ IDEA and started using the features like Full Screen and Distraction Free modes with proper keystrokes, it became the development environment of choice to get full steam ahead into Scala.</p>
+
+<p><a href="http://en.wikipedia.org/wiki/There_ain%27t_no_such_thing_as_a_free_lunch">There ain&rsquo;t no such thing as a free lunch</a> and it does take time to hop onto a new tooling and change habits. New things can often be getting into your way until you find them useful. As much as habits can help (speeding things up), they should not rule out others and mark them worse by default. As <a href="http://www.forbes.com/sites/margiewarrell/2014/02/03/learn-unlearn-and-relearn/">Learn, Unlearn And Relearn: How To Stay Current And Get Ahead</a> says:</p>
+
+<blockquote><p>Whatever the reasons, once the basics are covered, many people tend to stick with what they know and avoid situations or challenges where they may mess up or be forced to learn something new, thus creating a safe, secure and comfortable (and confining) world for themselves.</p></blockquote>
+
+<p>Give the tips from the blog post a try and a month later you will have found they&rsquo;re as pleasant as yours. Or bring you even more joy! Let me know how it&rsquo;s worked out in the Comments section below.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Oh My Zsh's Plugins to Boost Happiness From Using Git]]></title>

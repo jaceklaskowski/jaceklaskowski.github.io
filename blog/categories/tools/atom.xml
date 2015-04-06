@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Tools | Mastering FP and OO with Scala]]></title>
+  <link href="http://blog.jaceklaskowski.pl/blog/categories/tools/atom.xml" rel="self"/>
+  <link href="http://blog.jaceklaskowski.pl/"/>
+  <updated>2015-04-06T21:56:26+02:00</updated>
+  <id>http://blog.jaceklaskowski.pl/</id>
+  <author>
+    <name><![CDATA[Jacek Laskowski]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Code Review With Gerrit and Contributing to a Patch Set?]]></title>
+    <link href="http://blog.jaceklaskowski.pl/2015/04/05/code-review-with-gerrit-and-contributing-to-a-patchset.html"/>
+    <updated>2015-04-05T17:59:41+02:00</updated>
+    <id>http://blog.jaceklaskowski.pl/2015/04/05/code-review-with-gerrit-and-contributing-to-a-patchset</id>
+    <content type="html"><![CDATA[[<img class="left" src="/images/gerrit-diffy.png" title="Gerrit Code Review" >](https://code.google.com/p/gerrit/)
+
+I&#8217;m yet to appreciate [gerrit](https://code.google.com/p/gerrit/) as a code review tool worth to learn (after having heard bad and good stories about its features and how it complements development workflows), but in my new team at [Codilime](http://www.codilime.com/) where we develop&#8230;*[a revolutionary machine learning engine enabling your team to use state-of-the-art algorithms in a fraction of time!](http://deepsense.io/)* that&#8217;s the tool to conduct code reviews.
+
+The blog post presents how I discovered a way to contribute to a patch set with my own changes. Use with caution as I&#8217;m not really sure that&#8217;s how gerrit should be used in a team.
+
+<!-- more -->
+
+## Very (lame) intro to gerrit
+
+From the website of [gerrit](https://code.google.com/p/gerrit/):
+
+> Web based code review and project management for Git based projects.
+
+The take away from it is that it&#8217;s the tool for **code reviews** for **git** project. You `git push` your changes to `master` early and often &#8211; I&#8217;d say it&#8217;s even earlier and more often than I did following [the github workflow](https://guides.github.com/introduction/flow/) with *pull requests* or [the gitlab workflow](https://about.gitlab.com/2014/09/29/gitlab-flow/) with *merge requests*.
+
+At GitHub and GitLab I usually `git rebase` changes to squash them all into one and send a pull/merge request.
+
+In gerrit, you `git commit &#8211;amend` as a way to keep changes under a single code review request. The point is to keep `Change-Id` and you should be fine in a single code review session. Every `git push` following `git commit &#8211;amend` with a single `Change-Id` creates a new Patch Set until it&#8217;s ready to be merged with `master`. These Patch Sets (under a single `Change-Id`) establish a sort of branch from which you send changes for code review.
+
+Once the code looks good, i.e. it&#8217;s `+1` twice by the team and verified (possibly by Jenkins), it can be submitted to the central git repository - preferably (private) one at GitHub.
+
+## Drafts as branches - not for review
+
+There&#8217;s a feature of gerrit called [drafts](http://gerrit-documentation.googlecode.com/svn/ReleaseNotes/ReleaseNotes-2.3.html#_drafts) that&#8230;*will be for a change that is not meant for review (yet).* It&#8217;s a good candidate for changes that other developers can contribute to (I might be mistaken here since I&#8217;m new to gerrit).
+
+## Contributing to a Patch Set
+
+**DISCLAIMER:** What follows assumes that a patch set in draft status can be considered a branch to develop collaboratively with a few developers. I&#8217;m not so sure it&#8217;s a correct assumption.
+
+<img class="center" src="/images/gerrit-contributing-patchset-5.png" title="Patch Set" >
+
+In gerrit, go to **All > Open** where you see all the available changes for code review. Pick one, preferrably in **Draft** status (but others should work fine, too).
+
+Expand the latest **Patch Set** and select **checkout** tab in **Download**. Copy the `git fetch &#8230; && git checkout FETCH_HEAD` command using the icon on the right (see the screenshot above).
+
+Do your changes and once satisfied `git checkout -b new_branch_name` to create a new branch as `new_branch_name`.
+
+`git add` the changes and **very important** `git commit &#8211;amend` them with **Change-Id** untouched. The Change-Id is the way for gerrit to keep track what belongs to what development stream as a new patch set. You may also want to change the author with `git commit &#8211;amend &#8211;author` to mark the changes as yours.
+
+Push the commit to `origin` (or whatever remote repository you use) with `git push origin <new_branch_name>:refs/drafts/master`. The `git push` command assumes that you&#8217;re on `master` branch.
+
+You&#8217;re done!
+
+See [How to change a patchset and push it as a new one?](http://stackoverflow.com/q/24457418/1305344) where the knowledge was initially developed.]]></content>
+  </entry>
+  
+</feed>

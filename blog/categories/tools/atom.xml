@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Tools | Mastering FP and OO with Scala]]></title>
   <link href="http://blog.jaceklaskowski.pl/blog/categories/tools/atom.xml" rel="self"/>
   <link href="http://blog.jaceklaskowski.pl/"/>
-  <updated>2015-04-06T21:56:26+02:00</updated>
+  <updated>2015-04-12T16:32:20+02:00</updated>
   <id>http://blog.jaceklaskowski.pl/</id>
   <author>
     <name><![CDATA[Jacek Laskowski]]></name>
@@ -12,6 +12,57 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Using AutoPlugin in Sbt for Common Settings Across Projects in Multi-project Build]]></title>
+    <link href="http://blog.jaceklaskowski.pl/2015/04/12/using-autoplugin-in-sbt-for-common-settings-across-projects-in-multi-project-build.html"/>
+    <updated>2015-04-12T15:20:45+02:00</updated>
+    <id>http://blog.jaceklaskowski.pl/2015/04/12/using-autoplugin-in-sbt-for-common-settings-across-projects-in-multi-project-build</id>
+    <content type="html"><![CDATA[What a joy to learn all the goodies sbt brings to the table and be given a chance to apply it right away to commercial projects in Scala!
+
+I've recently been assigned to a task to create a solution to share common settings across projects in a [multi-project build](http://www.scala-sbt.org/0.13/tutorial/Multi-Project.html) in a Scala project managed by [sbt](http://www.scala-sbt.org). With the new feature of sbt - [autoplugins](http://www.scala-sbt.org/0.13/docs/Plugins.html) - it was very easy to implement from the day one.
+
+<!-- more -->
+
+## The solution = project/CommonSettingsPlugin.scala
+
+	import sbt._
+	import Keys._
+
+	object CommonSettingsPlugin extends AutoPlugin {
+	  override def trigger = allRequirements
+	  override lazy val projectSettings = Seq(
+	    organization  := &#8220;io.deepsense&#8221;,
+	    version       := &#8220;0.1.0&#8221;,
+	    scalaVersion  := &#8220;2.11.6&#8221;,
+	    scalacOptions := Seq(
+	      &#8220;-unchecked&#8221;, &#8220;-deprecation&#8221;, &#8220;-encoding&#8221;, &#8220;utf8&#8221;, &#8220;-feature&#8221;,
+	      &#8220;-language:existentials&#8221;, &#8220;-language:implicitConversions&#8221;
+	    )
+	  )
+	}
+
+Since the autplugin is automatically triggered for all the projects in the multi-project build &#8211; `override def trigger = allRequirements` &#8211; all the projects have `organization`, `version`, `scalaVersion`, `scalacOptions` set. No other work is needed.
+
+Simple and easy, and, what&#8217;s tracked under another issue, Jenkins should now be able to execute `coverageReport` and `coverageAggregate` without troubles for the project!
+
+As a bonus, you don&#8217;t have to change anything in your sbt project to leverage the simplicity - just drop the code as `project/CommonSettingsPlugin.scala` and do `show scalaVersion`. From that moment on, all the (sub)projects in your multi-project build should have the same `scalaVersion` (unless you use a separate `build.sbt` for a project and set `scalaVersion` explicitly).
+
+## Lessons learnt
+
+The initial mistake was to create a separate sbt project just to keep the autoplugin&#8217;s code.
+
+From the very first day of the plugin&#8217;s life it was so much different from the other projects in the build &#8211; it almost yelled out in pain at me not to place it where it was initially. It was a sbt plugin and as such it only meant to enhance sbt itself (not be a part of the commercial project).
+
+What&#8217;s even worse, up to the latest version of sbt 0.13.8 all plugins (are doomed to) use Scala 2.10.4 that&#8217;s an issue for [sbt-scoverage plugin](https://github.com/scoverage/sbt-scoverage) as it kept refusing to work with the version of Scala.
+
+All in all, I seemed reluctant for a long time to have even thought of a better place even though I had actually known it.
+
+A few discussions on [gitter on the sbt channel](https://gitter.im/sbt/sbt) made my day after the very helpful and nice people from the channel lent me a helping hand to find the final solution - the autoplugin went under `project` and&#8230;my live was so much bright again!
+
+p.s. Shhh, the team thinks it was just me to have figured it out myself.
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Code Review With Gerrit and Contributing to a Patch Set?]]></title>

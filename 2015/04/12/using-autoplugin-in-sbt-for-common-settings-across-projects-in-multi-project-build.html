@@ -5,12 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Category: Intellij-idea - Mastering FP and OO with Scala</title>
+  <title>Using AutoPlugin in Sbt for Common Settings Across Projects in Multi-project Build - Mastering FP and OO with Scala</title>
   <meta name="author" content="Jacek Laskowski">
 
   
-  <meta name="description" content="Category: intellij-idea">
-  
+  <meta name="description" content="What a joy to learn all the goodies sbt brings to the table and be given a chance to apply it right away to commercial projects in Scala! I&rsquo;ve &hellip;">
+  <meta name="keywords" content="autoplugin, sbt">
 
   <!-- http://t.co/dKP3o1e -->
   <meta name="HandheldFriendly" content="True">
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://blog.jaceklaskowski.pl/blog/categories/intellij-idea/index.html">
+  <link rel="canonical" href="http://blog.jaceklaskowski.pl/2015/04/12/using-autoplugin-in-sbt-for-common-settings-across-projects-in-multi-project-build.html">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="http://feeds.feedburner.com/MasteringFpWithScala" rel="alternate" title="Mastering FP and OO with Scala" type="application/atom+xml">
@@ -46,7 +46,7 @@
 
 </head>
 
-<body   >
+<body    class="collapse-sidebar sidebar-footer" >
   <header role="banner"><hgroup>
   <h1><a href="/">Mastering FP and OO with Scala</a></h1>
   
@@ -78,53 +78,125 @@
   <div id="main">
     <div id="content">
       <div>
-<article role="article">
+<article class="hentry" role="article">
   
   <header>
-    <h1 class="entry-title">Category: Intellij-idea</h1>
+    
+      <h1 class="entry-title">Using AutoPlugin in Sbt for Common Settings Across Projects in Multi-project Build</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-04-12T15:20:45+02:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>12</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>3:20 pm</span></time>
+        
+      </p>
     
   </header>
-  
-  <div id="blog-archives" class="category">
 
 
+<div class="entry-content"><p>What a joy to learn all the goodies sbt brings to the table and be given a chance to apply it right away to commercial projects in Scala!</p>
 
-  
-  <h2>2015</h2>
+<p>I&rsquo;ve recently been assigned to a task to create a solution to share common settings across projects in a <a href="http://www.scala-sbt.org/0.13/tutorial/Multi-Project.html">multi-project build</a> in a Scala project managed by <a href="http://www.scala-sbt.org">sbt</a>. With the new feature of sbt - <a href="http://www.scala-sbt.org/0.13/docs/Plugins.html">autoplugins</a> - it was very easy to implement from the day one.</p>
 
-<article>
-  
-<h1><a href="/2015/03/28/daily-routines-to-learn-scala-with-intellij-idea.html">Daily Routines to Learn Scala With IntelliJ IDEA</a></h1>
-<time datetime="2015-03-28T12:54:28+01:00" pubdate><span class='month'>Mar</span> <span class='day'>28</span> <span class='year'>2015</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/intellij-idea/'>intellij-idea</a>, <a class='category' href='/blog/categories/scala/'>scala</a></span>
-</footer>
+<!-- more -->
 
 
-</article>
+<h2>The solution = project/CommonSettingsPlugin.scala</h2>
 
+<pre><code>import sbt._
+import Keys._
 
+object CommonSettingsPlugin extends AutoPlugin {
+  override def trigger = allRequirements
+  override lazy val projectSettings = Seq(
+    organization  := "io.deepsense",
+    version       := "0.1.0",
+    scalaVersion  := "2.11.6",
+    scalacOptions := Seq(
+      "-unchecked", "-deprecation", "-encoding", "utf8", "-feature",
+      "-language:existentials", "-language:implicitConversions"
+    )
+  )
+}
+</code></pre>
 
-  
-  <h2>2013</h2>
+<p>Since the autplugin is automatically triggered for all the projects in the multi-project build &ndash; <code>override def trigger = allRequirements</code> &ndash; all the projects have <code>organization</code>, <code>version</code>, <code>scalaVersion</code>, <code>scalacOptions</code> set. No other work is needed.</p>
 
-<article>
-  
-<h1><a href="/2013/12/07/beginner-guide-to-sbt-0-dot-13-and-intellij-idea-13.html">Beginner &#8220;Guide&#8221; to Sbt 0.13 and IntelliJ IDEA 13</a></h1>
-<time datetime="2013-12-07T16:39:37+01:00" pubdate><span class='month'>Dec</span> <span class='day'>07</span> <span class='year'>2013</span></time>
+<p>Simple and easy, and, what&rsquo;s tracked under another issue, Jenkins should now be able to execute <code>coverageReport</code> and <code>coverageAggregate</code> without troubles for the project!</p>
 
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/intellij-idea/'>intellij-idea</a>, <a class='category' href='/blog/categories/sbt/'>sbt</a>, <a class='category' href='/blog/categories/scala/'>scala</a></span>
-</footer>
+<p>As a bonus, you don&rsquo;t have to change anything in your sbt project to leverage the simplicity - just drop the code as <code>project/CommonSettingsPlugin.scala</code> and do <code>show scalaVersion</code>. From that moment on, all the (sub)projects in your multi-project build should have the same <code>scalaVersion</code> (unless you use a separate <code>build.sbt</code> for a project and set <code>scalaVersion</code> explicitly).</p>
 
+<h2>Lessons learnt</h2>
 
-</article>
+<p>The initial mistake was to create a separate sbt project just to keep the autoplugin&rsquo;s code.</p>
 
+<p>From the very first day of the plugin&rsquo;s life it was so much different from the other projects in the build &ndash; it almost yelled out in pain at me not to place it where it was initially. It was a sbt plugin and as such it only meant to enhance sbt itself (not be a part of the commercial project).</p>
+
+<p>What&rsquo;s even worse, up to the latest version of sbt 0.13.8 all plugins (are doomed to) use Scala 2.10.4 that&rsquo;s an issue for <a href="https://github.com/scoverage/sbt-scoverage">sbt-scoverage plugin</a> as it kept refusing to work with the version of Scala.</p>
+
+<p>All in all, I seemed reluctant for a long time to have even thought of a better place even though I had actually known it.</p>
+
+<p>A few discussions on <a href="https://gitter.im/sbt/sbt">gitter on the sbt channel</a> made my day after the very helpful and nice people from the channel lent me a helping hand to find the final solution - the autoplugin went under <code>project</code> and&hellip;my live was so much bright again!</p>
+
+<p>p.s. Shhh, the team thinks it was just me to have figured it out myself.</p>
 </div>
 
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">Jacek Laskowski</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-04-12T15:20:45+02:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>12</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>3:20 pm</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/sbt/'>sbt</a>, <a class='category' href='/blog/categories/tools/'>tools</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://blog.jaceklaskowski.pl/2015/04/12/using-autoplugin-in-sbt-for-common-settings-across-projects-in-multi-project-build.html" data-via="jaceklaskowski" data-counturl="http://blog.jaceklaskowski.pl/2015/04/12/using-autoplugin-in-sbt-for-common-settings-across-projects-in-multi-project-build.html" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/2015/04/05/code-review-with-gerrit-and-contributing-to-a-patchset.html" title="Previous Post: Code review with gerrit and contributing to a patch set?">&laquo; Code review with gerrit and contributing to a patch set?</a>
+      
+      
+    </p>
+  </footer>
 </article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
 
 </div>
 
@@ -256,7 +328,10 @@
       var disqus_shortname = 'jaceklaskowski';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://blog.jaceklaskowski.pl/2015/04/12/using-autoplugin-in-sbt-for-common-settings-across-projects-in-multi-project-build.html';
+        var disqus_url = 'http://blog.jaceklaskowski.pl/2015/04/12/using-autoplugin-in-sbt-for-common-settings-across-projects-in-multi-project-build.html';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

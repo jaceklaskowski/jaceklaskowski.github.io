@@ -124,7 +124,7 @@ object CommonSettingsPlugin extends AutoPlugin {
 }
 </code></pre>
 
-<p>Since the autplugin is automatically triggered for all the projects in the multi-project build &ndash; <code>override def trigger = allRequirements</code> &ndash; all the projects have <code>organization</code>, <code>version</code>, <code>scalaVersion</code>, <code>scalacOptions</code> set. No other work is needed.</p>
+<p>Since the autoplugin is automatically triggered for all the projects in the multi-project build &ndash; <code>override def trigger = allRequirements</code> &ndash; all the projects have <code>organization</code>, <code>version</code>, <code>scalaVersion</code>, <code>scalacOptions</code> set. No other work is needed.</p>
 
 <p>Simple and easy, and, what&rsquo;s tracked under another issue, Jenkins should now be able to execute <code>coverageReport</code> and <code>coverageAggregate</code> without troubles for the project!</p>
 

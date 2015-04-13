@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Tools | Mastering FP and OO with Scala]]></title>
   <link href="http://blog.jaceklaskowski.pl/blog/categories/tools/atom.xml" rel="self"/>
   <link href="http://blog.jaceklaskowski.pl/"/>
-  <updated>2015-04-12T16:32:20+02:00</updated>
+  <updated>2015-04-13T09:49:41+02:00</updated>
   <id>http://blog.jaceklaskowski.pl/</id>
   <author>
     <name><![CDATA[Jacek Laskowski]]></name>
@@ -42,7 +42,7 @@ I've recently been assigned to a task to create a solution to share common setti
 	  )
 	}
 
-Since the autplugin is automatically triggered for all the projects in the multi-project build &#8211; `override def trigger = allRequirements` &#8211; all the projects have `organization`, `version`, `scalaVersion`, `scalacOptions` set. No other work is needed.
+Since the autoplugin is automatically triggered for all the projects in the multi-project build &#8211; `override def trigger = allRequirements` &#8211; all the projects have `organization`, `version`, `scalaVersion`, `scalacOptions` set. No other work is needed.
 
 Simple and easy, and, what&#8217;s tracked under another issue, Jenkins should now be able to execute `coverageReport` and `coverageAggregate` without troubles for the project!
 

@@ -138,9 +138,15 @@ object CommonSettingsPlugin extends AutoPlugin {
 
 <p>What&rsquo;s even worse, up to the latest version of sbt 0.13.8 all plugins (are doomed to) use Scala 2.10.4 that&rsquo;s an issue for <a href="https://github.com/scoverage/sbt-scoverage">sbt-scoverage plugin</a> as it kept refusing to work with the version of Scala.</p>
 
-<p>All in all, I seemed reluctant for a long time to have even thought of a better place even though I had actually known it.</p>
+<p>All in all, I seemed reluctant for a long time to have even thought of a better place for the plugin even though I had actually known it.</p>
 
 <p>A few discussions on <a href="https://gitter.im/sbt/sbt">gitter on the sbt channel</a> made my day after the very helpful and nice people from the channel lent me a helping hand to find the final solution - the autoplugin went under <code>project</code> and&hellip;my live was so much bright again!</p>
+
+<p>What was later pointed out to me when we discussed the change in the team, the final solution was a mere 24 line removal (!)</p>
+
+<p><img src="/images/using-autoplugin-patchset-gerrit.png" title="Patchset with AutoPlugin changes" ></p>
+
+<p>It got <code>+2</code> from a teammate and has been merged to <code>master</code> without much hussle.</p>
 
 <p>p.s. Shhh, the team thinks it was just me to have figured it out myself.</p>
 </div>

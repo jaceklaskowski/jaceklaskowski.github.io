@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Tools | Mastering FP and OO with Scala]]></title>
   <link href="http://blog.jaceklaskowski.pl/blog/categories/tools/atom.xml" rel="self"/>
   <link href="http://blog.jaceklaskowski.pl/"/>
-  <updated>2015-04-13T09:49:41+02:00</updated>
+  <updated>2015-04-13T22:01:40+02:00</updated>
   <id>http://blog.jaceklaskowski.pl/</id>
   <author>
     <name><![CDATA[Jacek Laskowski]]></name>
@@ -56,9 +56,15 @@ From the very first day of the plugin&#8217;s life it was so much different from
 
 What&#8217;s even worse, up to the latest version of sbt 0.13.8 all plugins (are doomed to) use Scala 2.10.4 that&#8217;s an issue for [sbt-scoverage plugin](https://github.com/scoverage/sbt-scoverage) as it kept refusing to work with the version of Scala.
 
-All in all, I seemed reluctant for a long time to have even thought of a better place even though I had actually known it.
+All in all, I seemed reluctant for a long time to have even thought of a better place for the plugin even though I had actually known it.
 
 A few discussions on [gitter on the sbt channel](https://gitter.im/sbt/sbt) made my day after the very helpful and nice people from the channel lent me a helping hand to find the final solution - the autoplugin went under `project` and&#8230;my live was so much bright again!
+
+What was later pointed out to me when we discussed the change in the team, the final solution was a mere 24 line removal (!)
+
+<img src="/images/using-autoplugin-patchset-gerrit.png" title="Patchset with AutoPlugin changes" >
+
+It got `+2` from a teammate and has been merged to `master` without much hussle.
 
 p.s. Shhh, the team thinks it was just me to have figured it out myself.
 ]]></content>

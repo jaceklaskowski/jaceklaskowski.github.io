@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Scala | Mastering FP and OO with Scala]]></title>
   <link href="http://blog.jaceklaskowski.pl/blog/categories/scala/atom.xml" rel="self"/>
   <link href="http://blog.jaceklaskowski.pl/"/>
-  <updated>2015-04-13T22:01:40+02:00</updated>
+  <updated>2015-05-09T23:27:42+02:00</updated>
   <id>http://blog.jaceklaskowski.pl/</id>
   <author>
     <name><![CDATA[Jacek Laskowski]]></name>
@@ -12,6 +12,41 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Ditching Guice's @Singleton in Favour of Scala's (Companion) Object]]></title>
+    <link href="http://blog.jaceklaskowski.pl/2015/05/09/ditching-guices-at-singleton-in-favour-of-scalas-companion-object.html"/>
+    <updated>2015-05-09T14:57:19+02:00</updated>
+    <id>http://blog.jaceklaskowski.pl/2015/05/09/ditching-guices-at-singleton-in-favour-of-scalas-companion-object</id>
+    <content type="html"><![CDATA[[Arek Komarzewski](https://twitter.com/akomarzewski) (a Scala developer in HCore) mentioned the following this Friday and made my day (and the whole week, too):
+
+> I can now ditch Guice&#8217;s @Singleton as I&#8217;ve got a trait and the companion object combo (thanks to Scala).
+
+This time the blog post is without a complete working example. Not yet. It&#8217;s to remind myself to prepare one (or be given one after the blog post is published &#8211; whatever comes first). I just think it needs to be said aloud to be heard and think about.
+
+<!-- more -->
+
+And then, quite unexpectedly to me, [Play Framework](https://www.playframework.com/) - *&#8221;The High Velocity Web Framework For Java and Scala&#8221;* - that&#8217;s the web framework supported by Typesafe in their [Reactive Platform](http://www.typesafe.com/products/typesafe-reactive-platform) has announced in [What&#8217;s new in Play 2.4](https://www.playframework.com/documentation/2.4.x/Highlights24):
+
+> In the Scala ecosystem, the approach to dependency injection is not generally agreed upon, with many competing compile time and runtime dependency injection approaches out there.
+
+> Play’s philosophy in providing a dependency injection solution is to be unopinionated in what approaches we allow, but to be opinionated to the approach that we document and provide out of the box. For this reason, we have provided the following:
+
+> An implementation that uses Guice out of the box
+
+I&#8217;m very lucky to be able to pursue my understanding of Scala the programming language not only in my free time, but also in commercial projects as a full-time Scala developer and a technical leader (in [DeepSense.io](http://deepsense.io/)) as well as supporting companies making the most out of Scala and open source software (in [HCore](http://www.hcore.com/)) not to mention leading [Warsaw Scala Enthusiasts](http://www.meetup.com/WarszawScaLa/) in **Warsaw**, **Poland**. The technical part of my life simply can&#8217;t be any better! I&#8217;m learning as well as teaching people using Scala as an object-oriented and functional programming language on JVM, and am also meeting up lots of Scala developers. I really wish I had more time to publish all the major breakthroughs in blog posts here.
+
+Enough praising. On to real matters.
+
+In [DeepSense.io](http://deepsense.io/) we&#8217;re using [Guice](https://github.com/google/guice) as *a dependency framework*. It&#8217;s also used in few other projects where Scala is used. That often leads to my questioning the need for Guice or any dependency injection framework since Scala the programming language itself offers enough features to let Guice leave.
+
+I think there&#8217;s the issue of how most Scala developers (I&#8217;m meeting) think &#8211; they are former Java developers who see no reason to adapt to new approaches of tackling development problems. They simply have no more courage to dig deeper, and&#8230;let the past rest and welcome new solutions for the brighter future. And since Scala alone is still shaping itself and the Scala community is not clear on what to follow along and what to forget about, that all makes the leave-past-welcome-new approach harder.
+
+Just this week I had a pleasure to meet two teams that both use Guice because nobody introduced viable alternatives (even when they use one already - Scala!). I don&#8217;t consider myself skilled enough, either, since I&#8217;m pretty much a Guice newbie and hence just unable to counter the Guice&#8217;s way of solving problems. It&#8217;s that something inside me that is telling me that Guice is dragged along unnecessarily and gives a false perception of being the right fit to dependency injection-looking problems (even when it introduces more problems, mostly related to learning a yet another framework, than it solves). I&#8217;m glad Spring is far heavier as it would likely have found its way in the projects, too.
+
+It has worked fine for Arek and I&#8217;m hoping it&#8217;s going to work fine for me soon, too. I&#8217;ll simply have to find it out and promote the right approach.
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Daily Routines to Learn Scala With IntelliJ IDEA]]></title>
@@ -430,105 +465,6 @@ Create a new git repository under `Repos` in the CloudBees Administrative Consol
 Access http://hello-play-tutorial.jaceklaskowski.eu.cloudbees.net (mind that yours is different) to see the application deployed and running.
 
 Set up a Jenkins job so the application&#8217;s deployed every `git push cloudbees`.]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[JSON in Play Framework With JsValue and Reads]]></title>
-    <link href="http://blog.jaceklaskowski.pl/2014/09/02/json-in-play-framework-with-jsvalue-and-reads.html"/>
-    <updated>2014-09-02T16:00:00+02:00</updated>
-    <id>http://blog.jaceklaskowski.pl/2014/09/02/json-in-play-framework-with-jsvalue-and-reads</id>
-    <content type="html"><![CDATA[There are many ways to learn [the Scala programming language](http://www.scala-lang.org/) and the vast number of libraries for the language. Mine is to use [sbt](http://www.scala-sbt.org/) console in a customized project with required dependencies that are automatically downloaded by sbt. All (analysing, downloading, setting up CLASSPATH and such) is handled by the tooling itself not me. Share your approach if it appears smarter.
-
-In this installment, I'm presenting a sbt build for learning the JSON API from the [play-json](https://www.playframework.com/documentation/2.4.x/ScalaJson) module in the [play.api.libs.json](https://www.playframework.com/documentation/2.4.x/api/scala/index.html#play.api.libs.json.package) package in [Play Framework 2.4.0-M1](https://www.playframework.com/).
-
-<!-- more -->
-
-It’s a code-mainly version of the article [JSON Macro Inception](https://www.playframework.com/documentation/2.4.x/ScalaJsonInception) from the official documentation of Play Framework.
-
-Start a new activator/sbt project with the following build definition in `build.sbt`:
-
-    scalaVersion := &#8220;2.11.2&#8221;
-
-    val playVersion = &#8220;2.4.0-M1&#8221;
-
-    libraryDependencies += &#8220;com.typesafe.play&#8221; %% &#8220;play-json&#8221; % playVersion
-
-On the command line execute `sbt` and then, while in the sbt shell, `console`.
-
-    > console
-    [info] Starting scala interpreter&#8230;
-    [info]
-    Welcome to Scala version 2.11.2 (Java HotSpot(TM) 64-Bit Server VM, Java 1.8.0_20).
-    Type in expressions to have them evaluated.
-    Type :help for more information.
-
-When you see the above (the Java version might be different depending on your configuration), you’re in an interactive development environment - Scala REPL - with play-json library and Scala 2.11.2. The world of JSON’s (almost) yours!
-
-`:pa` (a shortcut for `:paste`) enters paste mode so you can copy and paste entire Scala statements.
-
-    scala> :pa
-    // Entering paste mode (ctrl-D to finish)
-
-    import play.api.libs.functional.syntax._
-    import play.api.libs.json._
-
-    // Exiting paste mode, now interpreting.
-
-    import play.api.libs.functional.syntax._
-    import play.api.libs.json._
-
-    scala> case class Person(name: String, age: Int, lovesChocolate: Boolean)
-    defined class Person
-
-    scala> :pa
-    // Entering paste mode (ctrl-D to finish)
-
-    implicit val personReads = (
-      (__ \ &#8216;name).read[String] and
-      (__ \ &#8216;age).read[Int] and
-      (__ \ &#8216;lovesChocolate).read[Boolean]
-    )(Person)
-
-    // Exiting paste mode, now interpreting.
-
-    personReads: play.api.libs.json.Reads[Person] = play.api.libs.json.Reads$$anon$8@5c2b898d
-
-    scala> val jsonStr = &#8220;&#8221;&#8220;{ &#8220;name&#8221; : &#8220;Jacek&#8221;, &#8220;age&#8221; : 41, &#8220;lovesChocolate&#8221;: true }&#8221;&#8220;&#8221;
-    jsonStr: String = { &#8220;name&#8221; : &#8220;Jacek&#8221;, &#8220;age&#8221; : 41, &#8220;lovesChocolate&#8221;: true }
-
-    scala> val json = play.api.libs.json.Json.parse(jsonStr)
-    json: play.api.libs.json.JsValue = {&#8220;name&#8221;:&#8221;Jacek&#8221;,&#8221;age&#8221;:41,&#8221;lovesChocolate&#8221;:true}
-
-    scala> val jacek: Person = json
-    <console>:18: error: type mismatch;
-     found   : play.api.libs.json.JsValue
-     required: Person
-           val jacek: Person = json
-                               ^
-
-    scala> val jacek: Person = json.as[Person]
-    jacek: Person = Person(Jacek,41,true)
-
-    scala> implicit val personReads = Json.reads[Person]
-    personReads: play.api.libs.json.Reads[Person] = play.api.libs.json.Reads$$anon$8@5e930aa2
-
-With the playground you can play with JSON types in Play however you like. Start with the trait [play.api.libs.json.JsValue](https://www.playframework.com/documentation/2.4.x/api/scala/index.html#play.api.libs.json.JsValue) and then learn what [play.api.libs.json.Reads[T]](https://www.playframework.com/documentation/2.4.x/api/scala/index.html#play.api.libs.json.Reads) offers. They&#8217;re the cornerstone of the JSON API in Play.
-
-The entire code to paste (`:pa` or `:paste` in sbt console) follows. Note the simplifications codenamed **JSON Inception**.
-
-    import play.api.libs.json._
-
-    case class Person(name: String, age: Int, lovesChocolate: Boolean)
-
-    val jsonStr = &#8220;&#8221;&#8220;{ &#8220;name&#8221; : &#8220;Jacek&#8221;, &#8220;age&#8221; : 41, &#8220;lovesChocolate&#8221;: true }&#8221;&#8220;&#8221;
-
-    val json = play.api.libs.json.Json.parse(jsonStr)
-
-    implicit val personReads = Json.reads[Person]
-
-    val jacek: Person = json.as[Person]
-
-Once you’re done, press `Ctrl+D` twice to exit `console` and the sbt shell afterwards.]]></content>
   </entry>
   
 </feed>

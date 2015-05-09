@@ -5,12 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Category: Scala - Mastering FP and OO with Scala</title>
+  <title>Ditching Guice&#8217;s @Singleton in Favour of Scala&#8217;s (Companion) Object - Mastering FP and OO with Scala</title>
   <meta name="author" content="Jacek Laskowski">
 
   
-  <meta name="description" content="Category: scala">
-  
+  <meta name="description" content="Arek Komarzewski (a Scala developer in HCore) mentioned the following this Friday and made my day (and the whole week, too): I can now ditch Guice& &hellip;">
+  <meta name="keywords" content="guice, singleton pattern, companion object">
 
   <!-- http://t.co/dKP3o1e -->
   <meta name="HandheldFriendly" content="True">
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://blog.jaceklaskowski.pl/blog/categories/scala/index.html">
+  <link rel="canonical" href="http://blog.jaceklaskowski.pl/2015/05/09/ditching-guices-at-singleton-in-favour-of-scalas-companion-object.html">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="http://feeds.feedburner.com/MasteringFpWithScala" rel="alternate" title="Mastering FP and OO with Scala" type="application/atom+xml">
@@ -46,7 +46,7 @@
 
 </head>
 
-<body   >
+<body    class="collapse-sidebar sidebar-footer" >
   <header role="banner"><hgroup>
   <h1><a href="/">Mastering FP and OO with Scala</a></h1>
   
@@ -78,168 +78,108 @@
   <div id="main">
     <div id="content">
       <div>
-<article role="article">
+<article class="hentry" role="article">
   
   <header>
-    <h1 class="entry-title">Category: Scala</h1>
+    
+      <h1 class="entry-title">Ditching Guice&#8217;s @Singleton in Favour of Scala&#8217;s (Companion) Object</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-05-09T14:57:19+02:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>9</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>2:57 pm</span></time>
+        
+      </p>
     
   </header>
-  
-  <div id="blog-archives" class="category">
 
 
+<div class="entry-content"><p><a href="https://twitter.com/akomarzewski">Arek Komarzewski</a> (a Scala developer in HCore) mentioned the following this Friday and made my day (and the whole week, too):</p>
 
-  
-  <h2>2015</h2>
+<blockquote><p>I can now ditch Guice&rsquo;s @Singleton as I&rsquo;ve got a trait and the companion object combo (thanks to Scala).</p></blockquote>
 
-<article>
-  
-<h1><a href="/2015/05/09/ditching-guices-at-singleton-in-favour-of-scalas-companion-object.html">Ditching Guice&#8217;s @Singleton in Favour of Scala&#8217;s (Companion) Object</a></h1>
-<time datetime="2015-05-09T14:57:19+02:00" pubdate><span class='month'>May</span> <span class='day'>09</span> <span class='year'>2015</span></time>
+<p>This time the blog post is without a complete working example. Not yet. It&rsquo;s to remind myself to prepare one (or be given one after the blog post is published &ndash; whatever comes first). I just think it needs to be said aloud to be heard and think about.</p>
 
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/scala/'>scala</a></span>
-</footer>
+<!-- more -->
 
 
-</article>
+<p>And then, quite unexpectedly to me, <a href="https://www.playframework.com/">Play Framework</a> - <em>&ldquo;The High Velocity Web Framework For Java and Scala&rdquo;</em> - that&rsquo;s the web framework supported by Typesafe in their <a href="http://www.typesafe.com/products/typesafe-reactive-platform">Reactive Platform</a> has announced in <a href="https://www.playframework.com/documentation/2.4.x/Highlights24">What&rsquo;s new in Play 2.4</a>:</p>
 
+<blockquote><p>In the Scala ecosystem, the approach to dependency injection is not generally agreed upon, with many competing compile time and runtime dependency injection approaches out there.</p>
 
+<p>Play’s philosophy in providing a dependency injection solution is to be unopinionated in what approaches we allow, but to be opinionated to the approach that we document and provide out of the box. For this reason, we have provided the following:</p>
 
-<article>
-  
-<h1><a href="/2015/03/28/daily-routines-to-learn-scala-with-intellij-idea.html">Daily Routines to Learn Scala With IntelliJ IDEA</a></h1>
-<time datetime="2015-03-28T12:54:28+01:00" pubdate><span class='month'>Mar</span> <span class='day'>28</span> <span class='year'>2015</span></time>
+<p>An implementation that uses Guice out of the box</p></blockquote>
 
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/intellij-idea/'>intellij-idea</a>, <a class='category' href='/blog/categories/scala/'>scala</a></span>
-</footer>
+<p>I&rsquo;m very lucky to be able to pursue my understanding of Scala the programming language not only in my free time, but also in commercial projects as a full-time Scala developer and a technical leader (in <a href="http://deepsense.io/">DeepSense.io</a>) as well as supporting companies making the most out of Scala and open source software (in <a href="http://www.hcore.com/">HCore</a>) not to mention leading <a href="http://www.meetup.com/WarszawScaLa/">Warsaw Scala Enthusiasts</a> in <strong>Warsaw</strong>, <strong>Poland</strong>. The technical part of my life simply can&rsquo;t be any better! I&rsquo;m learning as well as teaching people using Scala as an object-oriented and functional programming language on JVM, and am also meeting up lots of Scala developers. I really wish I had more time to publish all the major breakthroughs in blog posts here.</p>
 
+<p>Enough praising. On to real matters.</p>
 
-</article>
+<p>In <a href="http://deepsense.io/">DeepSense.io</a> we&rsquo;re using <a href="https://github.com/google/guice">Guice</a> as <em>a dependency framework</em>. It&rsquo;s also used in few other projects where Scala is used. That often leads to my questioning the need for Guice or any dependency injection framework since Scala the programming language itself offers enough features to let Guice leave.</p>
 
+<p>I think there&rsquo;s the issue of how most Scala developers (I&rsquo;m meeting) think &ndash; they are former Java developers who see no reason to adapt to new approaches of tackling development problems. They simply have no more courage to dig deeper, and&hellip;let the past rest and welcome new solutions for the brighter future. And since Scala alone is still shaping itself and the Scala community is not clear on what to follow along and what to forget about, that all makes the leave-past-welcome-new approach harder.</p>
 
+<p>Just this week I had a pleasure to meet two teams that both use Guice because nobody introduced viable alternatives (even when they use one already - Scala!). I don&rsquo;t consider myself skilled enough, either, since I&rsquo;m pretty much a Guice newbie and hence just unable to counter the Guice&rsquo;s way of solving problems. It&rsquo;s that something inside me that is telling me that Guice is dragged along unnecessarily and gives a false perception of being the right fit to dependency injection-looking problems (even when it introduces more problems, mostly related to learning a yet another framework, than it solves). I&rsquo;m glad Spring is far heavier as it would likely have found its way in the projects, too.</p>
 
-  
-  <h2>2014</h2>
-
-<article>
-  
-<h1><a href="/2014/11/29/sbt-dependency-graph-for-easier-dependency-management-in-sbt.html">Sbt-dependency-graph for Easier Dependency Management in Sbt</a></h1>
-<time datetime="2014-11-29T23:10:06+01:00" pubdate><span class='month'>Nov</span> <span class='day'>29</span> <span class='year'>2014</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/sbt/'>sbt</a>, <a class='category' href='/blog/categories/scala/'>scala</a></span>
-</footer>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/2014/09/12/mistakes-introducing-slick-for-database-access-under-play-framework-2-dot-3-4-and-2-dot-4-0-m1.html">Mistakes Introducing Slick for Database Access Under Play Framework 2.3.4 and 2.4.0-M1</a></h1>
-<time datetime="2014-09-12T21:47:50+02:00" pubdate><span class='month'>Sep</span> <span class='day'>12</span> <span class='year'>2014</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/play-framework/'>play framework</a>, <a class='category' href='/blog/categories/scala/'>scala</a>, <a class='category' href='/blog/categories/slick/'>slick</a></span>
-</footer>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/2014/09/08/getting-started-with-play-framework-and-angularjs-day-1.html">Getting Started With Play Framework and AngularJS - Day 1</a></h1>
-<time datetime="2014-09-08T12:42:49+02:00" pubdate><span class='month'>Sep</span> <span class='day'>08</span> <span class='year'>2014</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/angularjs/'>angularjs</a>, <a class='category' href='/blog/categories/play-framework/'>play framework</a>, <a class='category' href='/blog/categories/scala/'>scala</a>, <a class='category' href='/blog/categories/tutorial/'>tutorial</a>, <a class='category' href='/blog/categories/wip/'>wip</a></span>
-</footer>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/2014/09/02/json-in-play-framework-with-jsvalue-and-reads.html">JSON in Play Framework With JsValue and Reads</a></h1>
-<time datetime="2014-09-02T16:00:00+02:00" pubdate><span class='month'>Sep</span> <span class='day'>02</span> <span class='year'>2014</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/json/'>json</a>, <a class='category' href='/blog/categories/play-framework/'>play framework</a>, <a class='category' href='/blog/categories/scala/'>scala</a></span>
-</footer>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/2014/07/22/trait-init-scope-in-sbt.html">Trait Init[Scope] in Sbt</a></h1>
-<time datetime="2014-07-22T13:19:54+02:00" pubdate><span class='month'>Jul</span> <span class='day'>22</span> <span class='year'>2014</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/sbt/'>sbt</a>, <a class='category' href='/blog/categories/scala/'>scala</a>, <a class='category' href='/blog/categories/wip/'>wip</a></span>
-</footer>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/2014/06/26/calculate-profit-in-scala-with-foldLeft.html">Calculate Profit in Scala With foldLeft</a></h1>
-<time datetime="2014-06-26T22:57:00+02:00" pubdate><span class='month'>Jun</span> <span class='day'>26</span> <span class='year'>2014</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/scala/'>scala</a></span>
-</footer>
-
-
-</article>
-
-
-
-  
-  <h2>2013</h2>
-
-<article>
-  
-<h1><a href="/2013/12/07/beginner-guide-to-sbt-0-dot-13-and-intellij-idea-13.html">Beginner &#8220;Guide&#8221; to Sbt 0.13 and IntelliJ IDEA 13</a></h1>
-<time datetime="2013-12-07T16:39:37+01:00" pubdate><span class='month'>Dec</span> <span class='day'>07</span> <span class='year'>2013</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/intellij-idea/'>intellij-idea</a>, <a class='category' href='/blog/categories/sbt/'>sbt</a>, <a class='category' href='/blog/categories/scala/'>scala</a></span>
-</footer>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/2013/11/23/how-much-one-ought-to-know-eta-expansion.html">How Much One Ought to Know Eta Expansion</a></h1>
-<time datetime="2013-11-23T22:20:23+01:00" pubdate><span class='month'>Nov</span> <span class='day'>23</span> <span class='year'>2013</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/scala/'>scala</a></span>
-</footer>
-
-
-</article>
-
+<p>It has worked fine for Arek and I&rsquo;m hoping it&rsquo;s going to work fine for me soon, too. I&rsquo;ll simply have to find it out and promote the right approach.</p>
 </div>
 
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">Jacek Laskowski</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-05-09T14:57:19+02:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>9</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>2:57 pm</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/scala/'>scala</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://blog.jaceklaskowski.pl/2015/05/09/ditching-guices-at-singleton-in-favour-of-scalas-companion-object.html" data-via="jaceklaskowski" data-counturl="http://blog.jaceklaskowski.pl/2015/05/09/ditching-guices-at-singleton-in-favour-of-scalas-companion-object.html" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/2015/04/12/using-autoplugin-in-sbt-for-common-settings-across-projects-in-multi-project-build.html" title="Previous Post: Using AutoPlugin in sbt for common settings across projects in multi-project build">&laquo; Using AutoPlugin in sbt for common settings across projects in multi-project build</a>
+      
+      
+    </p>
+  </footer>
 </article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
 
 </div>
 
@@ -371,7 +311,10 @@
       var disqus_shortname = 'jaceklaskowski';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://blog.jaceklaskowski.pl/2015/05/09/ditching-guices-at-singleton-in-favour-of-scalas-companion-object.html';
+        var disqus_url = 'http://blog.jaceklaskowski.pl/2015/05/09/ditching-guices-at-singleton-in-favour-of-scalas-companion-object.html';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

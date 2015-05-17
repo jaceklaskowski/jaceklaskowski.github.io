@@ -4,7 +4,7 @@
   <title><![CDATA[Mastering FP and OO with Scala]]></title>
   <link href="http://blog.jaceklaskowski.pl/atom.xml" rel="self"/>
   <link href="http://blog.jaceklaskowski.pl/"/>
-  <updated>2015-05-09T23:27:42+02:00</updated>
+  <updated>2015-05-17T02:19:51+02:00</updated>
   <id>http://blog.jaceklaskowski.pl/</id>
   <author>
     <name><![CDATA[Jacek Laskowski]]></name>
@@ -12,6 +12,301 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Ad Hoc Polymorphism in Scala With Type Classes]]></title>
+    <link href="http://blog.jaceklaskowski.pl/2015/05/15/ad-hoc-polymorphism-in-scala-with-type-classes.html"/>
+    <updated>2015-05-15T22:21:20+02:00</updated>
+    <id>http://blog.jaceklaskowski.pl/2015/05/15/ad-hoc-polymorphism-in-scala-with-type-classes</id>
+    <content type="html"><![CDATA[<p>My journey into the depths of <a href="http://www.scala-lang.org/">Scala</a> is in full swing. Not only can I learn the theory (with the group of <a href="http://warsawscala.pl">Warsaw Scala Enthusiasts</a>), but also apply it to commercial projects (with the Scala development teams of <a href="http://deepsense.io/">DeepSense.io</a> and <a href="http://www.hcore.com/">HCore</a>). Each day I feel I&rsquo;m getting better at using <strong>type system in Scala</strong> in a more concious and (hopefully) efficient manner.</p>
+
+<p>This time I sank into <strong>type classes</strong> that is a means of doing <strong> <em>ad hoc</em> polymorphism</strong> in Scala.</p>
+
+<p>From <a href="http://en.wikipedia.org/wiki/Ad_hoc_polymorphism"><em>ad hoc</em> polymorphism</a> article on Wikipedia:</p>
+
+<blockquote><p>In programming languages, <strong>ad hoc polymorphism</strong> is a kind of polymorphism in which polymorphic functions can be applied to arguments of different types, because a polymorphic function can denote a number of distinct and potentially heterogeneous implementations depending on the type of argument(s) to which it is applied.</p></blockquote>
+
+<p>The blog post presents a way to implement the type classes concept in Scala.</p>
+
+<p>p.s. I&rsquo;m yet to find out how much of it is <a href="http://clojure.org/multimethods">multimethods</a> in <a href="http://clojure.org/">Clojure</a> (that was once of much help to introduce me to <strong>functional programming</strong>).</p>
+
+<!-- more -->
+
+
+<h2>Theory</h2>
+
+<p>From the article <a href="http://en.wikipedia.org/wiki/Polymorphism_(computer_science">Polymorphism (computer science)</a>) on Wikipedia, you can read about three different kinds of polymorphism:</p>
+
+<ul>
+<li><strong>subtyping</strong></li>
+<li><strong>parametric polymorphism</strong></li>
+<li><strong>ad hoc polymorphism</strong></li>
+</ul>
+
+
+<p>The order does matter (and is different from the Wikipedia article&rsquo;s one) as I think that&rsquo;s exactly the order of when and how well developers master them (in any programming language).</p>
+
+<p>I reckon the Scala community finds the first two quite often used in code that contributes to how well it&rsquo;s understood and applied (except <a href="http://en.wikipedia.org/wiki/Covariance_and_contravariance_%28computer_science%29">variance</a>), and just the last one - ad hoc polymorphism - is proving a major hurdle for many, me including. It didn&rsquo;t click for me for a long time, either, only until I found the &ldquo;venues&rdquo; of very concise and comprehensible material (see <a href="#references">References</a> section below).</p>
+
+<blockquote><p>In programming languages and type theory, polymorphism is the provision of a single interface to entities of different types.</p></blockquote>
+
+<p>The difference between <em>subtyping</em> and <em>parametric polymorphism</em> and <em>ad hoc polymorphism</em> is that the type hierarchy is expressed explicitly using <strong>extends</strong> keyword in Scala (for subtyping) or type parameters (for parametric polymorphism) while ad hoc polymorphism bases itself on <strong>implicit classes</strong> to <em>mixin</em> the behaviour (using traits). And that&rsquo;s pretty much all, technically.</p>
+
+<p>Let&rsquo;s see it in a Scala code.</p>
+
+<h2>Practice</h2>
+
+<h3>Algebraic data types (raw data)</h3>
+
+<p>Let&rsquo;s assume you have the following type hierarchy (from <a href="https://youtu.be/sVMES4RZF-8">Tutorial: Typeclasses in Scala with Dan Rosen</a>):</p>
+
+<pre><code>sealed trait Expression
+case class Number(value: Int) extends Expression
+case class Plus(lhs: Expression, rhs: Expression) extends Expression
+case class Minus(lhs: Expression, rhs: Expression) extends Expression
+</code></pre>
+
+<p>No behaviour, but <em>algebraic data types</em> or (often called) <em>raw data</em>.</p>
+
+<p>Think about how you&rsquo;d go about evaluating expressions, i.e. <code>Plus(Minus(Number(5), Number(3)), Number(18))</code>, i.e. how to make the following application compile and print <code>20</code>?</p>
+
+<pre><code>object Main extends App {
+  val expr = Plus(Minus(Number(5), Number(3)), Number(18))
+  println(...) // do something with expr so it prints 20
+}
+</code></pre>
+
+<p>The past me would change <code>sealed trait Expression</code> to include <code>def value: Int</code> and force the three case classes <code>Number</code>, <code>Plus</code> and <code>Minus</code> follow. I&rsquo;d not be surprised if you thought exactly so. You should not, however.</p>
+
+<p>Think about the case where you must <strong>not</strong> change them as they could be provided as a library or be part of the language or be licensed or&hellip;I simply ask you not to.</p>
+
+<h3>objects to apply behaviour</h3>
+
+<p>Since you&rsquo;re in Scala, you could easily work it around with an object, say <code>object ExpressionEvaluator</code>, that would <em>pattern match</em> to types and do the heavy lifting, i.e. know what to do with each and every type:</p>
+
+<pre><code>object ExpressionEvaluator {
+  def value(expression: Expression): Int = expression match {
+    case Number(value) =&gt; value
+    case Plus(lhs, rhs) =&gt; value(lhs) + value(rhs)
+    case Minus(lhs, rhs) =&gt; value(lhs) - value(rhs)
+  }
+}
+</code></pre>
+
+<p>That&rsquo;s quite inefficient and cumbersome, though. You&rsquo;d have to know about all of the implementations as well as about what to do for each. It&rsquo;s nearly impossible to have right, complete and still flexible.</p>
+
+<p>With the above object, you&rsquo;d write:</p>
+
+<pre><code>object Main extends App {
+  val expr = Plus(Minus(Number(5), Number(3)), Number(18))
+  println(ExpressionEvaluator.value(expr)) // print the value
+}
+</code></pre>
+
+<h3>implicits in Scala</h3>
+
+<p>Let&rsquo;s do it the right way, so it&rsquo;s not <code>ExpressionEvaluator</code> to know what to do with every <code>Expression</code>, but expressions themselves do what they&rsquo;re supposed to do instead.</p>
+
+<p>You may have heard about <strong>implicits</strong> in Scala. Perhaps, you may have used them, too. Think about a solution with implicit machinery so the following is possible:</p>
+
+<pre><code>object Main extends App {
+  val expr = Plus(Minus(Number(5), Number(3)), Number(18))
+  println(expr.value) // print the value
+}
+</code></pre>
+
+<p>One way in Scala would be to apply <strong>Pimp my Library</strong> pattern leveraging <code>implicit class</code>es to add necessary methods as follows:</p>
+
+<pre><code>implicit class ExpressionOps(e: Expression) {
+  def value = ... // calculate the value
+}
+</code></pre>
+
+<p>And have a <code>implicit class</code> per <code>case class</code> and <code>sealed trait Expression</code>, too. The reason to have the implicits is to add a <code>value</code> method to every type, i.e. implicitly convert types without <code>value</code> to ones that have it.</p>
+
+<pre><code>implicit class ExpressionOps(e: Expression) {
+  def value: Int = e match {
+    case n : Number =&gt; n.value
+    case p : Plus =&gt; p.value
+    case m : Minus =&gt; m.value
+  }
+}
+
+implicit class PlusOps(p: Plus) {
+  def value: Int = p.lhs.value + p.rhs.value
+}
+
+implicit class MinusOps(m: Minus) {
+  def value: Int = m.lhs.value - m.rhs.value
+}
+</code></pre>
+
+<p>Note that since <code>Number</code> had <code>value</code> already, an implicit was not needed.</p>
+
+<p>With the implicits in place, you can write:</p>
+
+<pre><code>println(expr.value)  // prints 20
+</code></pre>
+
+<p>The implicit-based solution is far much more flexible because calculating a value is the responsibility of an implicit in scope &ndash; a change in a single implicit, say <code>MinusOps</code>, would only change how <code>Minus.value</code> works (with no changes to the rest of the &ldquo;framework&rdquo;).</p>
+
+<p>You&rsquo;re halfway to typeclasses!</p>
+
+<h3>Partial ad hoc polymorphism</h3>
+
+<p>Think about the case where you&rsquo;d have a library to calculate a value of <code>Valueable</code> values (no pun intended). Say, you have such a library that offers the following &ldquo;calculator&rdquo;:</p>
+
+<pre><code>def calculate(v: Valueable) = ... // calculate the value of v
+</code></pre>
+
+<p>How would you go about converting <code>Expression</code>s to <code>Valueable</code>s so a value of <code>Expression</code> type would participate in the contract of <code>def calculate</code>?</p>
+
+<p>You&rsquo;re right that whenever type conversion is needed in Scala, implicits have their say &ndash; you used them already to have <code>def value</code> for <code>Expression</code> type hierarchy. You&rsquo;re going to use them again with a very small change that has enormous impact. Doing so will introduce the type class design pattern.</p>
+
+<p>The current solution relies on values with <code>def value</code> &ndash; it&rsquo;s like having a library that uses structural typing in Scala that unfortunatelly uses reflection and hence is very costly performance-wise. Happily, you don&rsquo;t need structural types.</p>
+
+<p>If you had a library that expects values of some type, say <code>trait Valueable</code>, to calculate a value or some other library to JSONify them (using some <code>trait Json</code>), the previous solutions would fall short &ndash; you&rsquo;ve merely met the requirement of being able to call a <code>value</code> method on values, but the values don&rsquo;t belong to a single type hierarchy of some <code>trait Valueable</code> that the library uses.</p>
+
+<p>Assume you have a library that works with <code>trait Valueable</code>-only values and there&rsquo;s a <code>calculate</code> method to work with them as follows:</p>
+
+<pre><code>trait Valueable {
+  def value: Int
+}
+
+def calculate(v: Valueable) = v.value
+</code></pre>
+
+<p>Note that the library knows nothing about the <code>Expression</code> type hierarchy. The <code>Expression</code> type hierarchy could not even have existed at the time <code>Valueable</code> did.</p>
+
+<p>A more flexible and efficient solution is to <em>somehow</em> meld the <code>Expression</code> type hierarchy with <code>Valueable</code> and create <em>is-a relationship</em>. No, no, you&rsquo;re not going to change the <code>Expression</code> trait in any way. You must <strong>not</strong> and you even <strong>can&rsquo;t</strong>, remember?</p>
+
+<p>Welcome to <strong>typeclasses</strong> (also known as <strong>type class design pattern</strong>)!</p>
+
+<p>In order to have <code>extends</code>-like semantic at runtime with no <code>extends Valueable</code> in the (closed and <code>sealed</code>) <code>Expression</code> type hierarchy you change <code>implicit class</code>es to have the common trait mixed in, instead.</p>
+
+<pre><code>implicit class ExpressionOps(e: Expression) extends Valueable {
+  def value = e match {
+    case n: Number =&gt; n.value
+    case p: Plus =&gt; p.value
+    case m: Minus =&gt; m.value
+  }
+}
+
+implicit class PlusOps(p: Plus) {
+  def value: Int = p.lhs.value + p.rhs.value
+}
+
+implicit class MinusOps(m: Minus) {
+  def value: Int = m.lhs.value - m.rhs.value
+}
+</code></pre>
+
+<p>With the above <code>implicit class</code>es that all <code>extends Valueable</code>, you can safely do <code>expr.value</code> for any <code>Expression</code> value for which an implicit exists in scope and be done with the task at hand. Notice how Scala &ldquo;executes&rdquo; <code>value</code> on the different types (that&rsquo;s based upon using <code>implicit class</code>es for the types when <code>value</code> is needed).</p>
+
+<pre><code>println(calculate(expr))  // prints 20
+</code></pre>
+
+<p>For what is worth, the <code>calculate</code> method belongs to a library that knows nothing about <code>Expression</code> type and you can&rsquo;t change it so <code>Expression</code>s would be worked with. That&rsquo;s exactly where typeclasses shines and are hard to beat.</p>
+
+<p>This is the version of type classes pattern as described in the book <a href="http://shop.oreilly.com/product/0636920033073.do">Programming Scala, 2nd Edition</a> in &ldquo;Type Class Pattern&rdquo; section, page 156.</p>
+
+<h3>Final solution: <code>Value[T]</code> type class</h3>
+
+<p>You can still do better than that in Scala and that&rsquo;s what (<em>the real</em>) type class design pattern offers. This is the version of type class pattern as demonstrated in the video <a href="https://youtu.be/sVMES4RZF-8">Tutorial: Typeclasses in Scala with Dan Rosen</a>. You should really watch it.</p>
+
+<p>Let&rsquo;s have a parameterized type <code>trait Value[T]</code> that&rsquo;s supposed to &ldquo;bridge&rdquo; the type hierarchies - <code>Expression</code> and <code>Valueable</code>:</p>
+
+<pre><code>trait Value[T] {
+  def value(t: T): Valueable
+}
+</code></pre>
+
+<p>The fictitious Calculator library has <code>object Calculator</code> with a single <code>def calculate(v: Valueable): Int</code> method:</p>
+
+<pre><code>object Calculator {
+  def calculate(v: Valueable): Int = v.value
+}
+</code></pre>
+
+<p>No <code>Expression</code>s, just <code>Valueable</code>s. That&rsquo;s where the type class pattern shines.</p>
+
+<p>Create <code>object CalculatorEx</code> as follows:</p>
+
+<pre><code>object CalculatorEx {
+  def calculate[T : Value](t: T): Int =
+    Calculator.calculate(implicitly[Value[T]].value(t))
+}
+</code></pre>
+
+<p>It says that for any type <code>T</code> there&rsquo;s an implicit conversion to a <code>Value[_]</code> type hierarchy using implicits (that are used in the method via <a href="http://www.scala-lang.org/api/current/index.html#scala.Predef$">implicitly</a>).</p>
+
+<p>All in all, you need to throw in three more implicits for <code>Number</code>, <code>Plus</code> and <code>Minus</code> so they can be seen as <code>Valueable</code> and participate in <code>def calculate(v: Valueable): Int</code>-based library:</p>
+
+<pre><code>implicit val number2Value = new Value[Number] {
+  def value(n: Number): Valueable = new Valueable {
+    override def value: Int = n.value
+  }
+}
+
+implicit val plus2Value = new Value[Plus] {
+  def value(p: Plus): Valueable = new Valueable {
+    override def value: Int = p.lhs.value + p.rhs.value
+  }
+}
+
+implicit val minus2Value = new Value[Minus] {
+  def value(m: Minus): Valueable = new Valueable {
+    override def value: Int = m.lhs.value - m.rhs.value
+  }
+}
+</code></pre>
+
+<p>These make it possible to calculate the value of the expression leveraging the fictitious Calculator library:</p>
+
+<pre><code>println(CalculatorEx.calculate(expr))  // prints 20
+</code></pre>
+
+<p>That&rsquo;s it! You&rsquo;re done. If you&rsquo;ve followed along closely and have developed the &ldquo;framework&rdquo; on your own, you should have a complete understanding of the type class design pattern in Scala. Without the type class pattern, blending the <code>Expression</code> type hierarchy with <code>Valueable</code> would not have been possible! And that was the goal of the exercise.</p>
+
+<h3>Follow up - All <code>Valueable</code></h3>
+
+<p>Think about using other types, say <code>Int</code>, with the fictitious Calculator library so the following is possible:</p>
+
+<pre><code>println(CalculatorEx.calculate(1))  // prints 1
+</code></pre>
+
+<p>As the Scala compiler says:</p>
+
+<blockquote><p>could not find implicit value for evidence parameter of type Value[Int]</p></blockquote>
+
+<p>All, we need to do to blend <code>Int</code>s as <code>Valueable</code>s is to have an implicit that does the conversion.</p>
+
+<pre><code>implicit val int2Value = new Value[Int] {
+  override def value(t: Int) = new Valueable {
+    override def value: Int = t
+  }
+}
+</code></pre>
+
+<p>And that&rsquo;s it!</p>
+
+<p>As a final exercise would be to reuse implicits and create more complex ones to support &ldquo;sum&rdquo; types, like <code>Tuple</code>. I&rsquo;m leaving it as a homework. Have fun!</p>
+
+<p>Let me know how the homework and the whole blog post went out in the Comments section below. I&rsquo;d appreciate any comments to improve upon.</p>
+
+<h2>References</h2>
+
+<p>There are plenty of very good sources on the topic of type classes in general and in Scala, in particular, but the following have done wonders for me:</p>
+
+<ul>
+<li><a href="http://en.wikipedia.org/wiki/Ad_hoc_polymorphism">ad hoc polymorphism</a> article on Wikipedia</li>
+<li><a href="http://en.wikipedia.org/wiki/Polymorphism_(computer_science">Polymorphism (computer science)</a>) article on Wikipedia</li>
+<li><a href="https://youtu.be/sVMES4RZF-8">Tutorial: Typeclasses in Scala with Dan Rosen</a> video</li>
+<li><a href="http://shop.oreilly.com/product/0636920033073.do">Programming Scala, 2nd Edition</a> book</li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Ditching Guice's @Singleton in Favour of Scala's (Companion) Object]]></title>

@@ -1,0 +1,624 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Scala | Mastering FP and OO with Scala]]></title>
+  <link href="http://blog.jaceklaskowski.pl/categories/scala/atom.xml" rel="self"/>
+  <link href="http://blog.jaceklaskowski.pl/"/>
+  <updated>2015-06-20T20:07:37+02:00</updated>
+  <id>http://blog.jaceklaskowski.pl/</id>
+  <author>
+    <name><![CDATA[Jacek Laskowski]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Ad Hoc Polymorphism in Scala With Type Classes]]></title>
+    <link href="http://blog.jaceklaskowski.pl/2015/05/15/ad-hoc-polymorphism-in-scala-with-type-classes.html"/>
+    <updated>2015-05-15T22:21:20+02:00</updated>
+    <id>http://blog.jaceklaskowski.pl/2015/05/15/ad-hoc-polymorphism-in-scala-with-type-classes</id>
+    <content type="html"><![CDATA[My journey into the depths of [Scala](http://www.scala-lang.org/) is in full swing. Not only can I learn the theory (with the group of [Warsaw Scala Enthusiasts](http://warsawscala.pl)), but also apply it to commercial projects (with the Scala development teams of [DeepSense.io](http://deepsense.io/) and [HCore](http://www.hcore.com/)). Each day I feel I'm getting better at using **type system in Scala** in a more concious and (hopefully) efficient manner.
+
+This time I sank into **type classes** that is a means of doing ** *ad hoc* polymorphism** in Scala.
+
+From [*ad hoc* polymorphism](http://en.wikipedia.org/wiki/Ad_hoc_polymorphism) article on Wikipedia:
+
+> In programming languages, **ad hoc polymorphism** is a kind of polymorphism in which polymorphic functions can be applied to arguments of different types, because a polymorphic function can denote a number of distinct and potentially heterogeneous implementations depending on the type of argument(s) to which it is applied.
+
+The blog post presents a way to implement the type classes concept in Scala.
+
+p.s. I'm yet to find out how much of it is [multimethods](http://clojure.org/multimethods) in [Clojure](http://clojure.org/) (that was once of much help to introduce me to **functional programming**).
+
+<!-- more -->
+
+## Theory
+
+From the article [Polymorphism (computer science)](http://en.wikipedia.org/wiki/Polymorphism_(computer_science)) on Wikipedia, you can read about three different kinds of polymorphism:
+
+* **subtyping**
+* **parametric polymorphism**
+* **ad hoc polymorphism**
+
+The order does matter (and is different from the Wikipedia article's one) as I think that's exactly the order of when and how well developers master them (in any programming language).
+
+I reckon the Scala community finds the first two quite often used in code that contributes to how well it's understood and applied (except [variance](http://en.wikipedia.org/wiki/Covariance_and_contravariance_%28computer_science%29)), and just the last one - ad hoc polymorphism - is proving a major hurdle for many, me including. It didn't click for me for a long time, either, only until I found the "venues" of very concise and comprehensible material (see [References](#references) section below).
+
+> In programming languages and type theory, polymorphism is the provision of a single interface to entities of different types.
+
+The difference between *subtyping* and *parametric polymorphism* and *ad hoc polymorphism* is that the type hierarchy is expressed explicitly using **extends** keyword in Scala (for subtyping) or type parameters (for parametric polymorphism) while ad hoc polymorphism bases itself on **implicit classes** to *mixin* the behaviour (using traits). And that's pretty much all, technically.
+
+Let's see it in a Scala code.
+
+## Practice
+
+### Algebraic data types (raw data)
+
+Let's assume you have the following type hierarchy (from [Tutorial: Typeclasses in Scala with Dan Rosen](https://youtu.be/sVMES4RZF-8)):
+
+    sealed trait Expression
+    case class Number(value: Int) extends Expression
+    case class Plus(lhs: Expression, rhs: Expression) extends Expression
+    case class Minus(lhs: Expression, rhs: Expression) extends Expression
+
+No behaviour, but *algebraic data types* or (often called) *raw data*.
+
+Think about how you'd go about evaluating expressions, i.e. `Plus(Minus(Number(5), Number(3)), Number(18))`, i.e. how to make the following application compile and print `20`?
+
+    object Main extends App {
+      val expr = Plus(Minus(Number(5), Number(3)), Number(18))
+      println(...) // do something with expr so it prints 20
+    }
+
+The past me would change `sealed trait Expression` to include `def value: Int` and force the three case classes `Number`, `Plus` and `Minus` follow. I'd not be surprised if you thought exactly so. You should not, however.
+
+Think about the case where you must **not** change them as they could be provided as a library or be part of the language or be licensed or...I simply ask you not to.
+
+### objects to apply behaviour
+
+Since you're in Scala, you could easily work it around with an object, say `object ExpressionEvaluator`, that would *pattern match* to types and do the heavy lifting, i.e. know what to do with each and every type:
+
+    object ExpressionEvaluator {
+      def value(expression: Expression): Int = expression match {
+        case Number(value) => value
+        case Plus(lhs, rhs) => value(lhs) + value(rhs)
+        case Minus(lhs, rhs) => value(lhs) - value(rhs)
+      }
+    }
+
+That's quite inefficient and cumbersome, though. You'd have to know about all of the implementations as well as about what to do for each. It's nearly impossible to have right, complete and still flexible.
+
+With the above object, you'd write:
+
+    object Main extends App {
+      val expr = Plus(Minus(Number(5), Number(3)), Number(18))
+      println(ExpressionEvaluator.value(expr)) // print the value
+    }
+
+### implicits in Scala
+
+Let's do it the right way, so it's not `ExpressionEvaluator` to know what to do with every `Expression`, but expressions themselves do what they're supposed to do instead.
+
+You may have heard about **implicits** in Scala. Perhaps, you may have used them, too. Think about a solution with implicit machinery so the following is possible:
+
+    object Main extends App {
+      val expr = Plus(Minus(Number(5), Number(3)), Number(18))
+      println(expr.value) // print the value
+    }
+
+One way in Scala would be to apply **Pimp my Library** pattern leveraging `implicit class`es to add necessary methods as follows:
+
+    implicit class ExpressionOps(e: Expression) {
+      def value = ... // calculate the value
+    }
+
+And have a `implicit class` per `case class` and `sealed trait Expression`, too. The reason to have the implicits is to add a `value` method to every type, i.e. implicitly convert types without `value` to ones that have it.
+
+    implicit class ExpressionOps(e: Expression) {
+      def value: Int = e match {
+        case n : Number => n.value
+        case p : Plus => p.value
+        case m : Minus => m.value
+      }
+    }
+
+    implicit class PlusOps(p: Plus) {
+      def value: Int = p.lhs.value + p.rhs.value
+    }
+
+    implicit class MinusOps(m: Minus) {
+      def value: Int = m.lhs.value - m.rhs.value
+    }
+
+Note that since `Number` had `value` already, an implicit was not needed.
+
+With the implicits in place, you can write:
+
+    println(expr.value)  // prints 20
+
+The implicit-based solution is far much more flexible because calculating a value is the responsibility of an implicit in scope -- a change in a single implicit, say `MinusOps`, would only change how `Minus.value` works (with no changes to the rest of the "framework").
+
+You're halfway to typeclasses!
+
+### Partial ad hoc polymorphism
+
+Think about the case where you'd have a library to calculate a value of `Valueable` values (no pun intended). Say, you have such a library that offers the following "calculator":
+
+    def calculate(v: Valueable) = ... // calculate the value of v
+
+How would you go about converting `Expression`s to `Valueable`s so a value of `Expression` type would participate in the contract of `def calculate`? 
+
+You're right that whenever type conversion is needed in Scala, implicits have their say -- you used them already to have `def value` for `Expression` type hierarchy. You're going to use them again with a very small change that has enormous impact. Doing so will introduce the type class design pattern.
+
+The current solution relies on values with `def value` -- it's like having a library that uses structural typing in Scala that unfortunatelly uses reflection and hence is very costly performance-wise. Happily, you don't need structural types.
+
+If you had a library that expects values of some type, say `trait Valueable`, to calculate a value or some other library to JSONify them (using some `trait Json`), the previous solutions would fall short -- you've merely met the requirement of being able to call a `value` method on values, but the values don't belong to a single type hierarchy of some `trait Valueable` that the library uses.
+
+Assume you have a library that works with `trait Valueable`-only values and there's a `calculate` method to work with them as follows:
+
+    trait Valueable {
+      def value: Int
+    }
+
+    def calculate(v: Valueable) = v.value
+
+Note that the library knows nothing about the `Expression` type hierarchy. The `Expression` type hierarchy could not even have existed at the time `Valueable` did.
+
+A more flexible and efficient solution is to *somehow* meld the `Expression` type hierarchy with `Valueable` and create *is-a relationship*. No, no, you're not going to change the `Expression` trait in any way. You must **not** and you even **can't**, remember?
+
+Welcome to **typeclasses** (also known as **type class design pattern**)!
+
+In order to have `extends`-like semantic at runtime with no `extends Valueable` in the (closed and `sealed`) `Expression` type hierarchy you change `implicit class`es to have the common trait mixed in, instead.
+
+    implicit class ExpressionOps(e: Expression) extends Valueable {
+      def value = e match {
+        case n: Number => n.value
+        case p: Plus => p.value
+        case m: Minus => m.value
+      }
+    }
+
+    implicit class PlusOps(p: Plus) {
+      def value: Int = p.lhs.value + p.rhs.value
+    }
+
+    implicit class MinusOps(m: Minus) {
+      def value: Int = m.lhs.value - m.rhs.value
+    }
+
+With the above `implicit class`es that all `extends Valueable`, you can safely do `expr.value` for any `Expression` value for which an implicit exists in scope and be done with the task at hand. Notice how Scala "executes" `value` on the different types (that's based upon using `implicit class`es for the types when `value` is needed).
+
+    println(calculate(expr))  // prints 20
+
+For what is worth, the `calculate` method belongs to a library that knows nothing about `Expression` type and you can't change it so `Expression`s would be worked with. That's exactly where typeclasses shines and are hard to beat.
+
+This is the version of type classes pattern as described in the book [Programming Scala, 2nd Edition](http://shop.oreilly.com/product/0636920033073.do) in "Type Class Pattern" section, page 156.
+
+### Final solution: `Value[T]` type class
+
+You can still do better than that in Scala and that's what (*the real*) type class design pattern offers. This is the version of type class pattern as demonstrated in the video [Tutorial: Typeclasses in Scala with Dan Rosen](https://youtu.be/sVMES4RZF-8). You should really watch it.
+
+Let's have a parameterized type `trait Value[T]` that's supposed to "bridge" the type hierarchies - `Expression` and `Valueable`:
+
+    trait Value[T] {
+      def value(t: T): Valueable
+    }
+
+The fictitious Calculator library has `object Calculator` with a single `def calculate(v: Valueable): Int` method:
+
+    object Calculator {
+      def calculate(v: Valueable): Int = v.value
+    }
+
+No `Expression`s, just `Valueable`s. That's where the type class pattern shines.
+
+Create `object CalculatorEx` as follows:
+
+    object CalculatorEx {
+      def calculate[T : Value](t: T): Int =
+        Calculator.calculate(implicitly[Value[T]].value(t))
+    }
+
+It says that for any type `T` there's an implicit conversion to a `Value[_]` type hierarchy using implicits (that are used in the method via [implicitly](http://www.scala-lang.org/api/current/index.html#scala.Predef$)).
+
+All in all, you need to throw in three more implicits for `Number`, `Plus` and `Minus` so they can be seen as `Valueable` and participate in `def calculate(v: Valueable): Int`-based library:
+
+    implicit val number2Value = new Value[Number] {
+      def value(n: Number): Valueable = new Valueable {
+        override def value: Int = n.value
+      }
+    }
+
+    implicit val plus2Value = new Value[Plus] {
+      def value(p: Plus): Valueable = new Valueable {
+        override def value: Int = p.lhs.value + p.rhs.value
+      }
+    }
+
+    implicit val minus2Value = new Value[Minus] {
+      def value(m: Minus): Valueable = new Valueable {
+        override def value: Int = m.lhs.value - m.rhs.value
+      }
+    }
+
+These make it possible to calculate the value of the expression leveraging the fictitious Calculator library:
+
+    println(CalculatorEx.calculate(expr))  // prints 20
+
+That's it! You're done. If you've followed along closely and have developed the "framework" on your own, you should have a complete understanding of the type class design pattern in Scala. Without the type class pattern, blending the `Expression` type hierarchy with `Valueable` would not have been possible! And that was the goal of the exercise.
+
+### Follow up - All `Valueable`
+
+Think about using other types, say `Int`, with the fictitious Calculator library so the following is possible:
+
+    println(CalculatorEx.calculate(1))  // prints 1
+
+As the Scala compiler says:
+
+> could not find implicit value for evidence parameter of type Value[Int]
+
+All, we need to do to blend `Int`s as `Valueable`s is to have an implicit that does the conversion.
+
+    implicit val int2Value = new Value[Int] {
+      override def value(t: Int) = new Valueable {
+        override def value: Int = t
+      }
+    }
+
+And that's it!
+
+As a final exercise would be to reuse implicits and create more complex ones to support "sum" types, like `Tuple`. I'm leaving it as a homework. Have fun!
+
+Let me know how the homework and the whole blog post went out in the Comments section below. I'd appreciate any comments to improve upon.
+
+## References
+
+There are plenty of very good sources on the topic of type classes in general and in Scala, in particular, but the following have done wonders for me:
+
+* [ad hoc polymorphism](http://en.wikipedia.org/wiki/Ad_hoc_polymorphism) article on Wikipedia
+* [Polymorphism (computer science)](http://en.wikipedia.org/wiki/Polymorphism_(computer_science)) article on Wikipedia
+* [Tutorial: Typeclasses in Scala with Dan Rosen](https://youtu.be/sVMES4RZF-8) video
+* [Programming Scala, 2nd Edition](http://shop.oreilly.com/product/0636920033073.do) book]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Ditching Guice's @Singleton in Favour of Scala's (Companion) Object]]></title>
+    <link href="http://blog.jaceklaskowski.pl/2015/05/09/ditching-guices-at-singleton-in-favour-of-scalas-companion-object.html"/>
+    <updated>2015-05-09T14:57:19+02:00</updated>
+    <id>http://blog.jaceklaskowski.pl/2015/05/09/ditching-guices-at-singleton-in-favour-of-scalas-companion-object</id>
+    <content type="html"><![CDATA[[Arek Komarzewski](https://twitter.com/akomarzewski) (a Scala developer in HCore) mentioned the following this Friday and made my day (and the whole week, too):
+
+> I can now ditch Guice's @Singleton as I've got a trait and the companion object combo (thanks to Scala).
+
+This time the blog post is without a complete working example. Not yet. It's to remind myself to prepare one (or be given one after the blog post is published -- whatever comes first). I just think it needs to be said aloud to be heard and think about.
+
+<!-- more -->
+
+And then, quite unexpectedly to me, [Play Framework](https://www.playframework.com/) - *"The High Velocity Web Framework For Java and Scala"* - that's the web framework supported by Typesafe in their [Reactive Platform](http://www.typesafe.com/products/typesafe-reactive-platform) has announced in [What's new in Play 2.4](https://www.playframework.com/documentation/2.4.x/Highlights24):
+
+> In the Scala ecosystem, the approach to dependency injection is not generally agreed upon, with many competing compile time and runtime dependency injection approaches out there.
+
+> Play’s philosophy in providing a dependency injection solution is to be unopinionated in what approaches we allow, but to be opinionated to the approach that we document and provide out of the box. For this reason, we have provided the following:
+
+> An implementation that uses Guice out of the box
+
+I'm very lucky to be able to pursue my understanding of Scala the programming language not only in my free time, but also in commercial projects as a full-time Scala developer and a technical leader (in [DeepSense.io](http://deepsense.io/)) as well as supporting companies making the most out of Scala and open source software (in [HCore](http://www.hcore.com/)) not to mention leading [Warsaw Scala Enthusiasts](http://www.meetup.com/WarszawScaLa/) in **Warsaw**, **Poland**. The technical part of my life simply can't be any better! I'm learning as well as teaching people using Scala as an object-oriented and functional programming language on JVM, and am also meeting up lots of Scala developers. I really wish I had more time to publish all the major breakthroughs in blog posts here.
+
+Enough praising. On to real matters.
+
+In [DeepSense.io](http://deepsense.io/) we're using [Guice](https://github.com/google/guice) as *a dependency framework*. It's also used in few other projects where Scala is used. That often leads to my questioning the need for Guice or any dependency injection framework since Scala the programming language itself offers enough features to let Guice leave.
+
+I think there's the issue of how most Scala developers (I'm meeting) think -- they are former Java developers who see no reason to adapt to new approaches of tackling development problems. They simply have no more courage to dig deeper, and...let the past rest and welcome new solutions for the brighter future. And since Scala alone is still shaping itself and the Scala community is not clear on what to follow along and what to forget about, that all makes the leave-past-welcome-new approach harder.
+
+Just this week I had a pleasure to meet two teams that both use Guice because nobody introduced viable alternatives (even when they use one already - Scala!). I don't consider myself skilled enough, either, since I'm pretty much a Guice newbie and hence just unable to counter the Guice's way of solving problems. It's that something inside me that is telling me that Guice is dragged along unnecessarily and gives a false perception of being the right fit to dependency injection-looking problems (even when it introduces more problems, mostly related to learning a yet another framework, than it solves). I'm glad Spring is far heavier as it would likely have found its way in the projects, too.
+
+It has worked fine for Arek and I'm hoping it's going to work fine for me soon, too. I'll simply have to find it out and promote the right approach.
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Daily Routines to Learn Scala With IntelliJ IDEA]]></title>
+    <link href="http://blog.jaceklaskowski.pl/2015/03/28/daily-routines-to-learn-scala-with-intellij-idea.html"/>
+    <updated>2015-03-28T12:54:28+01:00</updated>
+    <id>http://blog.jaceklaskowski.pl/2015/03/28/daily-routines-to-learn-scala-with-intellij-idea</id>
+    <content type="html"><![CDATA[[<img class="left" src="/images/scala-idea-intellij-idea-14-1.png" title="IntelliJ IDEA 14.1 is Here!" >](http://blog.jetbrains.com/idea/2015/03/intellij-idea-14-1-is-here/) So, you've got a moment to learn [Scala](http://www.scala-lang.org/) and have [IntelliJ IDEA](https://www.jetbrains.com/idea/) with [Scala plugin](https://plugins.jetbrains.com/plugin/?id=1347) installed. Your wish is to *maximize* the mental outcome given the time at hand with *little to no effort* to set up a productive working environment. You may even think you may have gotten one, but, unless you're doing what I'm describing here, you're actually far from truly having it. I'm asking you to go *the extra mile*!
+
+In this blog post I'm introducing you to two modes in the recently-shipped [IntelliJ IDEA 14.1](http://blog.jetbrains.com/idea/2015/03/intellij-idea-14-1-is-here/) -- **Full Screen** and **Distraction Free** modes -- and the few keystrokes I use in the development environment to have a comfortable place to learn Scala. I'm sure you'll have found few ideas to improve your way into your own personal Scala nirvana.
+
+Let's go minimalistic, full screen, distraction-free, mouse- and touchpad-less!
+
+You may find the blog post [What to Check Out in Scala Plugin 1.4.x for IntelliJ IDEA 14 & 14.1](http://blog.jetbrains.com/scala/2015/03/26/what-to-check-out-in-scala-plugin-1-4-x-for-intellij-idea-14-14-1/) helpful, too.
+
+*Side note* It came as a complete surprise to me to have noticed that I've been writing the blog post exactly a month after the last one.
+
+<!-- more -->
+
+## Why I'm using IntelliJ IDEA to learn Scala?
+
+I'm using IntelliJ IDEA daily.
+
+I begin a day switching to the desktop where the IDE awaits my attention and keep it open (until a mandatory reboot following a system update). I was using other IDEs -- NetBeans IDE or Eclipse IDE -- in the past to develop applications in Java or Java EE, but things have changed since I switched focus on Scala entirely.
+
+The reason for the switch was to master the Scala language not the other available IDEs, and given IntelliJ IDEA have always been receiving positive marks it's with me nowadays. When I need a full-blown IDE, it's IntelliJ IDEA with the Scala plugin. Period.
+
+There's another tool that supports learning Scala beautifully -- **Scala REPL**. However it's often too rudimentary and limiting, for quick rendezvous I prefer it with Sublime Text 3 and sbt. For more advanced sessions nothing beats the beloved IDE - IntelliJ IDEA.
+
+I think it was [Tomasz Nurkiewicz](http://www.nurkiewicz.com/) -- [an IntelliJ IDEA expert](http://blog.jetbrains.com/idea/2014/05/annotated-java-monthly-april-2014/) -- who first showed the beauty of using IntelliJ IDEA mouse- and touchpad-less. Thanks Tomek!
+
+## Minimalistic workspace
+
+[I remember the tweet from Adrian Gruntkowski](https://twitter.com/adrgrunt/status/552479034031239168) very well when the need to go minimalistic was first planted in my head. Adrian mentioned a user guide to set up a minimalistic workspace in IntelliJ IDEA (though it was for CursiveClojure) and the story began.
+
+<img class="center" src="/images/scala-idea-tweet-minimalistic-workspace.png" title="Adrian mentions minimalistic workspace" >
+
+It took me a while to get used to it, but it was worth it! I just needed a mixture of [Sublime Text 3](http://www.sublimetext.com/3) and IntelliJ IDEA as the Scala development environment and think I've found mine already.
+
+## A day with Scala and IntelliJ IDEA
+
+Be warned that I'm working on Mac OS X with `Mac OS X 10.5+` keymap so your milleage may vary.
+
+The blog post assumes you've got a Scala project imported or created from scratch already. I don't bother explaining how to do it. In either case, IntelliJ IDEA should open with a Scala project so switching between files makes sense.
+
+### Minimalistic IntelliJ IDEA
+
+Follow [CursiveClojure UI](https://cursiveclojure.com/userguide/ui.html) to have a minimalistic, clutter-free workspace. It's a good start and boils down to turning off the toolbars, deselecting Toolbar and Navigation Bars in the View menu and finally disabling the Editor Tabs. That's a very good start.
+
+Start by pressing `Cmd + Ctrl + F` to enter full screen.
+
+You should have the IDE looked like as in the following screenshot.
+
+<img class="center" src="/images/scala-idea-minimalistic-workspace.png" title="Minimalistic workspace following CursiveClojure UI" >
+
+Press `Shift` key twice to open **Search everywhere** popup.
+
+<img class="center" src="/images/scala-idea-search-action-popup.png" title="Search action popup" >
+
+You may also want to use `Cmd + Shift + A` to search for actions only.
+
+<img class="center" src="/images/scala-idea-search-actions-only.png" title="Search actions only popup" >
+
+Type in **pre mod** or (better) **preMod** to execute **Enter Presentation Mode** action. In IDEA 14.1 there's far more productive mode - **Distraction Free Mode** so type in **distMod** instead.
+
+<img class="center" src="/images/scala-idea-search-action-enter-distration-free-mode.png" title="Enter Distraction Free Mode" >
+
+Either way -- Presentation or Distraction mode -- you've got a clean desk and should concentrate on Scala much easier (with the goodies of IntelliJ IDEA at your fingertips).
+
+Following the advice in the empty workspace of IntelliJ IDEA, use `Cmd + E` to switch between files or `Cmd + Shift + E` to switch between files that were recently edited.
+
+<img class="center" src="/images/scala-idea-recently-edited-files.png" title="Recently Edited Files popup" >
+
+Use `Cmd + O` to open traits or classes. Use `Cmd + Shift + O` to open any file like `build.sbt` or project resources.
+
+<img class="center" src="/images/scala-idea-enter-file-name-build-sbt.png" title="Enter file name popup" >
+
+And the last but not least, install [BashSupport plugin](https://plugins.jetbrains.com/plugin/4230) to have a fully-supported terminal inside IntelliJ IDEA. Use `Alt + F12` to open a terminal session. I use it to have sbt shell open for `~ test` to have the tests executed every time the main and test sources change.
+
+<img class="center" src="/images/scala-idea-terminal-window-sbt-test.png" title="Terminal window with sbt test" >
+
+I use the terminal to open Scala REPL when I need to try out a new API.
+
+<img class="center" src="/images/scala-idea-terminal-window-scala-repl.png" title="Terminal window with Scala REPL" >
+
+There are also `Cmd + KeyUp` to select files from other directories in a project, or just switch to Project view with `Cmd + 1`. You could use `Alt + F1` to select the target to view the currently open file.
+
+<img class="center" src="/images/scala-idea-change-directory-cmd-keyup.png" title="Cmd + KeyUp" >
+
+## Summary
+
+There are plenty of ways and tools to help you learn Scala in a pleasant environment. I've been using Sublime Text 3 and sbt for quite some time, and found myself very productive with this combo. In my case, though, *enough* turned out to be *lazy to learn more advanced developer tools*, i.e. IntelliJ IDEA.
+
+Once I switched to IntelliJ IDEA and started using the features like Full Screen and Distraction Free modes with proper keystrokes, it became the development environment of choice to get full steam ahead into Scala.
+
+[There ain't no such thing as a free lunch](http://en.wikipedia.org/wiki/There_ain%27t_no_such_thing_as_a_free_lunch) and it does take time to hop onto a new tooling and change habits. New things can often be getting into your way until you find them useful. As much as habits can help (speeding things up), they should not rule out others and mark them worse by default. As [Learn, Unlearn And Relearn: How To Stay Current And Get Ahead](http://www.forbes.com/sites/margiewarrell/2014/02/03/learn-unlearn-and-relearn/) says:
+
+> Whatever the reasons, once the basics are covered, many people tend to stick with what they know and avoid situations or challenges where they may mess up or be forced to learn something new, thus creating a safe, secure and comfortable (and confining) world for themselves.
+
+Give the tips from the blog post a try and a month later you will have found they're as pleasant as yours. Or bring you even more joy! Let me know how it's worked out in the Comments section below.
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Sbt-dependency-graph for Easier Dependency Management in Sbt]]></title>
+    <link href="http://blog.jaceklaskowski.pl/2014/11/29/sbt-dependency-graph-for-easier-dependency-management-in-sbt.html"/>
+    <updated>2014-11-29T23:10:06+01:00</updated>
+    <id>http://blog.jaceklaskowski.pl/2014/11/29/sbt-dependency-graph-for-easier-dependency-management-in-sbt</id>
+    <content type="html"><![CDATA[That's gonna be short and hopefully simple. If you're with [sbt](http://www.scala-sbt.org/) you're going to like [sbt-dependency-graph](https://github.com/jrudolph/sbt-dependency-graph) *plugin to create a dependency graph for your project* very much.
+
+<!-- more -->
+
+Edit `~/.sbt/0.13/plugins/sbt-dependency-graph.sbt` so it looks as follows:
+
+	addSbtPlugin("net.virtual-void" % "sbt-dependency-graph" % "0.7.4")
+
+Edit `~/.sbt/0.13/global.sbt` so it looks:
+
+	net.virtualvoid.sbt.graph.Plugin.graphSettings
+
+With these two files, open `sbt` or `activator` and execute `dependencyGraph` (I used [hello-slick-specs2](https://github.com/jaceklaskowski/hello-slick-specs2) project):
+
+	> dependencyGraph
+	[info] Updating {file:/Users/jacek/dev/oss/hello-slick-specs2/}hello-slick-specs2...
+	[info] Resolving jline#jline;2.12 ...
+	[info] Done updating.
+	[info]                             +---------------------------+
+	[info]                             |hello-slick-specs2_2.11 [S]|
+	[info]                             |          default          |
+	[info]                             |            1.0            |
+	[info]                             +---------------------------+
+	[info]                                    |     |   |    |
+	[info]                ---------------------     |   |    ----------------------------
+	[info]                |                         |   -----------------               |
+	[info]                v                         v                   |               |
+	[info]           +---------+          +------------------+          |               |
+	[info]           |slf4j-nop|          |  slick_2.11 [S]  |          |               |
+	[info]           |org.slf4j|          |com.typesafe.slick|          |               |
+	[info]           |  1.7.7  |          |      2.1.0       |          |               |
+	[info]           +---------+          +------------------+          |               |
+	[info]                |                   |   ||      |             |               |
+	[info]      -----------                   |   ||      ---------     |               |
+	[info]      |  ----------------------------   ||              |     |               |
+	[info]      |  |             ------------------|              |     |               |
+	[info]      |  |             |                 |              |     |               |
+	[info]      v  v             v                 v              v     v               v
+	[info]  +---------+ +-----------------+ +------------+ +------------------+ +--------------+
+	[info]  |slf4j-api| |    slf4j-api    | |   config   | |  scala-library   | |      h2      |
+	[info]  |org.slf4j| |    org.slf4j    | |com.typesafe| |  org.scala-lang  | |com.h2database|
+	[info]  |  1.7.7  | |      1.6.4      | |   1.2.1    | |      2.11.1      | |   1.4.182    |
+	[info]  +---------+ |evicted by: 1.7.7| +------------+ |evicted by: 2.11.4| +--------------+
+	[info]              +-----------------+                +------------------+
+	[info] Note: The old tree layout is still available by using `dependency-tree`
+	[success] Total time: 0 s, completed Nov 29, 2014 11:19:30 PM
+
+Neat, isn't it?
+
+You may also want to execute `dependencyGraphMl`:
+
+	> dependencyGraphMl
+	[info] Wrote dependency graph to '/Users/jacek/dev/oss/hello-slick-specs2/target/dependencies-compile.graphml'
+	[success] Total time: 0 s, completed Nov 29, 2014 11:21:46 PM
+
+Install [yEd](http://www.yworks.com/en/products/yfiles/yed/) and open the graph:
+
+	> eval "open target/dependencies-compile.graphml" !
+	[info] ans: Int = 0
+
+<img src="/images/hello-slick-specs2-yed-graph.png" title="yEd graph of compile dependencies" >
+
+I really wish I'd known it earlier. It'd surely have saved me a lot of time.]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Mistakes Introducing Slick for Database Access Under Play Framework 2.3.4 and 2.4.0-M1]]></title>
+    <link href="http://blog.jaceklaskowski.pl/2014/09/12/mistakes-introducing-slick-for-database-access-under-play-framework-2-dot-3-4-and-2-dot-4-0-m1.html"/>
+    <updated>2014-09-12T21:47:50+02:00</updated>
+    <id>http://blog.jaceklaskowski.pl/2014/09/12/mistakes-introducing-slick-for-database-access-under-play-framework-2-dot-3-4-and-2-dot-4-0-m1</id>
+    <content type="html"><![CDATA[This is a summary of my attempt to run [Slick](http://slick.typesafe.com/) under [Play Framework](https://www.playframework.com/) **2.3.4** and **2.4.0-M1** that ultimately turned out a quite successful endeavour.
+
+I’m currently using Play’s Anorm and writing the queries myself didn’t seem to be something I much liked. I’ve been seeing Slick has had a good press so it was a no-brainer to pick it as an alternative.
+
+<!-- more -->
+
+## Mistake #1. Hurting myself with cutting edge versions
+
+Reading the documentation at http://slick.typesafe.com/ was not very informative as there was no word about how to embed it in a Play Framework application. There should really be a "Getting started with Slick and Play Framework" tutorial since both are part of [The Typesafe Reactive Platform](https://typesafe.com/platform).
+
+I added Slick to `build.sbt` as follows:
+
+    "com.typesafe.slick" %% "slick" % “2.1.0"
+
+And then I realised that I’d have had to do:
+
+    Database.forURL("jdbc:h2:mem:test1", driver = "org.h2.Driver") withSession {
+      implicit session =>
+      // <- write queries here
+    }
+
+but Play Framework gives me:
+
+    DB.withConnection("sayenedb") { implicit c =>
+        ...
+    }
+
+It was certainly not the way to follow. I needed a solution that would read database configuration from Play's.
+
+## Mistake #2. Using play-slick with Play 2.4.0-M1
+
+Time has come to give [play-slick](https://github.com/playframework/play-slick) a serious try. The project aims to make *"Slick a first-class citizen of Play 2.x.”*
+
+It took me a while to abandon the idea of running play-slick with Play 2.4.0-M1 since [this](https://groups.google.com/d/msg/play-framework/m_bxuqgSKgk/Z4WgfUer19wJ):
+
+> The purpose of this release is to get feedback about the approach to dependency injection that we're implementing in Play 2.4.  The old Play plugins mechanism is going to be deprecated.  For a detailed overview of the different styles of DI available in Play 2.4, please read here:
+
+> https://www.playframework.com/documentation/2.4.x/ScalaDependencyInjection
+https://www.playframework.com/documentation/2.4.x/ScalaCompileTimeDependencyInjection
+https://www.playframework.com/documentation/2.4.x/JavaDependencyInjection
+
+I reported [an issue for play-slick](https://github.com/playframework/play-slick/issues/208) hoping that the developers notice the missing integration point and the support for 2.4 will come...sooner (?)
+
+## Mistake #3. Using custom db configuration in Play
+
+The application uses no `db.default` configuration in `application.conf` in Play - just a custom one. The result?
+
+    [error] application -
+
+    ! @6jg39b0pk - Internal server error, for (GET) [/tips/wgcategories] ->
+
+    play.api.Configuration$$anon$1: Configuration error[Slick error : jdbc driver not defined in application.conf for db.default.driver key]
+         at play.api.Configuration$.play$api$Configuration$$configError(Configuration.scala:94) ~[play_2.11-2.3.4.jar:2.3.4]
+         at play.api.Configuration.reportError(Configuration.scala:743) ~[play_2.11-2.3.4.jar:2.3.4]
+         at play.api.db.slick.Config$$anonfun$1.apply(Config.scala:64) ~[play-slick_2.11-0.8.0.jar:0.8.0]
+         at play.api.db.slick.Config$$anonfun$1.apply(Config.scala:64) ~[play-slick_2.11-0.8.0.jar:0.8.0]
+         at scala.Option.getOrElse(Option.scala:120) ~[scala-library-2.11.2.jar:na]
+
+I had to add the following entries to work it around:
+
+    db.default.driver=org.postgresql.Driver
+    db.default.url=${?DB_CONN}
+
+`DB_CONN` is the property I set up at command line at Play startup.
+
+Using two datasources required following [Advanced drivers configuration](https://github.com/playframework/play-slick/wiki/ScalaSlickDrivers) and applying the (in)famous Cake pattern.
+
+## Mistake #4. Copying examples to production code - PostgreSQL is case sensitive for field names in quotes
+
+I had the following in my Component:
+
+    def id = column[Int]("ID", O.PrimaryKey, O.AutoInc)
+
+That generated a query with `"ID"` in `select` clause that in turn resulted in the following error:
+
+    STATEMENT:  select s13."ID", s13."name" from “xxx" s13;
+    ERROR:  column s13.ID does not exist at character 8
+
+[As Rene pointed out in his tweet](https://twitter.com/rgielen/status/510501297473462272):
+
+> @jaceklaskowski not true - #PostgreSQL follows SQL standard. Columns names are case insensitive unless created with quotation marks
+
+He was right - changing `ID` to `id` has indeed fixed the issue.
+
+    def id = column[Int]("id", O.PrimaryKey, O.AutoInc)
+
+## Mistake #5. [SI-3664] Explicit case class companion does not extend Function / override toString
+
+There's an issue reported against the Scala compiler - [[SI-3664] Explicit case class companion does not extend Function / override toString](https://issues.scala-lang.org/browse/SI-3664) - that stands in a way for the `*` projection, i.e. `def * = ...`, in your table description:
+
+    class Users(tag: Tag) extends Table[User](tag, "users") {
+        def id    = column[Int]   ("id", O.PrimaryKey, O.AutoInc)
+        def login = column[String]("login")
+
+        def * = (id, login) <> (User.tupled, User.unapply)
+    }
+
+For the `Users` class above the Scala compiler fails reporting:
+
+> value tupled is not a member of object model.User
+
+A solution is described in [Mapped Tables](http://slick.typesafe.com/doc/2.1.0/upgrade.html#mapped-tables) section of [UPGRADE GUIDES](http://slick.typesafe.com/doc/2.1.0/upgrade.html) document in the Slick manual:
+
+> Note that `.tupled` is only available for proper Scala functions.  
+> When using a case class, the companion object extends the correct function type by default, but only if you do not define the object yourself. In that case you should provide the right supertype manually.
+
+The mapping definition can look as follows:
+
+    class Users(tag: Tag) extends Table[User](tag, "users") {
+        def id    = column[Int]   ("id", O.PrimaryKey, O.AutoInc)
+        def login = column[String]("login")
+    
+        def * = (id, login) <> ((User.apply _).tupled, User.unapply)
+    }
+
+Note `(User.apply _).tupled`.
+
+## Mistake #6. JodaTime support
+
+For cases where you need to use JodaTime types in Slick you should use [slick-joda-mapper](https://github.com/tototoshi/slick-joda-mapper#slick-joda-mapper).
+
+Else you have to stick to `java.sql.Date`, `java.sql.Time`, `java.sql.Timestamp` as described in [Table Rows](http://slick.typesafe.com/doc/2.1.0/schemas.html?highlight=date#table-rows) in the Slick documentation.
+
+## Summary
+
+Using a non-default configuration is always a kind of minefield. Stay away from it unless you’re adventurous and have enough time and patience to fix issues along the way. You’ve been warned.
+]]></content>
+  </entry>
+  
+</feed>

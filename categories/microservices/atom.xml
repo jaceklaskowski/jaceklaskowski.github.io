@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Microservices | Mastering FP and OO with Scala]]></title>
+  <link href="http://blog.jaceklaskowski.pl/categories/microservices/atom.xml" rel="self"/>
+  <link href="http://blog.jaceklaskowski.pl/"/>
+  <updated>2015-06-20T20:07:37+02:00</updated>
+  <id>http://blog.jaceklaskowski.pl/</id>
+  <author>
+    <name><![CDATA[Jacek Laskowski]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[REST Clients (for Working With REST Microservices)]]></title>
+    <link href="http://blog.jaceklaskowski.pl/2015/02/11/rest-clients-for-working-with-rest-microservices.html"/>
+    <updated>2015-02-11T23:02:42+01:00</updated>
+    <id>http://blog.jaceklaskowski.pl/2015/02/11/rest-clients-for-working-with-rest-microservices</id>
+    <content type="html"><![CDATA[It's so engaging to learn things while learning others. So is the case with the new architectural style **REST microservices** and developing them using [Scala](http://www.scala-lang.org/) language and tools.
+
+As there are a lot of REST interactions -- sending requests to and receiving them from REST microservices -- as much as I'm not really in need to comprehend every bit of the communication format, I do need tools to work with them effectively, i.e. be able to create and consume HTTP packets with JSON payload with little to no effort.
+
+<!-- more -->
+
+## HTTPie (pronounced *aych-tee-tee-pie*)
+
+I've been using `curl` for so long that I hardly remember when it all began. It's a very handy tool, alas too complex at times.
+
+Not so long ago I stumbled upon another command-line tool called [HTTPie](http://httpie.org). Installation on MacOS X with `brew` was just `brew install httpie` away.
+
+    ➜  ~  brew install httpie
+    Warning: httpie-0.9.1 already installed
+
+`HTTPie` [describes itself as](http://httpie.org):
+
+> HTTPie (pronounced *aych-tee-tee-pie*) is a **command line HTTP client**. Its goal is to make CLI interaction with web services as **human-friendly** as possible. It provides a simple `http` command that allows for sending arbitrary HTTP requests using a simple and natural syntax, and displays colorized responses.
+
+The tool's so simple and intuitive that I'm still fighting with my thoughts to believe that people could still be using `curl`. I for one was using `curl` for so long that I almost lost the ability to sense how much pain I was experiencing with `curl`. I did get used to it and didn't notice I'm sufferring an enormous pain.
+
+`GET` requests are pretty similar in both tools (still think `httpie` is simpler).
+
+    http -v --json localhost:9000/api/person
+
+Where the difference shows up is to send `POST` requests with JSON payload as `application/json` (`-v` is to verbose the communication):
+
+    ➜  ~  http -v localhost:9000/api/person name=jacek
+    POST /api/person HTTP/1.1
+    Accept: application/json
+    Accept-Encoding: gzip, deflate
+    Connection: keep-alive
+    Content-Length: 17
+    Content-Type: application/json; charset=utf-8
+    Host: localhost:9000
+    User-Agent: HTTPie/0.9.1
+
+    {
+        "name": "jacek"
+    }
+
+    HTTP/1.1 200 OK
+    Content-Length: 21
+    Content-Type: application/json; charset=UTF-8
+    Date: Thu, 12 Feb 2015 09:35:46 GMT
+    Server: tmprl
+
+    {
+        "name": "jacek"
+    }
+
+
+First, I don't have to express it *explicitly* that I'm going to send a POST request since the `key=value` pair (in the example earlier `name=jacek`, and there could be more) implies so. Less typing, less errors.
+
+Second, I don't have to build the JSON payload myself, `key=value` pairs are enough to inform the tool to create one for me. Less typing, again.
+
+And the last but not least, colorized responses (aka formatted and colorized terminal output). That could've made a difference and it did!
+
+Just these three features made `httpie` an indispensable tool for me.
+
+`httpie` has changed how I test my REST microservices using JSON now. As is JSON to REST microservices, so is `httpie` to the new architecture.
+
+## Postman
+
+It appears that command-line tools are not always at a premium, and having few GUI tools might be of help at times.
+
+Just a couple of days ago I saw [Postman - REST Client](http://www.getpostman.com/) being used by a teammate. And it wouldn't have been any special if I had not heard about the tool from another person during my presentation about REST microservices with JSON -- just a day after I'd seen it the very first time (!) Coincidence? Don't think so!
+
+Postman is a plugin for Google Chrome so the installation went smoothly. Just a click and it's done. You should give it a go, too (unless you've already done and have few remarks to share in the comments to the blog post - I'd appreciate it very much).
+
+## Advanced REST client
+
+What made the situation more interesting was that even though Postman was mentioned few times here and there, it seems that [Advanced REST client](https://code.google.com/p/chrome-rest-client/) beats Postman by the number of stars - 6791 vs 2635. Why is so?! It's over 200%! How could that be that Postman is more famous (in my circles) without Advanced REST client being even mentioned?!
+
+<img class="center" src="/images/postman-rest-client-vs-advanced-rest-client.png" title="Postman REST client vs Advanced REST client" >
+
+It's installed and I'm going to give it a whirl, too.
+
+What are your tools to work with REST microservices with JSON as the data format? Let me know in the comments!]]></content>
+  </entry>
+  
+</feed>

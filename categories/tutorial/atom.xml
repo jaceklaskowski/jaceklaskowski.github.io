@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Tutorial | Mastering FP and OO with Scala]]></title>
+  <link href="http://blog.jaceklaskowski.pl/categories/tutorial/atom.xml" rel="self"/>
+  <link href="http://blog.jaceklaskowski.pl/"/>
+  <updated>2015-06-20T20:07:37+02:00</updated>
+  <id>http://blog.jaceklaskowski.pl/</id>
+  <author>
+    <name><![CDATA[Jacek Laskowski]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Getting Started With Play Framework and AngularJS - Day 1]]></title>
+    <link href="http://blog.jaceklaskowski.pl/2014/09/08/getting-started-with-play-framework-and-angularjs-day-1.html"/>
+    <updated>2014-09-08T12:42:49+02:00</updated>
+    <id>http://blog.jaceklaskowski.pl/2014/09/08/getting-started-with-play-framework-and-angularjs-day-1</id>
+    <content type="html"><![CDATA[Let's face it -- there are tons of very good tutorials about how to get started with [Play Framework](https://www.playframework.com/) and [AngularJS](https://angularjs.org/) to build modern web applications, and despite the fact there are still quite a few people out there who keep asking me about writing mine. Since writing tutorials is a way to clear up understanding of a topic to me, I found it very compelling to help myself and others using the two - Play and Angular - properly. Well, the *properly* part comes with your comments when I fix the parts that are outdated or plain wrong.
+
+So, here it is. The yet another tutorial series about developing web applications in Play Framework (with Scala) and AngularJS (in JavaScript). Let's get rolling!
+
+**NOTE** It's a work in progress. Watch this space until the note has disappeared and the blog post become feature-complete.
+
+<!-- more -->
+
+## Step 1. Installing Typesafe Activator
+
+Download Typesafe Activator from http://typesafe.com/activator and install it in a directory. Add the directory to `PATH` so you'll be able to execute `activator` from any place in your file system without having to use the fully-qualified path.
+
+Execute `activator ui` to open up Activator UI in a browser. Go to http://localhost:8888.
+
+See what's available in the UI and once you're satisfied, go to the command line where `activator ui` is running and press `Ctrl+C` to stop the UI process.
+
+## Step 2. Creating hello-play-tutorial web application
+
+In a directory of your choice, execute `activator new hello-play-tutorial play-scala` to create a web application using [the Play Scala Seed template](https://typesafe.com/activator/template/play-scala).
+
+**Pro-tip:** Read the output from the command so you learn what you can do with `activator` that I'm not going to cover in the article.
+
+    ➜  sandbox  activator new hello-play-tutorial play-scala
+
+    Fetching the latest list of templates...
+
+    OK, application "hello-play-tutorial" is being created using the "play-scala" template.
+
+    To run "hello-play-tutorial" from the command line, "cd hello-play-tutorial" then:
+    /Users/jacek/sandbox/hello-play-tutorial/activator run
+
+    To run the test for "hello-play-tutorial" from the command line, "cd hello-play-tutorial" then:
+    /Users/jacek/sandbox/hello-play-tutorial/activator test
+
+    To run the Activator UI for "hello-play-tutorial" from the command line, "cd hello-play-tutorial" then:
+    /Users/jacek/sandbox/hello-play-tutorial/activator ui
+
+Change the working directory to `hello-play-tutorial` and run `activator run`. Wait until the message `(Server started, use Ctrl+D to stop and go back to the console...)` has showed up.
+
+    ➜  sandbox  cd hello-play-tutorial
+    ➜  hello-play-tutorial  activator run
+    [info] Loading global plugins from /Users/jacek/.sbt/0.13/plugins
+    [info] Loading project definition from /Users/jacek/sandbox/hello-play-tutorial/project
+    [info] Updating {file:/Users/jacek/sandbox/hello-play-tutorial/project/}hello-play-tutorial-build...
+    [info] Resolving org.fusesource.jansi#jansi;1.4 ...
+    [info] Done updating.
+    [info] Set current project to hello-play-tutorial (in build file:/Users/jacek/sandbox/hello-play-tutorial/)
+    [info] Updating {file:/Users/jacek/sandbox/hello-play-tutorial/}root...
+    [info] Resolving jline#jline;2.11 ...
+    [info] Done updating.
+
+    --- (Running the application from SBT, auto-reloading is enabled) ---
+
+    [info] play - Listening for HTTP on /0:0:0:0:0:0:0:0:9000
+
+    (Server started, use Ctrl+D to stop and go back to the console...)
+
+Visit http://localhost:9000 to open up the web application in a browser.
+
+**Pro-tip:** Read the content of the welcome page so you know what the sample application offers beyond what is included in the article.
+
+## Step 3. (optional) Deploying to a cloud service - CloudBees
+
+According to the official documentation of Play Framework in [Deploying to Cloudbees](https://www.playframework.com/documentation/2.4.x/Deploying-to-CloudBees):
+
+>CloudBees support Play dists natively - with Jenkins and continuous deployment
+
+that is in turn confirmed in the official documentation of CloudBees in [RUN@cloud » Play Framework](https://developer.cloudbees.com/bin/view/RUN/Playframework):
+
+>CloudBees includes first-class support for running Play! applications in the Cloud.
+
+Install [CloudBees SDK](http://developer.cloudbees.com/bin/view/RUN/BeesSDK). On Mac OS X it's just that easy as `brew install cloudbees-sdk`.
+
+Start with `bees init` and provide necessary configuration information before moving on to deploying the Play application.
+
+Execute `bees app:create hello-play-tutorial -t play2` to configure the application on CloudBees.
+
+    ➜  hello-play-tutorial git:(master) bees app:create hello-play-tutorial -t play2
+    Application: jaceklaskowski/hello-play-tutorial
+        url: hello-play-tutorial.jaceklaskowski.eu.cloudbees.net
+
+Create a new git repository under `Repos` in the CloudBees Administrative Console and execute `git init` followed by `git add -am 'Initial commit'` in the directory.
+
+    ➜  hello-play-tutorial git:(master) git remote add cloudbees https://git.cloudbees.com/jaceklaskowski/hello-play-tutorial.git
+    ➜  hello-play-tutorial git:(master) git push --mirror cloudbees
+    Counting objects: 30, done.
+    Delta compression using up to 8 threads.
+    Compressing objects: 100% (25/25), done.
+    Writing objects: 100% (30/30), 1010.69 KiB | 0 bytes/s, done.
+    Total 30 (delta 0), reused 0 (delta 0)
+    To https://git.cloudbees.com/jaceklaskowski/hello-play-tutorial.git
+     * [new branch]      master -> master
+    ➜  hello-play-tutorial git:(master) activator clean dist
+    ...
+    ➜  hello-play-tutorial git:(master) bees app:deploy -t play2 -a hello-play-tutorial target/universal/hello-play-tutorial-1.0-SNAPSHOT.zip
+    Deploying application jaceklaskowski/hello-play-tutorial (environment: ): target/universal/hello-play-tutorial-1.0-SNAPSHOT.zip
+    Application parameters: {containerType=play2}
+    ........................uploaded 25%
+    ........................uploaded 50%
+    ........................uploaded 75%
+    ........................upload completed
+    deploying application to server(s)...
+    Application jaceklaskowski/hello-play-tutorial deployed: http://hello-play-tutorial.jaceklaskowski.eu.cloudbees.net
+
+Access http://hello-play-tutorial.jaceklaskowski.eu.cloudbees.net (mind that yours is different) to see the application deployed and running.
+
+Set up a Jenkins job so the application's deployed every `git push cloudbees`.]]></content>
+  </entry>
+  
+</feed>

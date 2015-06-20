@@ -4,7 +4,7 @@
   <title><![CDATA[Mastering FP and OO with Scala]]></title>
   <link href="http://blog.jaceklaskowski.pl/atom.xml" rel="self"/>
   <link href="http://blog.jaceklaskowski.pl/"/>
-  <updated>2015-05-17T02:19:51+02:00</updated>
+  <updated>2015-06-20T20:07:37+02:00</updated>
   <id>http://blog.jaceklaskowski.pl/</id>
   <author>
     <name><![CDATA[Jacek Laskowski]]></name>
@@ -1595,7 +1595,7 @@ res0: Double = 29.787899999999745
 
 <p>1. It is implicitly passed the object for which it was called</p>
 
-<p>2. It is able to operate on data that is contained within the class (remembering that an object is an instance of a class - the class is the definition, the object is an instance of that data)&#8221;</p></blockquote>
+<p>2. It is able to operate on data that is contained within the class (remembering that an object is an instance of a class - the class is the definition, the object is an instance of that data)"</p></blockquote>
 
 <p>Let&rsquo;s start with the following example.</p>
 
@@ -1841,7 +1841,7 @@ expected type, to qualifiers in selections, and to unapplied methods.</p></block
 <p>In <strong>6.26.2 Method Conversions</strong> the Scala Language Specification says:</p>
 
 <blockquote><p><strong>Eta Expansion.</strong> Otherwise, if the method is not a constructor, and the expected
-type pt is a function type (Ts&#8217;) => T&#8217;, eta-expansion (§6.26.5) is performed on the
+type pt is a function type (Ts') => T', eta-expansion (§6.26.5) is performed on the
 expression e.</p></blockquote>
 
 <h2>References (where wisdom came from)</h2>

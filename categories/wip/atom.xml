@@ -1,0 +1,406 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Wip | Mastering FP and OO with Scala]]></title>
+  <link href="http://blog.jaceklaskowski.pl/categories/wip/atom.xml" rel="self"/>
+  <link href="http://blog.jaceklaskowski.pl/"/>
+  <updated>2015-06-20T20:07:37+02:00</updated>
+  <id>http://blog.jaceklaskowski.pl/</id>
+  <author>
+    <name><![CDATA[Jacek Laskowski]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Oh My Zsh's Plugins to Boost Happiness From Using Git]]></title>
+    <link href="http://blog.jaceklaskowski.pl/2015/02/28/oh-my-zshs-plugins-to-boost-happiness-from-using-git.html"/>
+    <updated>2015-02-28T20:26:40+01:00</updated>
+    <id>http://blog.jaceklaskowski.pl/2015/02/28/oh-my-zshs-plugins-to-boost-happiness-from-using-git</id>
+    <content type="html"><![CDATA[From the website of the very useful and must-have addition to your terminal - [Oh-My-Zsh](http://ohmyz.sh/):
+
+> Oh-My-Zsh is an open source, community-driven framework for managing your ZSH configuration. It comes bundled with a ton of helpful functions, helpers, plugins, themes, and a few things that make you shout...**"Oh My ZSH!"**
+
+As I'm using the ZSH configuration framework so often that I can't believe I could've lived without it for so long here's a collection of the plugins to cut the number of keystrokes while working with git repositories. To my great surprise there are quite a few plugins for git and the list below is my humble summary to get it remembered as much as to spread a word (as I've been meeting people unaware of Oh-My-Zsh far too often).
+
+**FIXME** Consider the blog post complete after the line's gone. It's always in readable state, though.
+
+<!-- more -->
+
+## Oh Mom, there are 10 plugins for git!
+
+I was very surprised to have been presented with **10** plugins for git when I hit `TAB` to complete the `~/.oh-my-zsh/plugins/git` path:
+
+* **git** = (quoting README.md) *this plugin adds several git aliases and increase the completion function provided by zsh*
+* **git-extras** = ??? (*aka* unsure what it does - yet to be discovered)
+* **git-flow** = (quoting the plugin's sources) *git-flow completion nirvana*
+* **git-flow-avh** = unsure how it's different from the `git-flow` plugin
+* **git-hubflow** = unsure how it's different from the `git-flow` plugin
+* **git-prompt** = (quoting the plugin's sources) *ZSH Git Prompt Plugin*
+* **git-remote-branch** = ??? (*aka* unsure what it does - yet to be discovered)
+* **gitfast** = ??? (*aka* unsure what it does - yet to be discovered)
+* **github** = ??? (*aka* unsure what it does - yet to be discovered)
+* **gitignore** = ??? (*aka* unsure what it does - yet to be discovered)
+
+I *just* assume they are all plugins to ease my work with git repositories and am going to review them all one by one and *amend* the blog post afterwards.
+
+The commands I've managed to master so far:
+
+* `gaa`   = `git add --all`
+* `gco`   = `git checkout`
+* `glo`   = `git log --oneline --decorate --color`
+* `glgga` = `git log --graph --decorate --all`
+* `gcm`   = `git checkout master`
+* `gd`    = `git diff`
+* `gdc`   = `git diff --cached`
+* `gc!`   = `git commit -v --amend`
+* `gcp`   = `git cherry-pick`
+* `gl`    = `git pull`
+* `gp`    = `git push`
+* `gst`   = `git status`
+* `grba`  = `git rebase --abort`
+* `grbi`  = `git rebase -i`
+* `grbc`  = `git rebase --continue`
+* `grh`   = `git reset HEAD`
+* `grhh`  = `git reset HEAD --hard`
+* `grv`   = `git remote -v`
+* `gwc`   = `git whatchanged -p --abbrev-commit --pretty=medium`
+
+Read the official [Plugins](https://github.com/robbyrussell/oh-my-zsh/wiki/Plugins) page to learn how to enable plugins in your configuration.
+
+The configuration of mine includes the following plugins, `git` including:
+
+	➜  ~  grep -e "plugins=(" ~/.zshrc | grep -e "^[^#]"
+	plugins=(git osx brew common-aliases)
+
+I'm totally aware that there's plenty of room for improvement here. Let me know what I'm missing (and where I'm wasting my time still). I'd wholeheartedly appreciate any time savings.
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Getting Started With Play Framework and AngularJS - Day 1]]></title>
+    <link href="http://blog.jaceklaskowski.pl/2014/09/08/getting-started-with-play-framework-and-angularjs-day-1.html"/>
+    <updated>2014-09-08T12:42:49+02:00</updated>
+    <id>http://blog.jaceklaskowski.pl/2014/09/08/getting-started-with-play-framework-and-angularjs-day-1</id>
+    <content type="html"><![CDATA[Let's face it -- there are tons of very good tutorials about how to get started with [Play Framework](https://www.playframework.com/) and [AngularJS](https://angularjs.org/) to build modern web applications, and despite the fact there are still quite a few people out there who keep asking me about writing mine. Since writing tutorials is a way to clear up understanding of a topic to me, I found it very compelling to help myself and others using the two - Play and Angular - properly. Well, the *properly* part comes with your comments when I fix the parts that are outdated or plain wrong.
+
+So, here it is. The yet another tutorial series about developing web applications in Play Framework (with Scala) and AngularJS (in JavaScript). Let's get rolling!
+
+**NOTE** It's a work in progress. Watch this space until the note has disappeared and the blog post become feature-complete.
+
+<!-- more -->
+
+## Step 1. Installing Typesafe Activator
+
+Download Typesafe Activator from http://typesafe.com/activator and install it in a directory. Add the directory to `PATH` so you'll be able to execute `activator` from any place in your file system without having to use the fully-qualified path.
+
+Execute `activator ui` to open up Activator UI in a browser. Go to http://localhost:8888.
+
+See what's available in the UI and once you're satisfied, go to the command line where `activator ui` is running and press `Ctrl+C` to stop the UI process.
+
+## Step 2. Creating hello-play-tutorial web application
+
+In a directory of your choice, execute `activator new hello-play-tutorial play-scala` to create a web application using [the Play Scala Seed template](https://typesafe.com/activator/template/play-scala).
+
+**Pro-tip:** Read the output from the command so you learn what you can do with `activator` that I'm not going to cover in the article.
+
+    ➜  sandbox  activator new hello-play-tutorial play-scala
+
+    Fetching the latest list of templates...
+
+    OK, application "hello-play-tutorial" is being created using the "play-scala" template.
+
+    To run "hello-play-tutorial" from the command line, "cd hello-play-tutorial" then:
+    /Users/jacek/sandbox/hello-play-tutorial/activator run
+
+    To run the test for "hello-play-tutorial" from the command line, "cd hello-play-tutorial" then:
+    /Users/jacek/sandbox/hello-play-tutorial/activator test
+
+    To run the Activator UI for "hello-play-tutorial" from the command line, "cd hello-play-tutorial" then:
+    /Users/jacek/sandbox/hello-play-tutorial/activator ui
+
+Change the working directory to `hello-play-tutorial` and run `activator run`. Wait until the message `(Server started, use Ctrl+D to stop and go back to the console...)` has showed up.
+
+    ➜  sandbox  cd hello-play-tutorial
+    ➜  hello-play-tutorial  activator run
+    [info] Loading global plugins from /Users/jacek/.sbt/0.13/plugins
+    [info] Loading project definition from /Users/jacek/sandbox/hello-play-tutorial/project
+    [info] Updating {file:/Users/jacek/sandbox/hello-play-tutorial/project/}hello-play-tutorial-build...
+    [info] Resolving org.fusesource.jansi#jansi;1.4 ...
+    [info] Done updating.
+    [info] Set current project to hello-play-tutorial (in build file:/Users/jacek/sandbox/hello-play-tutorial/)
+    [info] Updating {file:/Users/jacek/sandbox/hello-play-tutorial/}root...
+    [info] Resolving jline#jline;2.11 ...
+    [info] Done updating.
+
+    --- (Running the application from SBT, auto-reloading is enabled) ---
+
+    [info] play - Listening for HTTP on /0:0:0:0:0:0:0:0:9000
+
+    (Server started, use Ctrl+D to stop and go back to the console...)
+
+Visit http://localhost:9000 to open up the web application in a browser.
+
+**Pro-tip:** Read the content of the welcome page so you know what the sample application offers beyond what is included in the article.
+
+## Step 3. (optional) Deploying to a cloud service - CloudBees
+
+According to the official documentation of Play Framework in [Deploying to Cloudbees](https://www.playframework.com/documentation/2.4.x/Deploying-to-CloudBees):
+
+>CloudBees support Play dists natively - with Jenkins and continuous deployment
+
+that is in turn confirmed in the official documentation of CloudBees in [RUN@cloud » Play Framework](https://developer.cloudbees.com/bin/view/RUN/Playframework):
+
+>CloudBees includes first-class support for running Play! applications in the Cloud.
+
+Install [CloudBees SDK](http://developer.cloudbees.com/bin/view/RUN/BeesSDK). On Mac OS X it's just that easy as `brew install cloudbees-sdk`.
+
+Start with `bees init` and provide necessary configuration information before moving on to deploying the Play application.
+
+Execute `bees app:create hello-play-tutorial -t play2` to configure the application on CloudBees.
+
+    ➜  hello-play-tutorial git:(master) bees app:create hello-play-tutorial -t play2
+    Application: jaceklaskowski/hello-play-tutorial
+        url: hello-play-tutorial.jaceklaskowski.eu.cloudbees.net
+
+Create a new git repository under `Repos` in the CloudBees Administrative Console and execute `git init` followed by `git add -am 'Initial commit'` in the directory.
+
+    ➜  hello-play-tutorial git:(master) git remote add cloudbees https://git.cloudbees.com/jaceklaskowski/hello-play-tutorial.git
+    ➜  hello-play-tutorial git:(master) git push --mirror cloudbees
+    Counting objects: 30, done.
+    Delta compression using up to 8 threads.
+    Compressing objects: 100% (25/25), done.
+    Writing objects: 100% (30/30), 1010.69 KiB | 0 bytes/s, done.
+    Total 30 (delta 0), reused 0 (delta 0)
+    To https://git.cloudbees.com/jaceklaskowski/hello-play-tutorial.git
+     * [new branch]      master -> master
+    ➜  hello-play-tutorial git:(master) activator clean dist
+    ...
+    ➜  hello-play-tutorial git:(master) bees app:deploy -t play2 -a hello-play-tutorial target/universal/hello-play-tutorial-1.0-SNAPSHOT.zip
+    Deploying application jaceklaskowski/hello-play-tutorial (environment: ): target/universal/hello-play-tutorial-1.0-SNAPSHOT.zip
+    Application parameters: {containerType=play2}
+    ........................uploaded 25%
+    ........................uploaded 50%
+    ........................uploaded 75%
+    ........................upload completed
+    deploying application to server(s)...
+    Application jaceklaskowski/hello-play-tutorial deployed: http://hello-play-tutorial.jaceklaskowski.eu.cloudbees.net
+
+Access http://hello-play-tutorial.jaceklaskowski.eu.cloudbees.net (mind that yours is different) to see the application deployed and running.
+
+Set up a Jenkins job so the application's deployed every `git push cloudbees`.]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Trait Init[Scope] in Sbt]]></title>
+    <link href="http://blog.jaceklaskowski.pl/2014/07/22/trait-init-scope-in-sbt.html"/>
+    <updated>2014-07-22T13:19:54+02:00</updated>
+    <id>http://blog.jaceklaskowski.pl/2014/07/22/trait-init-scope-in-sbt</id>
+    <content type="html"><![CDATA[It's been my wish to master [Scala](http://scala-lang.org/) recently and since I've been spending more time with [sbt](http://www.scala-sbt.org/) I've made the decision to use one to master the other (in no particular order). There are quite a few sophisticated projects in Scala out there, but sbt is enough for my needs.
+
+In order to pursue my understanding of sbt (and hence Scala itself) I've been reading the sources that honestly keep surprising me so much often. It's almost every minute when I find myself scratching my head to digest a piece of sbt code. It's akin to when I was reading the source code of [Clojure](http://clojure.org/) to learn the language. People can write complicated code and I wouldn't be surprised to hear sbt's sources belong to the category. I don't care, though. I'm fine with the complexity hoping the mental pain brings me closer to master Scala.
+
+Today I picked the trait [sbt.Init](https://github.com/sbt/sbt/blob/0.13/util/collection/src/main/scala/sbt/Settings.scala#L41) believing it'd be an important step in my journey.
+
+**NOTE** It becomes feature-complete when the note disappears. Live with the few mistakes for now. Let me know what you think in the Comments section. The site is on GitHub so pull requests are warmly welcome, too. Thanks!
+
+<!-- more -->
+
+There’s the trait [sbt.Init](https://github.com/sbt/sbt/blob/0.13/util/collection/src/main/scala/sbt/Settings.scala#L41). I don’t really know what its purpose is and I hope to find it out after few Scala snippets. There’s just enough hope to master Scala while pursuing my understanding of sbt with the trait.
+
+## Goal
+
+Create an instance of trait `Init[Scope]`.
+
+## Solution
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>val init = new Init[Int] {
+</span><span class='line'>  def showFullKey: Show[ScopedKey[_]] = Show { (sk: ScopedKey[_]) =&gt; 
+</span><span class='line'>    s"${sk.scope}:${sk.key}...${sk.scopedKey}"
+</span><span class='line'>  }
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+Run `sbt` and then execute the command `consoleProject` to open sbt's Scala REPL with all the necessary types of sbt loaded.
+
+## Mental issues encountered
+
+1. I’m far from being able to distinguish easily type parameters, e.g. `Scope`, in parameterised types, e.g. `Init[Scope]`, from types themselves. When I see `Init[Scope]` my Java-trained eyes see `Scope` type within `Init` type and although it doesn’t make sense after a moment that’s my initial thought.
+
+2. The type constructor `Show[ScopedKey[_]]` in the return value type of `showFullKey` is another trait `Show` that comes with `apply` that is supposed to return a `String` instance from `ScopedKey[_]`. But hey, `ScopedKey[_]` is another type constructor, and things get more complex for me again. Happily, `Show` has a companion object with `apply` method. The story ends as `ScopedKey` is a final parameterized case class and the function parameter `f: T => String` in `Show` returns a `String` so I've just merely followed the types and it *happened* to work fine. The Scala compiler happy and so am I.
+
+## Summary
+
+`Show` is a function type (with `apply`) that accepts `T` and returns `String`. In our case, `T` is `ScopedKey[_]` that’s...well...it’s yet to be understood.
+
+## consoleProject in sbt
+
+If you happened to want to see the code in action, execute `sbt consoleProject` and give the following a try:
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>// (attribute) key that points at Int value
+</span><span class='line'>scala&gt; val number = AttributeKey[Int]("number", "number stringified")
+</span><span class='line'>number: sbt.AttributeKey[Int] = number
+</span><span class='line'> 
+</span><span class='line'>scala&gt; val init = new Init[Int] {
+</span><span class='line'>     |   def showFullKey: Show[ScopedKey[_]] = Show { (sk: ScopedKey[_]) =&gt;
+</span><span class='line'>     |     s"${sk.scope}:${sk.key}...${sk.scopedKey}"
+</span><span class='line'>     |   }
+</span><span class='line'>     | }
+</span><span class='line'>init: sbt.Init[Int] = $anon$1@1f95802
+</span><span class='line'> 
+</span><span class='line'>scala&gt; val sfk: Show[init.ScopedKey[_]] = init.showFullKey
+</span><span class='line'>sfk: sbt.Show[init.ScopedKey[_]] = sbt.Show$$anon$1@7f54be72
+</span><span class='line'>
+</span><span class='line'>scala&gt; val s = sfk(init.ScopedKey[Int](scope=5, key=number))
+</span><span class='line'>s: String = 5:number...ScopedKey(5,number)</span></code></pre></td></tr></table></div></figure>]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Contributing to Open Source Projects on GitHub - Cheat Sheet]]></title>
+    <link href="http://blog.jaceklaskowski.pl/2014/07/08/contributing-to-open-source-projects-on-github-cheat-sheet.html"/>
+    <updated>2014-07-08T01:24:32+02:00</updated>
+    <id>http://blog.jaceklaskowski.pl/2014/07/08/contributing-to-open-source-projects-on-github-cheat-sheet</id>
+    <content type="html"><![CDATA[I've been contributing to many open source projects over the past couple of years and I found [GitHub](https://github.com/jaceklaskowski) pleasantly helpful to continue the gig in the years to come. I've learnt few techniques along the way (from many sources I'm including after the section they appply to).
+
+I don't want to keep the techniques for myself so the git/GitHub cheat sheet is supposed to help me remember the commands and others to learn from my mistakes (*aka* experience). It's so easy on GitHub that I keep wondering why it took me so long to learn it. It must not for you.
+
+Have fun contributing to open source projects as much as I do! *Pro publico bono.*
+
+**NOTE** It becomes feature-complete when the note disappears. Live with the few mistakes for now. Let me know what you think in the Comments section. Pull requests are welcome, too. Thanks!
+
+<!-- more -->
+
+## Picking project
+
+You start your day hunting down the project you want to contribute to. Be adventurous and pick the one you've always been dreaming about. This might be the day when the dream comes true.
+
+I'm more into Scala/sbt lately so I'm with projects under control of the project build tool - [sbt](http://www.scala-sbt.org/) as I can learn both contributing.
+
+## Cloning project
+
+Learning a project can take different approaches and reading the source code or just building it and staying on the cutting edge are a few examples.
+
+In the project's repository on GitHub, on the right-hand side, there's this clone URL field. Select the protocol to use (HTTPS or SSH) and click the Copy to clipboard button.
+
+In the terminal, execute the following command:
+
+    git clone [clone URL]
+
+It creates a directory with the project. The sources are yours now, master.
+
+## Forking project
+
+Your very first step is to fork a project. Forking means creating your own copy of the project. On GitHub it's so easy with the Fork button in the upper-right corner. Click it and select the account you want the fork go.
+
+In the terminal, go to the project's directory and add the repository as a remote repository.
+
+    git remote add [remote-name] [clone URL]
+
+I tend to use my first name for `remote-name` so I know that my personal repository copy is under `jacek` nick.
+
+## Branching project
+
+Developing a change for a project is the real thing. It can be a documentation page, a fix for an issue or whatever else the project holds.
+
+The following command
+
+    git checkout -b [branch-name]
+
+creates and changes your current branch from `master` (usually) to `branch-name`. Use `wip/` in the `branch-name` to denote that the work is in progress so people can review the changes before they get *squashed* and merged with the master.
+
+## Committing changes to project
+
+On a branch, go the following to commit the changes of yours:
+
+    git commit -am [commit-message]
+
+There are some strict rules on how to write a proper `commit-message`. For now, don't worry about it too much. There are tougher things you will have to go through and writing proper commit messages don't belong to that category...yet. It's more important to get you up to speed with contributing to a project than to do it without mistakes from the day 0.
+
+## Pushing changes to remote repo
+
+With the changes on the branch committed, it's time to show off on GitHub. Push the changes with the following command:
+
+    git push [remote-name] [branch-name]
+
+Using command completion can save you a lot of typing here. A decent shell like [oh-my-zsh](http://ohmyz.sh/) is highly recommended (on Mac OS X at the very least).
+
+`remote-name` is the nick of the remote repository, e.g. `jacek` while `branch-name` is the name of the branch you're working on right now.
+
+## Creating pull request on GitHub
+
+With the changes in the remote repository on GitHub, you should now be able to send a pull request to the **origin**al repo (usually called **origin**, but git lets you name it whatever you like).
+
+GitHub shows the Pull Request button when you're changes hit your repository that's a fork of the project. Click the button and fill out the blanks. GitHub uses your commit message as the title that further easies the process.
+
+Click Create and you've just contributed to the project! Open Source Contributor badge unlocked! Congratulations.
+
+## Squashing changes
+
+There might be times when your work in progress generates a stream of changes to a branch. It's assumed that the changes are already `git add`ed and the project maintainers have requested *to squash the changes* so they ultimately go (aka *get merged*) to the `master` as a single change/commit (since a branch is usually about a single feature that's often reasonable to have the feature merged in as a single change -- so it's self-contained and makes code review a little easier).
+
+Use `git rebase -i [branch]`:
+
+    git rebase -i origin/master
+
+where `origin/master` is the name of the `master` branch of the project you forked and then branched for your changes from the remote `origin` repository.
+
+Fix any merge issues while rebasing. When fixed, `git add` the files changed (because of the merge conflict) and `git rebase --continue` afterwards.
+
+You can always go back to the previous state (before doing `git rebase`) with `git rebase --abort`.
+
+Doing squashing is worth the time since merging the changes with `master` later on becomes a no-brainer for the project maintainers.
+
+Once you're done with modifying the history of the changes in your branch, do `git push -f` to push your changes forcefully. The reason for the `-f` option is that you make changes to the history of a public branch that others could've already featched and based their work on -- a conflict may be coming. To prevent the conflict git makes sure that's what you really want to do. You've been warned.
+
+Useful links about git rebase:
+
+* [squashing commits with rebase](http://gitready.com/advanced/2009/02/10/squashing-commits-with-rebase.html)
+* [About Git rebase](https://help.github.com/articles/about-git-rebase)
+* [How to Rebase a Pull Request](https://github.com/edx/edx-platform/wiki/How-to-Rebase-a-Pull-Request)
+
+## Deleting remote and local branches
+
+When the work is over and all the changes are merged with the master, you can safely delete remote and local branches.
+
+Once the work gets merged, GitHub asks you to delete the branch. Click the button under the pull request.
+
+Delete the local branch with the command:
+
+    git branch -D [branch-name]
+
+where `branch-name` is the name of the branch you want to delete.
+
+You should change the branch to some other branch to be able to delete it.
+
+## Maintainers, use "Closes #XXX" to auto-close pull requests
+
+It's a feature of GitHub and mostly for project maintainers when they merging pull requests to `master`.
+
+After you're about to `git push` your local changes, `git commit` them and as the last line add **Closes #XXX** where **XXX** is the pull request id. It will auto-close the pull request.
+
+Useful links about the feature:
+
+* ["Merge pull request" Considered Harmful](http://blog.spreedly.com/2014/06/24/merge-pull-request-considered-harmful/)
+]]></content>
+  </entry>
+  
+</feed>

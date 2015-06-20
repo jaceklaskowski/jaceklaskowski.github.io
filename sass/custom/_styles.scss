@@ -12,3 +12,37 @@
   }
 }
 
+ul {
+    padding-left: 2em;
+    padding-right: 2em;
+}
+
+.note {
+    @include border-radius(0.5em);
+    border: 1px solid #528bc5;
+    background-color: #F0F5FF;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+    padding: 0.5em;
+    margin-bottom: 1em;
+    font-size: 0.7em;
+    b { font-weight: bolder; }
+}
+
+figure:not(.code) {
+    text-align: center;
+    >figcaption {
+        font-size: 0.7em;
+        padding-bottom: 0.5em;
+        font-style: italic;
+    }
+}
+
+section.footnotes {
+    font-size: 0.7em;
+}
+
+.footnoteRef {
+    font-size: 0.8em;
+    vertical-align: super;
+    padding-left: 0.1em;
+}

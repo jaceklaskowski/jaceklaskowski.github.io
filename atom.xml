@@ -4,7 +4,7 @@
   <title><![CDATA[Mastering FP and OO with Scala]]></title>
   <link href="http://blog.jaceklaskowski.pl/atom.xml" rel="self"/>
   <link href="http://blog.jaceklaskowski.pl/"/>
-  <updated>2015-06-20T20:07:37+02:00</updated>
+  <updated>2015-07-14T22:23:58+02:00</updated>
   <id>http://blog.jaceklaskowski.pl/</id>
   <author>
     <name><![CDATA[Jacek Laskowski]]></name>
@@ -12,6 +12,172 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Apache Kafka on Docker]]></title>
+    <link href="http://blog.jaceklaskowski.pl/2015/07/14/apache-kafka-on-docker.html"/>
+    <updated>2015-07-14T20:59:33+02:00</updated>
+    <id>http://blog.jaceklaskowski.pl/2015/07/14/apache-kafka-on-docker</id>
+    <content type="html"><![CDATA[<p><a href="http://kafka.apache.org/"><img class="left" src="http://blog.jaceklaskowski.pl/images/kafka_logo.png" title="Apache Kafka" ></a></p>
+
+<p><a href="http://kafka.apache.org/">Apache Kafka</a> has always been high on my list of things to explore, but since there are quite a few things high on my list, Kafka couldn&rsquo;t actually make it to the very top. Until just recently, when I was asked to give <strong>the broker</strong> a try and see whether or not it meets a project&rsquo;s needs. Two projects, to be honest. You should see my face when I heard it.</p>
+
+<p><a href="https://github.com/apache/kafka#apache-kafka">I compiled Apache Kafka from the sources</a>, connected it to <a href="https://spark.apache.org/streaming/">Spark Streaming</a> and even attempted to answer few questions on StackOverflow (<a href="http://stackoverflow.com/q/31391782/1305344">How to use Kafka in Flink using Scala?</a> and <a href="http://stackoverflow.com/q/31344222/1305344">How to monitor Kafka broker using jmxtrans?</a>), not to mention reading tons of articles and watching videos about the tool. I built pretty strong confidence what use cases are the sweet spot for Apache Kafka.</p>
+
+<p>With the team in <a href="http://www.codilime.com/">Codilime</a> I&rsquo;m developing <a href="http://deepsense.io/">DeepSense.io</a> platform where we have just used <a href="http://www.ansible.com/home">Ansible</a> to automate deployment. We&rsquo;ve also been evaluating <a href="https://www.docker.com/">Docker</a> and/or <a href="https://www.vagrantup.com/">Vagrant</a>. All to ease the deployment of DeepSense.io.</p>
+
+<p>That&rsquo;s the moment when these two needs converged - exploring Apache Kafka and Docker (among the other tools) for three separate projects! Amazing, isn&rsquo;t it? I could finally explore how Docker might ease exploration of products and deployment. I knew Docker could ease my developer life, but it&rsquo;s only now when I really saw it. I would now <em>dockerize</em> everything. When I was told about the images <a href="https://registry.hub.docker.com/u/wurstmeister/kafka/">wurstmeister/kafka</a> and <a href="https://registry.hub.docker.com/u/wurstmeister/zookeeper/">wurstmeister/zookeeper</a> I couldn&rsquo;t have been happier. Running Apache Kafka and using Docker finally became a no-brainer and such a pleasant experience.</p>
+
+<p>I then thought I&rsquo;d share the love so it&rsquo;s not only mine and others could benefit from it, too.</p>
+
+<!-- more -->
+
+
+<p>Since I&rsquo;m on <strong>Mac OS X</strong> the steps to run Apache Kafka using Docker rely on <a href="http://boot2docker.io/">boot2docker</a> - <em>a Lightweight Linux for Docker</em> for platforms that don&rsquo;t natively support Docker - aforementioned Mac OS X and Windows.</p>
+
+<p>You&rsquo;re going to use the images <a href="https://registry.hub.docker.com/u/wurstmeister/kafka/">wurstmeister/kafka</a> and <a href="https://registry.hub.docker.com/u/wurstmeister/zookeeper/">wurstmeister/zookeeper</a>.</p>
+
+<p>You can run containers off the images in background or foreground. Depending on you Unix skills, it means one or two terminals. Let&rsquo;s use two terminals for each server - Apache Kafka and Apache Zookeeper. I&rsquo;m going to explain the role of Apache Zookeeper in another blog post.</p>
+
+<p>Here come the steps to run Apache Kafka using Docker. It&rsquo;s assumed you&rsquo;ve got <code>boot2docker</code> and <code>docker</code> tools installed.</p>
+
+<pre><code>➜  ~  boot2docker version
+Boot2Docker-cli version: v1.7.0
+Git commit: 7d89508
+
+➜  ~  docker --version
+Docker version 1.7.0, build 0baf609
+</code></pre>
+
+<p>I&rsquo;m a big fan of <a href="http://brew.sh/">homebrew</a> and highly recommend it to anyone using Mac OS X. Plenty of ready-to-use packages are just <code>brew install</code> away, docker and boot2docker including.</p>
+
+<h2>Running Kafka on two Docker images</h2>
+
+<ol>
+<li><p>(Only for Mac OS X and Windows users) Execute <code>boot2docker up</code> to start the tiny Linux core on Mac OS.</p>
+
+<pre><code> ➜  ~  boot2docker up
+ Waiting for VM and Docker daemon to start...
+ .o
+ Started.
+ Writing /Users/jacek/.boot2docker/certs/boot2docker-vm/ca.pem
+ Writing /Users/jacek/.boot2docker/certs/boot2docker-vm/cert.pem
+ Writing /Users/jacek/.boot2docker/certs/boot2docker-vm/key.pem
+
+ To connect the Docker client to the Docker daemon, please set:
+     export DOCKER_HOST=tcp://192.168.59.104:2376
+     export DOCKER_CERT_PATH=/Users/jacek/.boot2docker/certs/boot2docker-vm
+     export DOCKER_TLS_VERIFY=1
+</code></pre></li>
+<li><p>(Only for Mac OS X and Windows users) Execute <code>$(boot2docker shellinit)</code> to have the terminal set up and let <code>docker</code> know where the tiny Linux core is running (via <code>boot2docker</code>). You have to do the step in any terminal you open to work with Docker so the <code>export</code>s above are set. Should you face communication issues with <code>docker</code> commands, remember the step.</p>
+
+<pre><code> ➜  ~  $(boot2docker shellinit)
+ Writing /Users/jacek/.boot2docker/certs/boot2docker-vm/ca.pem
+ Writing /Users/jacek/.boot2docker/certs/boot2docker-vm/cert.pem
+ Writing /Users/jacek/.boot2docker/certs/boot2docker-vm/key.pem
+</code></pre></li>
+<li><p>As an additional check, run <code>docker ps</code> to verify the terminal is configured properly for Docker.</p>
+
+<pre><code> ➜  ~  docker ps
+ CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+</code></pre>
+
+<p> No containers are running at this time. It&rsquo;s going to change soon once you start the containers for Zookeeper first and then Kafka.</p></li>
+<li><p><a href="https://hub.docker.com/u/jaceklaskowski/">Create an account on Docker Hub</a> and execute <code>docker login</code> to store the credentials. With the step you don&rsquo;t have to repeat them for <code>docker pull</code> to pull images off the public hub of Docker images. Think of the Docker Hub as the GitHub for Docker images. Refer to the documentation <a href="http://docs.docker.com/docker-hub/userguide/">Using the Docker Hub</a> for more up-to-date information.</p></li>
+<li><p>Run <code>docker pull wurstmeister/zookeeper</code> to pull the Zookeeper image off Docker Hub. It takes a very long time as the Docker Hub can be very sluggish (or is this just my Internet connection?)</p></li>
+</ol>
+
+
+<p>  You will see hashes of respective layers printed out to the console. It&rsquo;s expected.</p>
+
+<pre><code>➜  ~  docker pull wurstmeister/zookeeper
+Pulling repository wurstmeister/zookeeper
+a3075a3d32da: Download complete
+...
+840840289a0d: Download complete
+e7381f1a45cf: Download complete
+5a6fc057f418: Download complete
+Status: Downloaded newer image for wurstmeister/zookeeper:latest
+</code></pre>
+
+<ol>
+<li><p>Execute <code>docker pull wurstmeister/kafka</code> to pull the Kafka image off Docker Hub.</p>
+
+<p> ➜  ~  docker pull wurstmeister/kafka
+ latest: Pulling from wurstmeister/kafka
+ 428b411c28f0: Pull complete
+ &hellip;
+ 422705fe88c8: Pull complete
+ 02bb7ca441d8: Pull complete
+ 0f9a08061516: Pull complete
+ 24fc32f98556: Already exists
+ Digest: sha256:06150c136dcfe6e4fbbf37731a2119ea17a953c75902e52775b5511b3572aa1f
+ Status: Downloaded newer image for wurstmeister/kafka:latest</p></li>
+<li><p>Once the two images are on your machine, execute <code>docker run --rm --name zookeeper -p 2181 -t wurstmeister/zookeeper</code> in one terminal to boot Zookeeper up.</p></li>
+</ol>
+
+
+<p>  Remember <code>$(boot2docker shellinit)</code> if you&rsquo;re on Mac OS X or Windows.</p>
+
+<pre><code>➜  ~  docker run --rm --name zookeeper -p 2181 -t wurstmeister/zookeeper
+JMX enabled by default
+Using config: /opt/zookeeper-3.4.6/bin/../conf/zoo.cfg
+2015-07-09 07:33:16,731 [myid:] - INFO  [main:QuorumPeerConfig@103] - Reading configuration from: /opt/zookeeper-3.4.6/bin/../conf/zoo.cfg
+...
+2015-07-09 07:33:16,764 [myid:] - INFO  [main:ZooKeeperServer@773] - maxSessionTimeout set to -1
+2015-07-09 07:33:16,778 [myid:] - INFO  [main:NIOServerCnxnFactory@94] - binding to port 0.0.0.0/0.0.0.0:2181
+</code></pre>
+
+<ol>
+<li>Execute <code>docker run --rm --name kafka -e HOST_IP=localhost -e KAFKA_ADVERTISED_PORT=9092 -e KAFKA_BROKER_ID=1 -e ZK=zk -p 9092 --link zookeeper:zk -t wurstmeister/kafka</code> in another terminal.</li>
+</ol>
+
+
+<p>  Remember <code>$(boot2docker shellinit)</code> if you&rsquo;re on Mac OS X or Windows.</p>
+
+<pre><code>➜  ~  docker run --rm --name kafka -e HOST_IP=localhost -e KAFKA_ADVERTISED_PORT=9092 -e KAFKA_BROKER_ID=1 -e ZK=zk -p 9092 --link zookeeper:zk -t wurstmeister/kafka
+[2015-07-09 07:35:30,145] INFO Verifying properties (kafka.utils.VerifiableProperties)
+[2015-07-09 07:35:30,173] INFO Property advertised.port is overridden to 9092 (kafka.utils.VerifiableProperties)
+...
+[2015-07-09 07:35:30,437] INFO Awaiting socket connections on 0.0.0.0:9092. (kafka.network.Acceptor)
+[2015-07-09 07:35:30,439] INFO [Socket Server on Broker 1], Started (kafka.network.SocketServer)
+[2015-07-09 07:35:30,496] INFO Will not load MX4J, mx4j-tools.jar is not in the classpath (kafka.utils.Mx4jLoader$)
+[2015-07-09 07:35:30,533] INFO 1 successfully elected as leader (kafka.server.ZookeeperLeaderElector)
+[2015-07-09 07:35:30,613] INFO Registered broker 1 at path /brokers/ids/1 with address 0b34a9927004:9092. (kafka.utils.ZkUtils$)
+[2015-07-09 07:35:30,632] INFO [Kafka Server 1], started (kafka.server.KafkaServer)
+[2015-07-09 07:35:30,682] INFO New leader is 1 (kafka.server.ZookeeperLeaderElector$LeaderChangeListener)
+</code></pre>
+
+<p>You&rsquo;re now a happy user of Apache Kafka on your computer using Docker. Check the status of the containers using <code>docker ps</code>:</p>
+
+<pre><code>➜  ~  $(boot2docker shellinit)
+Writing /Users/jacek/.boot2docker/certs/boot2docker-vm/ca.pem
+Writing /Users/jacek/.boot2docker/certs/boot2docker-vm/cert.pem
+Writing /Users/jacek/.boot2docker/certs/boot2docker-vm/key.pem
+➜  ~  docker ps
+CONTAINER ID        IMAGE                    COMMAND                CREATED             STATUS              PORTS                                                 NAMES
+0b34a9927004        wurstmeister/kafka       "/bin/sh -c start-ka   2 minutes ago       Up 2 minutes        0.0.0.0:32769-&gt;9092/tcp                               kafka
+14fd32558b1c        wurstmeister/zookeeper   "/bin/sh -c '/usr/sb   4 minutes ago       Up 4 minutes        22/tcp, 2888/tcp, 3888/tcp, 0.0.0.0:32768-&gt;2181/tcp   zookeeper
+</code></pre>
+
+<p>Once you&rsquo;re done with your journey into Apache Kafka, <code>docker stop</code> the containers using <code>docker stop kafka zookeeper</code> (or <code>docker stop $(docker ps -aq)</code> if the only running containers are <code>kafka</code> and <code>zookeeper</code>).</p>
+
+<pre><code>➜  ~  docker stop kafka zookeeper
+kafka
+zookeeper
+</code></pre>
+
+<p>Running <code>docker ps</code> should show no running containers afterwards:</p>
+
+<pre><code>➜  ~  docker ps
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+</code></pre>
+
+<p>Stop <code>boot2docker</code> daemon using <code>boot2docker down</code>.</p>
+
+<p>That&rsquo;s pretty much it. You can run Apache Kafka without much changing your local workstation to install Apache Kafka, Apache ZooKeeper or any other software that could hurt eventually consistency of your system. Just Docker (and perhaps boot2docker with homebrew). That protects you from spending time on installation and ensures proper functioning of your machine and the software. Moreover, the Docker images could be deployed to other machines and guarantee a consistent environment of the software inside.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Ad Hoc Polymorphism in Scala With Type Classes]]></title>

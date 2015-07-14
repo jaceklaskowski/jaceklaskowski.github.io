@@ -9,7 +9,7 @@
   <meta name="author" content="Jacek Laskowski">
 
   
-  <meta name="description" content="My journey into the depths of Scala is in full swing. Not only can I learn the theory (with the group of Warsaw Scala Enthusiasts), but also apply it &hellip;">
+  <meta name="description" content="Apache Kafka has always been high on my list of things to explore, but since there are quite a few things high on my list, Kafka couldn&rsquo;t &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +79,54 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2015/07/14/apache-kafka-on-docker.html">Apache Kafka on Docker</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-07-14T20:59:33+02:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>14</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>8:59 pm</span></time>
+        
+        
+           | <a href="/2015/07/14/apache-kafka-on-docker.html#disqus_thread"
+             data-disqus-identifier="http://blog.jaceklaskowski.pl/2015/07/14/apache-kafka-on-docker.html">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="http://kafka.apache.org/"><img class="left" src="/images/kafka_logo.png" title="Apache Kafka" ></a></p>
+
+<p><a href="http://kafka.apache.org/">Apache Kafka</a> has always been high on my list of things to explore, but since there are quite a few things high on my list, Kafka couldn&rsquo;t actually make it to the very top. Until just recently, when I was asked to give <strong>the broker</strong> a try and see whether or not it meets a project&rsquo;s needs. Two projects, to be honest. You should see my face when I heard it.</p>
+
+<p><a href="https://github.com/apache/kafka#apache-kafka">I compiled Apache Kafka from the sources</a>, connected it to <a href="https://spark.apache.org/streaming/">Spark Streaming</a> and even attempted to answer few questions on StackOverflow (<a href="http://stackoverflow.com/q/31391782/1305344">How to use Kafka in Flink using Scala?</a> and <a href="http://stackoverflow.com/q/31344222/1305344">How to monitor Kafka broker using jmxtrans?</a>), not to mention reading tons of articles and watching videos about the tool. I built pretty strong confidence what use cases are the sweet spot for Apache Kafka.</p>
+
+<p>With the team in <a href="http://www.codilime.com/">Codilime</a> I&rsquo;m developing <a href="http://deepsense.io/">DeepSense.io</a> platform where we have just used <a href="http://www.ansible.com/home">Ansible</a> to automate deployment. We&rsquo;ve also been evaluating <a href="https://www.docker.com/">Docker</a> and/or <a href="https://www.vagrantup.com/">Vagrant</a>. All to ease the deployment of DeepSense.io.</p>
+
+<p>That&rsquo;s the moment when these two needs converged - exploring Apache Kafka and Docker (among the other tools) for three separate projects! Amazing, isn&rsquo;t it? I could finally explore how Docker might ease exploration of products and deployment. I knew Docker could ease my developer life, but it&rsquo;s only now when I really saw it. I would now <em>dockerize</em> everything. When I was told about the images <a href="https://registry.hub.docker.com/u/wurstmeister/kafka/">wurstmeister/kafka</a> and <a href="https://registry.hub.docker.com/u/wurstmeister/zookeeper/">wurstmeister/zookeeper</a> I couldn&rsquo;t have been happier. Running Apache Kafka and using Docker finally became a no-brainer and such a pleasant experience.</p>
+
+<p>I then thought I&rsquo;d share the love so it&rsquo;s not only mine and others could benefit from it, too.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/2015/07/14/apache-kafka-on-docker.html">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -460,46 +508,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2014/09/12/mistakes-introducing-slick-for-database-access-under-play-framework-2-dot-3-4-and-2-dot-4-0-m1.html">Mistakes Introducing Slick for Database Access Under Play Framework 2.3.4 and 2.4.0-M1</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2014-09-12T21:47:50+02:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>12</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>9:47 pm</span></time>
-        
-        
-           | <a href="/2014/09/12/mistakes-introducing-slick-for-database-access-under-play-framework-2-dot-3-4-and-2-dot-4-0-m1.html#disqus_thread"
-             data-disqus-identifier="http://blog.jaceklaskowski.pl/2014/09/12/mistakes-introducing-slick-for-database-access-under-play-framework-2-dot-3-4-and-2-dot-4-0-m1.html">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>This is a summary of my attempt to run <a href="http://slick.typesafe.com/">Slick</a> under <a href="https://www.playframework.com/">Play Framework</a> <strong>2.3.4</strong> and <strong>2.4.0-M1</strong> that ultimately turned out a quite successful endeavour.</p>
-
-<p>I’m currently using Play’s Anorm and writing the queries myself didn’t seem to be something I much liked. I’ve been seeing Slick has had a good press so it was a no-brainer to pick it as an alternative.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/2014/09/12/mistakes-introducing-slick-for-database-access-under-play-framework-2-dot-3-4-and-2-dot-4-0-m1.html">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/2">&larr; Older</a>
@@ -515,6 +523,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2015/07/14/apache-kafka-on-docker.html">Apache Kafka on Docker</a>
+      </li>
+    
+      <li class="post">
         <a href="/2015/05/15/ad-hoc-polymorphism-in-scala-with-type-classes.html">Ad Hoc Polymorphism in Scala With Type Classes</a>
       </li>
     
@@ -528,10 +540,6 @@
     
       <li class="post">
         <a href="/2015/04/05/code-review-with-gerrit-and-contributing-to-a-patchset.html">Code Review With Gerrit and Contributing to a Patch Set?</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2015/03/28/daily-routines-to-learn-scala-with-intellij-idea.html">Daily Routines to Learn Scala With IntelliJ IDEA</a>
       </li>
     
   </ul>

@@ -31,11 +31,11 @@ You can run containers off the images in background or foreground. Depending on 
 Here come the steps to run Apache Kafka using Docker. It's assumed you've got `boot2docker` and `docker` tools installed.
 
     ➜  ~  boot2docker version
-    Boot2Docker-cli version: v1.7.0
-    Git commit: 7d89508
+    Boot2Docker-cli version: v1.7.1
+    Git commit: 8fdc6f5
 
     ➜  ~  docker --version
-    Docker version 1.7.0, build 0baf609
+    Docker version 1.7.1, build 786b29d
 
 I'm a big fan of [homebrew](http://brew.sh/) and highly recommend it to anyone using Mac OS X. Plenty of ready-to-use packages are just `brew install` away, docker and boot2docker including.
 

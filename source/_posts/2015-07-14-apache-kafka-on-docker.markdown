@@ -58,15 +58,15 @@ I'm a big fan of [homebrew](http://brew.sh/) and highly recommend it to anyone u
 
 1. (Only for Mac OS X and Windows users) Execute `$(boot2docker shellinit)` to have the terminal set up and let `docker` know where the tiny Linux core is running (via `boot2docker`). You have to do the step in any terminal you open to work with Docker so the `export`s above are set. Should you face communication issues with `docker` commands, remember the step.
 
-        ➜  ~  $(boot2docker shellinit)
-        Writing /Users/jacek/.boot2docker/certs/boot2docker-vm/ca.pem
-        Writing /Users/jacek/.boot2docker/certs/boot2docker-vm/cert.pem
-        Writing /Users/jacek/.boot2docker/certs/boot2docker-vm/key.pem
+       ➜  ~  $(boot2docker shellinit)
+       Writing /Users/jacek/.boot2docker/certs/boot2docker-vm/ca.pem
+       Writing /Users/jacek/.boot2docker/certs/boot2docker-vm/cert.pem
+       Writing /Users/jacek/.boot2docker/certs/boot2docker-vm/key.pem
 
 1. As an additional check, run `docker ps` to verify the terminal is configured properly for Docker.
 
-        ➜  ~  docker ps
-        CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+       ➜  ~  docker ps
+       CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
 
     No containers are running at this time. It's going to change soon once you start the containers for Zookeeper first and then Kafka.
 
@@ -74,57 +74,57 @@ I'm a big fan of [homebrew](http://brew.sh/) and highly recommend it to anyone u
 
 1. Run `docker pull wurstmeister/zookeeper` to pull the Zookeeper image off Docker Hub. It takes a very long time as the Docker Hub can be very sluggish (or is this just my Internet connection?)
 
-  You will see hashes of respective layers printed out to the console. It's expected.
+    You will see hashes of respective layers printed out to the console. It's expected.
 
-    ➜  ~  docker pull wurstmeister/zookeeper
-    Pulling repository wurstmeister/zookeeper
-    a3075a3d32da: Download complete
-    ...
-    840840289a0d: Download complete
-    e7381f1a45cf: Download complete
-    5a6fc057f418: Download complete
-    Status: Downloaded newer image for wurstmeister/zookeeper:latest
+       ➜  ~  docker pull wurstmeister/zookeeper
+       Pulling repository wurstmeister/zookeeper
+       a3075a3d32da: Download complete
+       ...
+       840840289a0d: Download complete
+       e7381f1a45cf: Download complete
+       5a6fc057f418: Download complete
+       Status: Downloaded newer image for wurstmeister/zookeeper:latest
 
 1. Execute `docker pull wurstmeister/kafka` to pull the Kafka image off Docker Hub.
 
-    ➜  ~  docker pull wurstmeister/kafka
-    latest: Pulling from wurstmeister/kafka
-    428b411c28f0: Pull complete
-    ...
-    422705fe88c8: Pull complete
-    02bb7ca441d8: Pull complete
-    0f9a08061516: Pull complete
-    24fc32f98556: Already exists
-    Digest: sha256:06150c136dcfe6e4fbbf37731a2119ea17a953c75902e52775b5511b3572aa1f
-    Status: Downloaded newer image for wurstmeister/kafka:latest
+        ➜  ~  docker pull wurstmeister/kafka
+        latest: Pulling from wurstmeister/kafka
+        428b411c28f0: Pull complete
+        ...
+        422705fe88c8: Pull complete
+        02bb7ca441d8: Pull complete
+        0f9a08061516: Pull complete
+        24fc32f98556: Already exists
+        Digest: sha256:06150c136dcfe6e4fbbf37731a2119ea17a953c75902e52775b5511b3572aa1f
+        Status: Downloaded newer image for wurstmeister/kafka:latest
 
 1. Once the two images are on your machine, execute `docker run --rm --name zookeeper -p 2181 -t wurstmeister/zookeeper` in one terminal to boot Zookeeper up.
 
-  Remember `$(boot2docker shellinit)` if you're on Mac OS X or Windows.
+    Remember `$(boot2docker shellinit)` if you're on Mac OS X or Windows.
 
-    ➜  ~  docker run --rm --name zookeeper -p 2181 -t wurstmeister/zookeeper
-    JMX enabled by default
-    Using config: /opt/zookeeper-3.4.6/bin/../conf/zoo.cfg
-    2015-07-09 07:33:16,731 [myid:] - INFO  [main:QuorumPeerConfig@103] - Reading configuration from: /opt/zookeeper-3.4.6/bin/../conf/zoo.cfg
-    ...
-    2015-07-09 07:33:16,764 [myid:] - INFO  [main:ZooKeeperServer@773] - maxSessionTimeout set to -1
-    2015-07-09 07:33:16,778 [myid:] - INFO  [main:NIOServerCnxnFactory@94] - binding to port 0.0.0.0/0.0.0.0:2181
+        ➜  ~  docker run --rm --name zookeeper -p 2181 -t wurstmeister/zookeeper
+        JMX enabled by default
+        Using config: /opt/zookeeper-3.4.6/bin/../conf/zoo.cfg
+        2015-07-09 07:33:16,731 [myid:] - INFO  [main:QuorumPeerConfig@103] - Reading configuration from: /opt/zookeeper-3.4.6/bin/../conf/zoo.cfg
+        ...
+        2015-07-09 07:33:16,764 [myid:] - INFO  [main:ZooKeeperServer@773] - maxSessionTimeout set to -1
+        2015-07-09 07:33:16,778 [myid:] - INFO  [main:NIOServerCnxnFactory@94] - binding to port 0.0.0.0/0.0.0.0:2181
 
 1. Execute `docker run --rm --name kafka -e HOST_IP=localhost -e KAFKA_ADVERTISED_PORT=9092 -e KAFKA_BROKER_ID=1 -e ZK=zk -p 9092 --link zookeeper:zk -t wurstmeister/kafka` in another terminal.
 
-  Remember `$(boot2docker shellinit)` if you're on Mac OS X or Windows.
+    Remember `$(boot2docker shellinit)` if you're on Mac OS X or Windows.
 
-    ➜  ~  docker run --rm --name kafka -e HOST_IP=localhost -e KAFKA_ADVERTISED_PORT=9092 -e KAFKA_BROKER_ID=1 -e ZK=zk -p 9092 --link zookeeper:zk -t wurstmeister/kafka
-    [2015-07-09 07:35:30,145] INFO Verifying properties (kafka.utils.VerifiableProperties)
-    [2015-07-09 07:35:30,173] INFO Property advertised.port is overridden to 9092 (kafka.utils.VerifiableProperties)
-    ...
-    [2015-07-09 07:35:30,437] INFO Awaiting socket connections on 0.0.0.0:9092. (kafka.network.Acceptor)
-    [2015-07-09 07:35:30,439] INFO [Socket Server on Broker 1], Started (kafka.network.SocketServer)
-    [2015-07-09 07:35:30,496] INFO Will not load MX4J, mx4j-tools.jar is not in the classpath (kafka.utils.Mx4jLoader$)
-    [2015-07-09 07:35:30,533] INFO 1 successfully elected as leader (kafka.server.ZookeeperLeaderElector)
-    [2015-07-09 07:35:30,613] INFO Registered broker 1 at path /brokers/ids/1 with address 0b34a9927004:9092. (kafka.utils.ZkUtils$)
-    [2015-07-09 07:35:30,632] INFO [Kafka Server 1], started (kafka.server.KafkaServer)
-    [2015-07-09 07:35:30,682] INFO New leader is 1 (kafka.server.ZookeeperLeaderElector$LeaderChangeListener)
+        ➜  ~  docker run --rm --name kafka -e HOST_IP=localhost -e KAFKA_ADVERTISED_PORT=9092 -e KAFKA_BROKER_ID=1 -e ZK=zk -p 9092 --link zookeeper:zk -t wurstmeister/kafka
+        [2015-07-09 07:35:30,145] INFO Verifying properties (kafka.utils.VerifiableProperties)
+        [2015-07-09 07:35:30,173] INFO Property advertised.port is overridden to 9092 (kafka.utils.VerifiableProperties)
+        ...
+        [2015-07-09 07:35:30,437] INFO Awaiting socket connections on 0.0.0.0:9092. (kafka.network.Acceptor)
+        [2015-07-09 07:35:30,439] INFO [Socket Server on Broker 1], Started (kafka.network.SocketServer)
+        [2015-07-09 07:35:30,496] INFO Will not load MX4J, mx4j-tools.jar is not in the classpath (kafka.utils.Mx4jLoader$)
+        [2015-07-09 07:35:30,533] INFO 1 successfully elected as leader (kafka.server.ZookeeperLeaderElector)
+        [2015-07-09 07:35:30,613] INFO Registered broker 1 at path /brokers/ids/1 with address 0b34a9927004:9092. (kafka.utils.ZkUtils$)
+        [2015-07-09 07:35:30,632] INFO [Kafka Server 1], started (kafka.server.KafkaServer)
+        [2015-07-09 07:35:30,682] INFO New leader is 1 (kafka.server.ZookeeperLeaderElector$LeaderChangeListener)
 
 You're now a happy user of Apache Kafka on your computer using Docker. Check the status of the containers using `docker ps`:
 

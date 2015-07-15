@@ -5,7 +5,7 @@
 .footnotes {
   font-size: 13px;
   line-height: 16px;
-  color: #666;
+//  color: #666;
 
   p {
     margin-bottom: 6px;
@@ -45,4 +45,8 @@ section.footnotes {
     font-size: 0.8em;
     vertical-align: super;
     padding-left: 0.1em;
+}
+
+pre code {
+    color: limegreen;
 }

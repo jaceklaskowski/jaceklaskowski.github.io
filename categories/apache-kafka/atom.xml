@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Apache-kafka | Mastering FP and OO with Scala]]></title>
   <link href="http://blog.jaceklaskowski.pl/categories/apache-kafka/atom.xml" rel="self"/>
   <link href="http://blog.jaceklaskowski.pl/"/>
-  <updated>2015-07-18T13:46:13+02:00</updated>
+  <updated>2015-07-18T22:41:50+02:00</updated>
   <id>http://blog.jaceklaskowski.pl/</id>
   <author>
     <name><![CDATA[Jacek Laskowski]]></name>
@@ -51,7 +51,7 @@ I'm a big fan of [homebrew](http://brew.sh/) and highly recommend it to anyone u
 
 ## Running Kafka on two Docker images
 
-1. (Only for Mac OS X and Windows users) Execute `boot2docker up` to start the tiny Linux core on Mac OS.
+1. (Mac OS X and Windows users only) Execute `boot2docker up` to start the tiny Linux core on Mac OS.
 
         ➜  ~  boot2docker up
         Waiting for VM and Docker daemon to start...
@@ -66,14 +66,14 @@ I'm a big fan of [homebrew](http://brew.sh/) and highly recommend it to anyone u
             export DOCKER_CERT_PATH=/Users/jacek/.boot2docker/certs/boot2docker-vm
             export DOCKER_TLS_VERIFY=1
 
-1. (Only for Mac OS X and Windows users) Execute `$(boot2docker shellinit)` to have the terminal set up and let `docker` know where the tiny Linux core is running (via `boot2docker`). You have to do the step in any terminal you open to work with Docker so the `export`s above are set. Should you face communication issues with `docker` commands, remember the step.
+1. (Mac OS X and Windows users only) Execute `$(boot2docker shellinit)` to have the terminal set up and let `docker` know where the tiny Linux core is running (via `boot2docker`). You have to do the step in any terminal you open to work with Docker so the `export`s above are set. Should you face communication issues with `docker` commands, remember the step.
 
        ➜  ~  $(boot2docker shellinit)
        Writing /Users/jacek/.boot2docker/certs/boot2docker-vm/ca.pem
        Writing /Users/jacek/.boot2docker/certs/boot2docker-vm/cert.pem
        Writing /Users/jacek/.boot2docker/certs/boot2docker-vm/key.pem
 
-1. As an additional check, run `docker ps` to verify the terminal is configured properly for Docker.
+1. Run `docker ps` to verify the terminal is configured properly for Docker.
 
        ➜  ~  docker ps
        CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
@@ -82,9 +82,7 @@ I'm a big fan of [homebrew](http://brew.sh/) and highly recommend it to anyone u
 
 1. [Create an account on Docker Hub](https://hub.docker.com/u/jaceklaskowski/) and execute `docker login` to store the credentials. With the step you don't have to repeat them for `docker pull` to pull images off the public hub of Docker images. Think of the Docker Hub as the GitHub for Docker images. Refer to the documentation [Using the Docker Hub](http://docs.docker.com/docker-hub/userguide/) for more up-to-date information.
 
-1. Run `docker pull wurstmeister/zookeeper` to pull the Zookeeper image off Docker Hub. It takes a very long time as the Docker Hub can be very sluggish (or is this just my Internet connection?)
-
-    You will see hashes of respective layers printed out to the console. It's expected.
+1. Run `docker pull wurstmeister/zookeeper` to pull the Zookeeper image off Docker Hub (might take a few minutes to download):
 
        ➜  ~  docker pull wurstmeister/zookeeper
        Pulling repository wurstmeister/zookeeper
@@ -95,7 +93,9 @@ I'm a big fan of [homebrew](http://brew.sh/) and highly recommend it to anyone u
        5a6fc057f418: Download complete
        Status: Downloaded newer image for wurstmeister/zookeeper:latest
 
-1. Execute `docker pull wurstmeister/kafka` to pull the Kafka image off Docker Hub.
+   You will see hashes of respective layers printed out to the console. It's expected.
+
+1. Execute `docker pull wurstmeister/kafka` to pull the Kafka image off Docker Hub (might take a few minutes to download):
 
         ➜  ~  docker pull wurstmeister/kafka
         latest: Pulling from wurstmeister/kafka
@@ -108,7 +108,7 @@ I'm a big fan of [homebrew](http://brew.sh/) and highly recommend it to anyone u
         Digest: sha256:06150c136dcfe6e4fbbf37731a2119ea17a953c75902e52775b5511b3572aa1f
         Status: Downloaded newer image for wurstmeister/kafka:latest
 
-1. Check the available images on your workstation using `docker images`. You should see the two just-downloaded ones.
+1. Verify that the two images - `wurstmeister/kafka` and `wurstmeister/zookeeper` - are downloaded. From the command line execute `docker images`:
 
        ➜  ~  docker images
        REPOSITORY               TAG                 IMAGE ID            CREATED             VIRTUAL SIZE
@@ -183,7 +183,7 @@ I'm a big fan of [homebrew](http://brew.sh/) and highly recommend it to anyone u
         7dde25ff7ec2        wurstmeister/kafka       "/bin/sh -c start-ka   15 hours ago        Exited (137) 16 seconds ago                       kafka
         b7b4b675b9c0        wurstmeister/zookeeper   "/bin/sh -c '/usr/sb   16 hours ago        Exited (137) 5 seconds ago                        zookeeper
 
-1. (Only for Mac OS X and Windows users) Finally, stop `boot2docker` daemon using `boot2docker down`.
+1. (Mac OS X and Windows users only) Finally, stop `boot2docker` daemon using `boot2docker down`.
 
 ## Summary
 

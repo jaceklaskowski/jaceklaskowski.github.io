@@ -106,7 +106,7 @@
 
 <p><a href="http://kafka.apache.org/">Apache Kafka</a> has always been high on my list of things to explore, but since there are quite a few things high on my list, Kafka couldn&rsquo;t actually make it to the very top. Until just recently, when I was asked to give <strong>the broker</strong> a try and see whether or not it meets a project&rsquo;s needs. Two projects, to be honest. You should see my face when I heard it.</p>
 
-<p><a href="https://github.com/apache/kafka#apache-kafka">I compiled Apache Kafka from the sources</a>, connected it to <a href="https://spark.apache.org/streaming/">Spark Streaming</a> and even attempted to answer few questions on StackOverflow (<a href="http://stackoverflow.com/q/31391782/1305344">How to use Kafka in Flink using Scala?</a> and <a href="http://stackoverflow.com/q/31344222/1305344">How to monitor Kafka broker using jmxtrans?</a>), not to mention reading tons of articles and watching videos about the tool. I built pretty strong confidence what use cases are the sweet spot for Apache Kafka.</p>
+<p><a href="https://github.com/apache/kafka#apache-kafka">I compiled Apache Kafka from the sources</a>, connected it to <a href="https://spark.apache.org/streaming/">Spark Streaming</a> and even attempted to answer few questions on StackOverflow (<a href="http://stackoverflow.com/q/31391782/1305344">How to use Kafka in Flink using Scala?</a> and <a href="http://stackoverflow.com/q/31344222/1305344">How to monitor Kafka broker using jmxtrans?</a>), not to mention reading tons of articles and watching videos about the tool. I developed pretty strong confidence what use cases are the sweet spot for Apache Kafka.</p>
 
 <p>With the team in <a href="http://www.codilime.com/">Codilime</a> I&rsquo;m developing <a href="http://deepsense.io/">DeepSense.io</a> platform where we have just used <a href="http://www.ansible.com/home">Ansible</a> to automate deployment. We&rsquo;ve also been evaluating <a href="https://www.docker.com/">Docker</a> and/or <a href="https://www.vagrantup.com/">Vagrant</a>. All to ease the deployment of DeepSense.io.</p>
 
@@ -194,65 +194,94 @@ Status: Downloaded newer image for wurstmeister/zookeeper:latest
  Digest: sha256:06150c136dcfe6e4fbbf37731a2119ea17a953c75902e52775b5511b3572aa1f
  Status: Downloaded newer image for wurstmeister/kafka:latest
 </code></pre></li>
-<li><p>Once the two images are on your machine, execute <code>docker run --rm --name zookeeper -p 2181 -t wurstmeister/zookeeper</code> in one terminal to boot Zookeeper up.</p>
+<li><p>Check the available images on your workstation using <code>docker images</code>. You should see the two just-downloaded ones.</p>
+
+<pre><code>➜  ~  docker images
+REPOSITORY               TAG                 IMAGE ID            CREATED             VIRTUAL SIZE
+wurstmeister/kafka       latest              24fc32f98556        3 weeks ago         477.6 MB
+wurstmeister/zookeeper   latest              a3075a3d32da        9 months ago        451 MB
+</code></pre></li>
+<li><p>You can now execute <code>docker run --name zookeeper -p 2181 -t wurstmeister/zookeeper</code> in one terminal to boot Zookeeper up.</p>
 
 <p> Remember <code>$(boot2docker shellinit)</code> if you&rsquo;re on Mac OS X or Windows.</p>
 
-<pre><code> ➜  ~  docker run --rm --name zookeeper -p 2181 -t wurstmeister/zookeeper
+<pre><code> ➜  ~  docker run --name zookeeper -p 2181:2181 -t wurstmeister/zookeeper
  JMX enabled by default
  Using config: /opt/zookeeper-3.4.6/bin/../conf/zoo.cfg
- 2015-07-09 07:33:16,731 [myid:] - INFO  [main:QuorumPeerConfig@103] - Reading configuration from: /opt/zookeeper-3.4.6/bin/../conf/zoo.cfg
+ 2015-07-17 19:10:40,419 [myid:] - INFO  [main:QuorumPeerConfig@103] - Reading configuration from: /opt/zookeeper-3.4.6/bin/../conf/zoo.cfg
  ...
- 2015-07-09 07:33:16,764 [myid:] - INFO  [main:ZooKeeperServer@773] - maxSessionTimeout set to -1
- 2015-07-09 07:33:16,778 [myid:] - INFO  [main:NIOServerCnxnFactory@94] - binding to port 0.0.0.0/0.0.0.0:2181
+ 2015-07-17 19:10:40,452 [myid:] - INFO  [main:ZooKeeperServer@773] - maxSessionTimeout set to -1
+ 2015-07-17 19:10:40,464 [myid:] - INFO  [main:NIOServerCnxnFactory@94] - binding to port 0.0.0.0/0.0.0.0:2181
+</code></pre>
+
+<p> This gives you Zookeeper listening to port 2181. Check it out by telneting to it using docker (or boot2docker on MacOS) ip address.</p>
+
+<pre><code> ➜  ~  telnet `boot2docker ip` 2181
+ Trying 192.168.59.103...
+ Connected to 192.168.59.103.
+ Escape character is '^]'.
 </code></pre></li>
-<li><p>Execute <code>docker run --rm --name kafka -e HOST_IP=localhost -e KAFKA_ADVERTISED_PORT=9092 -e KAFKA_BROKER_ID=1 -e ZK=zk -p 9092 --link zookeeper:zk -t wurstmeister/kafka</code> in another terminal.</p>
+<li><p>Execute <code>docker run --name kafka -e HOST_IP=localhost -e KAFKA_ADVERTISED_PORT=9092 -e KAFKA_BROKER_ID=1 -e ZK=zk -p 9092 --link zookeeper:zk -t wurstmeister/kafka</code> in another terminal.</p>
 
 <p> Remember <code>$(boot2docker shellinit)</code> if you&rsquo;re on Mac OS X or Windows.</p>
 
-<pre><code> ➜  ~  docker run --rm --name kafka -e HOST_IP=localhost -e KAFKA_ADVERTISED_PORT=9092 -e KAFKA_BROKER_ID=1 -e ZK=zk -p 9092 --link zookeeper:zk -t wurstmeister/kafka
- [2015-07-09 07:35:30,145] INFO Verifying properties (kafka.utils.VerifiableProperties)
- [2015-07-09 07:35:30,173] INFO Property advertised.port is overridden to 9092 (kafka.utils.VerifiableProperties)
+<pre><code> ➜  ~  docker run --name kafka -e HOST_IP=localhost -e KAFKA_ADVERTISED_PORT=9092 -e KAFKA_BROKER_ID=1 -e ZK=zk -p 9092 --link zookeeper:zk -t wurstmeister/kafka
+ [2015-07-17 19:32:35,865] INFO Verifying properties (kafka.utils.VerifiableProperties)
+ [2015-07-17 19:32:35,891] INFO Property advertised.port is overridden to 9092 (kafka.utils.VerifiableProperties)
+ [2015-07-17 19:32:35,891] INFO Property broker.id is overridden to 1 (kafka.utils.VerifiableProperties)
  ...
- [2015-07-09 07:35:30,437] INFO Awaiting socket connections on 0.0.0.0:9092. (kafka.network.Acceptor)
- [2015-07-09 07:35:30,439] INFO [Socket Server on Broker 1], Started (kafka.network.SocketServer)
- [2015-07-09 07:35:30,496] INFO Will not load MX4J, mx4j-tools.jar is not in the classpath (kafka.utils.Mx4jLoader$)
- [2015-07-09 07:35:30,533] INFO 1 successfully elected as leader (kafka.server.ZookeeperLeaderElector)
- [2015-07-09 07:35:30,613] INFO Registered broker 1 at path /brokers/ids/1 with address 0b34a9927004:9092. (kafka.utils.ZkUtils$)
- [2015-07-09 07:35:30,632] INFO [Kafka Server 1], started (kafka.server.KafkaServer)
- [2015-07-09 07:35:30,682] INFO New leader is 1 (kafka.server.ZookeeperLeaderElector$LeaderChangeListener)
+ [2015-07-17 19:32:35,894] INFO Property zookeeper.connect is overridden to 172.17.0.5:2181 (kafka.utils.VerifiableProperties)
+ [2015-07-17 19:32:35,895] INFO Property zookeeper.connection.timeout.ms is overridden to 6000 (kafka.utils.VerifiableProperties)
+ [2015-07-17 19:32:35,924] INFO [Kafka Server 1], starting (kafka.server.KafkaServer)
+ [2015-07-17 19:32:35,925] INFO [Kafka Server 1], Connecting to zookeeper on 172.17.0.5:2181 (kafka.server.KafkaServer)
+ [2015-07-17 19:32:35,934] INFO Starting ZkClient event thread. (org.I0Itec.zkclient.ZkEventThread)
+ [2015-07-17 19:32:35,939] INFO Client environment:zookeeper.version=3.4.6-1569965, built on 02/20/2014 09:09 GMT (org.apache.zookeeper.ZooKeeper)
+ ...
+ [2015-07-17 19:32:36,093] INFO Awaiting socket connections on 0.0.0.0:9092. (kafka.network.Acceptor)
+ [2015-07-17 19:32:36,095] INFO [Socket Server on Broker 1], Started (kafka.network.SocketServer)
+ [2015-07-17 19:32:36,146] INFO Will not load MX4J, mx4j-tools.jar is not in the classpath (kafka.utils.Mx4jLoader$)
+ [2015-07-17 19:32:36,172] INFO 1 successfully elected as leader (kafka.server.ZookeeperLeaderElector)
+ [2015-07-17 19:32:36,253] INFO Registered broker 1 at path /brokers/ids/1 with address 61c359a3136b:9092. (kafka.utils.ZkUtils$)
+ [2015-07-17 19:32:36,270] INFO [Kafka Server 1], started (kafka.server.KafkaServer)
+ [2015-07-17 19:32:36,318] INFO New leader is 1 (kafka.server.ZookeeperLeaderElector$LeaderChangeListener)
+</code></pre>
+
+<p> You&rsquo;re now a happy user of Apache Kafka on your computer using Docker. Check the status of the containers using <code>docker ps</code>:</p>
+
+<pre><code> ➜  ~  docker ps
+ CONTAINER ID        IMAGE                    COMMAND                CREATED             STATUS              PORTS                                                 NAMES
+ 0b34a9927004        wurstmeister/kafka       "/bin/sh -c start-ka   2 minutes ago       Up 2 minutes        0.0.0.0:32769-&gt;9092/tcp                               kafka
+ 14fd32558b1c        wurstmeister/zookeeper   "/bin/sh -c '/usr/sb   4 minutes ago       Up 4 minutes        22/tcp, 2888/tcp, 3888/tcp, 0.0.0.0:32768-&gt;2181/tcp   zookeeper
 </code></pre></li>
+<li><p>Once you&rsquo;re done with your journey into Apache Kafka, <code>docker stop</code> the containers using <code>docker stop kafka zookeeper</code> (or <code>docker stop $(docker ps -aq)</code> if the only running containers are <code>kafka</code> and <code>zookeeper</code>).</p>
+
+<pre><code> ➜  ~  docker stop kafka zookeeper
+ kafka
+ zookeeper
+</code></pre>
+
+<p> Running <code>docker ps</code> shows no running containers afterwards:</p>
+
+<pre><code> ➜  ~  docker ps
+ CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+</code></pre>
+
+<p> There are no running containers since they&rsquo;re stopped now. They are still ready to be booted up again - use <code>docker ps -a</code> to see the ready-to-use containers:</p>
+
+<pre><code> ➜  ~  docker ps -a
+ CONTAINER ID        IMAGE                    COMMAND                CREATED             STATUS                        PORTS               NAMES
+ 7dde25ff7ec2        wurstmeister/kafka       "/bin/sh -c start-ka   15 hours ago        Exited (137) 16 seconds ago                       kafka
+ b7b4b675b9c0        wurstmeister/zookeeper   "/bin/sh -c '/usr/sb   16 hours ago        Exited (137) 5 seconds ago                        zookeeper
+</code></pre></li>
+<li><p>(Only for Mac OS X and Windows users) Finally, stop <code>boot2docker</code> daemon using <code>boot2docker down</code>.</p></li>
 </ol>
 
 
-<p>You&rsquo;re now a happy user of Apache Kafka on your computer using Docker. Check the status of the containers using <code>docker ps</code>:</p>
+<h2>Summary</h2>
 
-<pre><code>➜  ~  $(boot2docker shellinit)
-Writing /Users/jacek/.boot2docker/certs/boot2docker-vm/ca.pem
-Writing /Users/jacek/.boot2docker/certs/boot2docker-vm/cert.pem
-Writing /Users/jacek/.boot2docker/certs/boot2docker-vm/key.pem
-➜  ~  docker ps
-CONTAINER ID        IMAGE                    COMMAND                CREATED             STATUS              PORTS                                                 NAMES
-0b34a9927004        wurstmeister/kafka       "/bin/sh -c start-ka   2 minutes ago       Up 2 minutes        0.0.0.0:32769-&gt;9092/tcp                               kafka
-14fd32558b1c        wurstmeister/zookeeper   "/bin/sh -c '/usr/sb   4 minutes ago       Up 4 minutes        22/tcp, 2888/tcp, 3888/tcp, 0.0.0.0:32768-&gt;2181/tcp   zookeeper
-</code></pre>
+<p>With these two docker images - <a href="https://registry.hub.docker.com/u/wurstmeister/kafka/">wurstmeister/kafka</a> and <a href="https://registry.hub.docker.com/u/wurstmeister/zookeeper/">wurstmeister/zookeeper</a> - you can run <strong>Apache Kafka</strong> without much changing your local workstation to install it together with the necessary components like Apache ZooKeeper. You don&rsquo;t need to worry about upgrading the software and its dependencies except docker itself (and boot2docker if you&rsquo;re lucky to be on Mac OS). That saves you from spending time on installation and ensures proper functioning of your machine and the software. Moreover, the Docker images could be deployed to other machines and guarantee a consistent environment of the software inside.</p>
 
-<p>Once you&rsquo;re done with your journey into Apache Kafka, <code>docker stop</code> the containers using <code>docker stop kafka zookeeper</code> (or <code>docker stop $(docker ps -aq)</code> if the only running containers are <code>kafka</code> and <code>zookeeper</code>).</p>
-
-<pre><code>➜  ~  docker stop kafka zookeeper
-kafka
-zookeeper
-</code></pre>
-
-<p>Running <code>docker ps</code> should show no running containers afterwards:</p>
-
-<pre><code>➜  ~  docker ps
-CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
-</code></pre>
-
-<p>Stop <code>boot2docker</code> daemon using <code>boot2docker down</code>.</p>
-
-<p>That&rsquo;s pretty much it. You can run Apache Kafka without much changing your local workstation to install Apache Kafka, Apache ZooKeeper or any other software that could hurt eventually consistency of your system. Just Docker (and perhaps boot2docker with homebrew). That protects you from spending time on installation and ensures proper functioning of your machine and the software. Moreover, the Docker images could be deployed to other machines and guarantee a consistent environment of the software inside.</p>
+<p>Let me know what you think about the article in the <a href="#disqus_thread">Comments</a> section below or contact me at <a href="&#109;&#x61;&#x69;&#108;&#116;&#x6f;&#x3a;&#106;&#x61;&#x63;&#101;&#107;&#x40;&#x6a;&#x61;&#x70;&#105;&#108;&#x61;&#46;&#112;&#x6c;&#46;">&#106;&#x61;&#x63;&#101;&#107;&#x40;&#x6a;&#97;&#x70;&#105;&#x6c;&#x61;&#x2e;&#x70;&#108;&#x2e;</a></p>
 </div>
 
 

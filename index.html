@@ -9,7 +9,7 @@
   <meta name="author" content="Jacek Laskowski">
 
   
-  <meta name="description" content="Apache Kafka has always been high on my list of things to explore, but since there are quite a few things high on my list, Kafka couldn&rsquo;t &hellip;">
+  <meta name="description" content="I&rsquo;m a Scala proponent so when I found out that the Apache Kafka team has decided to switch to using Java as the main language of the new client &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +79,48 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2015/07/19/publishing-events-using-custom-producer-for-apache-kafka.html">Publishing Events Using Custom Producer for Apache Kafka</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-07-19T23:04:21+02:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>19</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>11:04 pm</span></time>
+        
+        
+           | <a href="/2015/07/19/publishing-events-using-custom-producer-for-apache-kafka.html#disqus_thread"
+             data-disqus-identifier="http://blog.jaceklaskowski.pl/2015/07/19/publishing-events-using-custom-producer-for-apache-kafka.html">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&rsquo;m a <a href="http://www.scala-lang.org/">Scala</a> proponent so when I found out that <a href="https://cwiki.apache.org/confluence/display/KAFKA/Client+Rewrite">the Apache Kafka team has decided to switch to using Java as the main language of the new client API</a> it was beyond my imagination. <a href="http://akka.io/docs/">Akka</a>&rsquo;s fine with their Java/Scala APIs and so I can&rsquo;t believe <a href="http://kafka.apache.org/">Apache Kafka</a> couldn&rsquo;t offer similar APIs, too. It&rsquo;s even more weird when one finds out that Apache Kafka itself is written in Scala. Why on earth did they decide to do the migration?!</p>
+
+<p>In order to learn Kafka better, I developed a custom producer using the latest Kafka&rsquo;s Client API in Scala. I built Kafka from the source so I&rsquo;m at <strong>0.8.3-SNAPSHOT</strong> level. It was pretty surprising experience, esp. when I ran across  <a href="http://docs.oracle.com/javase/8/docs/api/java/util/concurrent/Future.html">java.util.concurrent.Future</a> that seems so limited to what <a href="http://docs.scala-lang.org/overviews/core/futures.html">scala.concurrent.Future</a> offers. No <code>map</code>, <code>flatMap</code> or such? So far I consider the switch to using Java for the Client API a big mistake.</p>
+
+<p>Here comes the complete Kafka producer I&rsquo;ve developed in Scala that&rsquo;s supposed to serve as a basis for my future development endeavours using the API in what&rsquo;s going to be in 0.8.3 release.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/2015/07/19/publishing-events-using-custom-producer-for-apache-kafka.html">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -468,46 +510,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2014/09/25/loose-notes-about-cassandra.html">Loose Notes About Cassandra</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2014-09-25T09:05:39+02:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>25</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>9:05 am</span></time>
-        
-        
-           | <a href="/2014/09/25/loose-notes-about-cassandra.html#disqus_thread"
-             data-disqus-identifier="http://blog.jaceklaskowski.pl/2014/09/25/loose-notes-about-cassandra.html">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I&rsquo;ve got curious about <a href="http://cassandra.apache.org/">Cassandra</a> and more and more I&rsquo;ve been asking myself about the use cases it could be the most valuable solution for. With all the answers out there, I simply needed a place where I could <em>dump</em> the findings to ultimately build something useful as a single page (and perhaps ditch it to create something of a higher value).</p>
-
-<p>So here they are, <em>loose notes</em> about Cassandra to understand the value propositions of the database and where it could fit well. Should I ever be faced the question of using Cassandra or not, I may some day find an answer here (or know where to look for it).</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/2014/09/25/loose-notes-about-cassandra.html">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/2">&larr; Older</a>
@@ -523,6 +525,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2015/07/19/publishing-events-using-custom-producer-for-apache-kafka.html">Publishing Events Using Custom Producer for Apache Kafka</a>
+      </li>
+    
+      <li class="post">
         <a href="/2015/07/14/apache-kafka-on-docker.html">Apache Kafka on Docker</a>
       </li>
     
@@ -536,10 +542,6 @@
     
       <li class="post">
         <a href="/2015/04/12/using-autoplugin-in-sbt-for-common-settings-across-projects-in-multi-project-build.html">Using AutoPlugin in Sbt for Common Settings Across Projects in Multi-project Build</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2015/04/05/code-review-with-gerrit-and-contributing-to-a-patchset.html">Code Review With Gerrit and Contributing to a Patch Set?</a>
       </li>
     
   </ul>

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Scala | Mastering FP and OO with Scala]]></title>
   <link href="http://blog.jaceklaskowski.pl/categories/scala/atom.xml" rel="self"/>
   <link href="http://blog.jaceklaskowski.pl/"/>
-  <updated>2015-07-18T22:41:50+02:00</updated>
+  <updated>2015-07-20T00:35:04+02:00</updated>
   <id>http://blog.jaceklaskowski.pl/</id>
   <author>
     <name><![CDATA[Jacek Laskowski]]></name>
@@ -12,6 +12,245 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Publishing Events Using Custom Producer for Apache Kafka]]></title>
+    <link href="http://blog.jaceklaskowski.pl/2015/07/19/publishing-events-using-custom-producer-for-apache-kafka.html"/>
+    <updated>2015-07-19T23:04:21+02:00</updated>
+    <id>http://blog.jaceklaskowski.pl/2015/07/19/publishing-events-using-custom-producer-for-apache-kafka</id>
+    <content type="html"><![CDATA[I'm a [Scala](http://www.scala-lang.org/) proponent so when I found out that [the Apache Kafka team has decided to switch to using Java as the main language of the new client API](https://cwiki.apache.org/confluence/display/KAFKA/Client+Rewrite) it was beyond my imagination. [Akka](http://akka.io/docs/)'s fine with their Java/Scala APIs and so I can't believe [Apache Kafka](http://kafka.apache.org/) couldn't offer similar APIs, too. It's even more weird when one finds out that Apache Kafka itself is written in Scala. Why on earth did they decide to do the migration?!
+
+In order to learn Kafka better, I developed a custom producer using the latest Kafka's Client API in Scala. I built Kafka from the source so I'm at **0.8.3-SNAPSHOT** level. It was pretty surprising experience, esp. when I ran across  [java.util.concurrent.Future](http://docs.oracle.com/javase/8/docs/api/java/util/concurrent/Future.html) that seems so limited to what [scala.concurrent.Future](http://docs.scala-lang.org/overviews/core/futures.html) offers. No `map`, `flatMap` or such? So far I consider the switch to using Java for the Client API a big mistake.
+
+Here comes the complete Kafka producer I've developed in Scala that's supposed to serve as a basis for my future development endeavours using the API in what's going to be in 0.8.3 release.
+
+<!-- more -->
+
+## Custom KafkaProducer in Scala
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">import</span> <span class="nn">java.util.concurrent.Future</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">import</span> <span class="nn">org.apache.kafka.clients.producer.RecordMetadata</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">object</span> <span class="nc">KafkaProducer</span> <span class="k">extends</span> <span class="nc">App</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">val</span> <span class="n">topic</span> <span class="k">=</span> <span class="n">util</span><span class="o">.</span><span class="nc">Try</span><span class="o">(</span><span class="n">args</span><span class="o">(</span><span class="mi">0</span><span class="o">)).</span><span class="n">getOrElse</span><span class="o">(</span><span class="s">&quot;my-topic-test&quot;</span><span class="o">)</span>
+</span><span class='line'>  <span class="n">println</span><span class="o">(</span><span class="n">s</span><span class="s">&quot;Connecting to $topic&quot;</span><span class="o">)</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">import</span> <span class="nn">org.apache.kafka.clients.producer.KafkaProducer</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">val</span> <span class="n">props</span> <span class="k">=</span> <span class="k">new</span> <span class="n">java</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="nc">Properties</span><span class="o">()</span>
+</span><span class='line'>  <span class="n">props</span><span class="o">.</span><span class="n">put</span><span class="o">(</span><span class="s">&quot;bootstrap.servers&quot;</span><span class="o">,</span> <span class="s">&quot;localhost:9092&quot;</span><span class="o">)</span>
+</span><span class='line'>  <span class="n">props</span><span class="o">.</span><span class="n">put</span><span class="o">(</span><span class="s">&quot;client.id&quot;</span><span class="o">,</span> <span class="s">&quot;KafkaProducer&quot;</span><span class="o">)</span>
+</span><span class='line'>  <span class="n">props</span><span class="o">.</span><span class="n">put</span><span class="o">(</span><span class="s">&quot;key.serializer&quot;</span><span class="o">,</span> <span class="s">&quot;org.apache.kafka.common.serialization.IntegerSerializer&quot;</span><span class="o">)</span>
+</span><span class='line'>  <span class="n">props</span><span class="o">.</span><span class="n">put</span><span class="o">(</span><span class="s">&quot;value.serializer&quot;</span><span class="o">,</span> <span class="s">&quot;org.apache.kafka.common.serialization.StringSerializer&quot;</span><span class="o">)</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">val</span> <span class="n">producer</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">KafkaProducer</span><span class="o">[</span><span class="kt">Integer</span>, <span class="kt">String</span><span class="o">](</span><span class="n">props</span><span class="o">)</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">import</span> <span class="nn">org.apache.kafka.clients.producer.ProducerRecord</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">val</span> <span class="n">polish</span> <span class="k">=</span> <span class="n">java</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">format</span><span class="o">.</span><span class="nc">DateTimeFormatter</span><span class="o">.</span><span class="n">ofPattern</span><span class="o">(</span><span class="s">&quot;dd.MM.yyyy H:mm:ss&quot;</span><span class="o">)</span>
+</span><span class='line'>  <span class="k">val</span> <span class="n">now</span> <span class="k">=</span> <span class="n">java</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="nc">LocalDateTime</span><span class="o">.</span><span class="n">now</span><span class="o">().</span><span class="n">format</span><span class="o">(</span><span class="n">polish</span><span class="o">)</span>
+</span><span class='line'>  <span class="k">val</span> <span class="n">record</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">ProducerRecord</span><span class="o">[</span><span class="kt">Integer</span>, <span class="kt">String</span><span class="o">](</span><span class="n">topic</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span> <span class="n">s</span><span class="s">&quot;hello at $now&quot;</span><span class="o">)</span>
+</span><span class='line'>  <span class="k">val</span> <span class="n">metaF</span><span class="k">:</span> <span class="kt">Future</span><span class="o">[</span><span class="kt">RecordMetadata</span><span class="o">]</span> <span class="k">=</span> <span class="n">producer</span><span class="o">.</span><span class="n">send</span><span class="o">(</span><span class="n">record</span><span class="o">)</span>
+</span><span class='line'>  <span class="k">val</span> <span class="n">meta</span> <span class="k">=</span> <span class="n">metaF</span><span class="o">.</span><span class="n">get</span><span class="o">()</span> <span class="c1">// blocking!</span>
+</span><span class='line'>  <span class="k">val</span> <span class="n">msgLog</span> <span class="k">=</span>
+</span><span class='line'>    <span class="n">s</span><span class="s">&quot;&quot;&quot;</span>
+</span><span class='line'><span class="s">       |offset    = ${meta.offset()}</span>
+</span><span class='line'><span class="s">       |partition = ${meta.partition()}</span>
+</span><span class='line'><span class="s">       |topic     = ${meta.topic()}</span>
+</span><span class='line'><span class="s">     &quot;&quot;&quot;</span><span class="o">.</span><span class="n">stripMargin</span>
+</span><span class='line'>  <span class="n">println</span><span class="o">(</span><span class="n">msgLog</span><span class="o">)</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">producer</span><span class="o">.</span><span class="n">close</span><span class="o">()</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+## Building Kafka from the sources
+
+In order to run the client you should build Kafka from the sources first and publish the jars to the local Maven repository. The reason to have the build is that the producer uses the very latest Kafka Producer API.
+
+Building Kafka from the sources is as simple as executing `gradle -PscalaVersion=2.11.7 clean releaseTarGz` in the directory where you `git clone https://github.com/apache/kafka.git`d [the Kafka repo from GitHub](https://github.com/apache/kafka.git).
+
+    ➜  kafka git:(trunk) gradle -PscalaVersion=2.11.7 clean releaseTarGz
+    Building project 'core' with Scala version 2.11.7
+    ...
+    BUILD SUCCESSFUL
+
+    Total time: 1 mins 23.233 secs
+
+I was building the distro against **Scala 2.11.7**.
+
+Once done, `core/build/distributions/kafka_2.11-0.8.3-SNAPSHOT.tgz` is where you find the release package.
+
+    ➜  kafka git:(trunk) ✗ ls -l core/build/distributions/kafka_2.11-0.8.3-SNAPSHOT.tgz
+    -rw-r--r--  1 jacek  staff  17006303 18 lip 13:19 core/build/distributions/kafka_2.11-0.8.3-SNAPSHOT.tgz
+
+Unpack it and `cd` to it.
+
+    ➜  kafka git:(trunk) ✗ tar -zxf core/build/distributions/kafka_2.11-0.8.3-SNAPSHOT.tgz
+    ➜  kafka git:(trunk) ✗ cd kafka_2.11-0.8.3-SNAPSHOT
+
+## Zookeeper up and running
+
+Running Zookeeper is the very first step you should do (as that's how Kafka maintains high-availability). Use `./bin/zookeeper-server-start.sh config/zookeeper.properties`:
+
+    ➜  kafka_2.11-0.8.3-SNAPSHOT git:(trunk) ✗ ./bin/zookeeper-server-start.sh config/zookeeper.properties
+    [2015-07-20 00:17:08,134] INFO Reading configuration from: config/zookeeper.properties (org.apache.zookeeper.server.quorum.QuorumPeerConfig)
+    [2015-07-20 00:17:08,136] INFO autopurge.snapRetainCount set to 3 (org.apache.zookeeper.server.DatadirCleanupManager)
+    [2015-07-20 00:17:08,136] INFO autopurge.purgeInterval set to 0 (org.apache.zookeeper.server.DatadirCleanupManager)
+    [2015-07-20 00:17:08,136] INFO Purge task is not scheduled. (org.apache.zookeeper.server.DatadirCleanupManager)
+    [2015-07-20 00:17:08,136] WARN Either no config or no quorum defined in config, running  in standalone mode (org.apache.zookeeper.server.quorum.QuorumPeerMain)
+    [2015-07-20 00:17:08,153] INFO Reading configuration from: config/zookeeper.properties (org.apache.zookeeper.server.quorum.QuorumPeerConfig)
+    [2015-07-20 00:17:08,154] INFO Starting server (org.apache.zookeeper.server.ZooKeeperServerMain)
+    [2015-07-20 00:17:08,165] INFO Server environment:zookeeper.version=3.4.6-1569965, built on 02/20/2014 09:09 GMT (org.apache.zookeeper.server.ZooKeeperServer)
+    [2015-07-20 00:17:08,165] INFO Server environment:host.name=192.168.1.9 (org.apache.zookeeper.server.ZooKeeperServer)
+    [2015-07-20 00:17:08,165] INFO Server environment:java.version=1.8.0_45 (org.apache.zookeeper.server.ZooKeeperServer)
+    ...
+    [2015-07-20 00:17:08,191] INFO binding to port 0.0.0.0/0.0.0.0:2181 (org.apache.zookeeper.server.NIOServerCnxnFactory)
+
+## Kafka broker up and running
+
+With Zookeeper up, start a Kafka broker using `./bin/kafka-server-start.sh config/server.properties` command:
+
+    ➜  kafka_2.11-0.8.3-SNAPSHOT git:(trunk) ✗ ./bin/kafka-server-start.sh config/server.properties
+    [2015-07-20 00:18:33,574] INFO KafkaConfig values:
+    	advertised.host.name = null
+      ...
+    	log.dir = /tmp/kafka-logs
+      ...
+    	zookeeper.connect = localhost:2181
+    	zookeeper.sync.time.ms = 2000
+    	port = 9092
+      ...
+    [2015-07-20 00:18:33,671] INFO starting (kafka.server.KafkaServer)
+    [2015-07-20 00:18:33,673] INFO Connecting to zookeeper on localhost:2181 (kafka.server.KafkaServer)
+    [2015-07-20 00:18:33,684] INFO Starting ZkClient event thread. (org.I0Itec.zkclient.ZkEventThread)
+    [2015-07-20 00:18:33,693] INFO Client environment:zookeeper.version=3.4.6-1569965, built on 02/20/2014 09:09 GMT (org.apache.zookeeper.ZooKeeper)
+    [2015-07-20 00:18:33,694] INFO Client environment:host.name=192.168.1.9 (org.apache.zookeeper.ZooKeeper)
+    [2015-07-20 00:18:33,694] INFO Client environment:java.version=1.8.0_45 (org.apache.zookeeper.ZooKeeper)
+    [2015-07-20 00:18:33,694] INFO Client environment:java.vendor=Oracle Corporation (org.apache.zookeeper.ZooKeeper)
+    ...
+    [2015-07-20 00:18:34,414] INFO Registered broker 0 at path /brokers/ids/0 with addresses: PLAINTEXT -> EndPoint(192.168.1.9,9092,PLAINTEXT) (kafka.utils.ZkUtils$)
+    [2015-07-20 00:18:34,419] INFO [Kafka Server 0], started (kafka.server.KafkaServer)
+
+## Create topic
+
+You're now going to create `my-topic` topic where the custom producer is going to publish messages to. Of course, the name of the topic is arbitrary, but should match what the custom producer uses.
+
+    ➜  kafka_2.11-0.8.3-SNAPSHOT git:(trunk) ✗ ./bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic my-topic-test
+    Created topic "my-topic-test".
+
+Check out the topics available using `./bin/kafka-topics.sh --list --zookeeper localhost:2181`. You should see one.
+
+    ➜  kafka_2.11-0.8.3-SNAPSHOT git:(trunk) ✗ ./bin/kafka-topics.sh --list --zookeeper localhost:2181
+    my-topic-test
+
+## Scala/sbt project setup
+
+Create a Scala/sbt project with the following `build.sbt`:
+
+    val kafkaVersion = "0.8.3-SNAPSHOT"
+
+    scalaVersion := "2.11.7"
+
+    resolvers += Resolver.mavenLocal
+
+    libraryDependencies += "org.apache.kafka" % "kafka-clients" % kafkaVersion
+
+Use the following `project/build.properties`:
+
+    sbt.version=0.13.9-RC3
+
+## Sending messages using KafkaProducer - `sbt run`
+
+With the setup, you should now be able to run `sbt run` to run the custom Scala producer for Kafka.
+
+    [kafka-publisher]> run
+    [info] Running KafkaProducer
+    Connecting to my-topic-test
+    SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+    SLF4J: Defaulting to no-operation (NOP) logger implementation
+    SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+
+    offset    = 0
+    partition = 0
+    topic     = my-topic-test
+
+    [success] Total time: 8 s, completed Jul 20, 2015 12:29:44 AM
+
+Executing `sbt run` again should show a different offset for the sam partition and topic:
+
+    [kafka-publisher]> run
+    [info] Running KafkaProducer
+    Connecting to my-topic-test
+    SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+    SLF4J: Defaulting to no-operation (NOP) logger implementation
+    SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+
+    offset    = 1
+    partition = 0
+    topic     = my-topic-test
+
+    [success] Total time: 0 s, completed Jul 20, 2015 12:30:47 AM
+
+## Using kafkacat as a Kafka message consumer
+
+If you really would like to see the message on the other, receiving side, I strongly recommend using [kafkacat](https://github.com/edenhill/kafkacat) that, once installed, boils down to the following command:
+
+    ➜  ~  kafkacat -C -b localhost:9092 -t my-topic-test
+    hello at 20.07.2015 0:29:43
+    hello at 20.07.2015 0:30:46
+
+It will read all the messages already published to `my-topic-test` topic and print out others once they come.
+
+That's it. Congratulations!
+
+## Summary
+
+The complete project is [on GitHub in kafka-producer repo](https://github.com/jaceklaskowski/kafka-producer).
+
+You may also want to read [1.3 Quick Start](http://kafka.apache.org/documentation.html#quickstart) in the official documentation of Apache Kafka.
+
+Let me know what you think about the blog post in the [Comments](#disqus_thread) section below or contact me at jacek@japila.pl.
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Ad Hoc Polymorphism in Scala With Type Classes]]></title>
@@ -485,140 +724,6 @@ Install [yEd](http://www.yworks.com/en/products/yfiles/yed/) and open the graph:
 <img src="/images/hello-slick-specs2-yed-graph.png" title="yEd graph of compile dependencies" >
 
 I really wish I'd known it earlier. It'd surely have saved me a lot of time.]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Mistakes Introducing Slick for Database Access Under Play Framework 2.3.4 and 2.4.0-M1]]></title>
-    <link href="http://blog.jaceklaskowski.pl/2014/09/12/mistakes-introducing-slick-for-database-access-under-play-framework-2-dot-3-4-and-2-dot-4-0-m1.html"/>
-    <updated>2014-09-12T21:47:50+02:00</updated>
-    <id>http://blog.jaceklaskowski.pl/2014/09/12/mistakes-introducing-slick-for-database-access-under-play-framework-2-dot-3-4-and-2-dot-4-0-m1</id>
-    <content type="html"><![CDATA[This is a summary of my attempt to run [Slick](http://slick.typesafe.com/) under [Play Framework](https://www.playframework.com/) **2.3.4** and **2.4.0-M1** that ultimately turned out a quite successful endeavour.
-
-I’m currently using Play’s Anorm and writing the queries myself didn’t seem to be something I much liked. I’ve been seeing Slick has had a good press so it was a no-brainer to pick it as an alternative.
-
-<!-- more -->
-
-## Mistake #1. Hurting myself with cutting edge versions
-
-Reading the documentation at http://slick.typesafe.com/ was not very informative as there was no word about how to embed it in a Play Framework application. There should really be a "Getting started with Slick and Play Framework" tutorial since both are part of [The Typesafe Reactive Platform](https://typesafe.com/platform).
-
-I added Slick to `build.sbt` as follows:
-
-    "com.typesafe.slick" %% "slick" % “2.1.0"
-
-And then I realised that I’d have had to do:
-
-    Database.forURL("jdbc:h2:mem:test1", driver = "org.h2.Driver") withSession {
-      implicit session =>
-      // <- write queries here
-    }
-
-but Play Framework gives me:
-
-    DB.withConnection("sayenedb") { implicit c =>
-        ...
-    }
-
-It was certainly not the way to follow. I needed a solution that would read database configuration from Play's.
-
-## Mistake #2. Using play-slick with Play 2.4.0-M1
-
-Time has come to give [play-slick](https://github.com/playframework/play-slick) a serious try. The project aims to make *"Slick a first-class citizen of Play 2.x.”*
-
-It took me a while to abandon the idea of running play-slick with Play 2.4.0-M1 since [this](https://groups.google.com/d/msg/play-framework/m_bxuqgSKgk/Z4WgfUer19wJ):
-
-> The purpose of this release is to get feedback about the approach to dependency injection that we're implementing in Play 2.4.  The old Play plugins mechanism is going to be deprecated.  For a detailed overview of the different styles of DI available in Play 2.4, please read here:
-
-> https://www.playframework.com/documentation/2.4.x/ScalaDependencyInjection
-https://www.playframework.com/documentation/2.4.x/ScalaCompileTimeDependencyInjection
-https://www.playframework.com/documentation/2.4.x/JavaDependencyInjection
-
-I reported [an issue for play-slick](https://github.com/playframework/play-slick/issues/208) hoping that the developers notice the missing integration point and the support for 2.4 will come...sooner (?)
-
-## Mistake #3. Using custom db configuration in Play
-
-The application uses no `db.default` configuration in `application.conf` in Play - just a custom one. The result?
-
-    [error] application -
-
-    ! @6jg39b0pk - Internal server error, for (GET) [/tips/wgcategories] ->
-
-    play.api.Configuration$$anon$1: Configuration error[Slick error : jdbc driver not defined in application.conf for db.default.driver key]
-         at play.api.Configuration$.play$api$Configuration$$configError(Configuration.scala:94) ~[play_2.11-2.3.4.jar:2.3.4]
-         at play.api.Configuration.reportError(Configuration.scala:743) ~[play_2.11-2.3.4.jar:2.3.4]
-         at play.api.db.slick.Config$$anonfun$1.apply(Config.scala:64) ~[play-slick_2.11-0.8.0.jar:0.8.0]
-         at play.api.db.slick.Config$$anonfun$1.apply(Config.scala:64) ~[play-slick_2.11-0.8.0.jar:0.8.0]
-         at scala.Option.getOrElse(Option.scala:120) ~[scala-library-2.11.2.jar:na]
-
-I had to add the following entries to work it around:
-
-    db.default.driver=org.postgresql.Driver
-    db.default.url=${?DB_CONN}
-
-`DB_CONN` is the property I set up at command line at Play startup.
-
-Using two datasources required following [Advanced drivers configuration](https://github.com/playframework/play-slick/wiki/ScalaSlickDrivers) and applying the (in)famous Cake pattern.
-
-## Mistake #4. Copying examples to production code - PostgreSQL is case sensitive for field names in quotes
-
-I had the following in my Component:
-
-    def id = column[Int]("ID", O.PrimaryKey, O.AutoInc)
-
-That generated a query with `"ID"` in `select` clause that in turn resulted in the following error:
-
-    STATEMENT:  select s13."ID", s13."name" from “xxx" s13;
-    ERROR:  column s13.ID does not exist at character 8
-
-[As Rene pointed out in his tweet](https://twitter.com/rgielen/status/510501297473462272):
-
-> @jaceklaskowski not true - #PostgreSQL follows SQL standard. Columns names are case insensitive unless created with quotation marks
-
-He was right - changing `ID` to `id` has indeed fixed the issue.
-
-    def id = column[Int]("id", O.PrimaryKey, O.AutoInc)
-
-## Mistake #5. [SI-3664] Explicit case class companion does not extend Function / override toString
-
-There's an issue reported against the Scala compiler - [[SI-3664] Explicit case class companion does not extend Function / override toString](https://issues.scala-lang.org/browse/SI-3664) - that stands in a way for the `*` projection, i.e. `def * = ...`, in your table description:
-
-    class Users(tag: Tag) extends Table[User](tag, "users") {
-        def id    = column[Int]   ("id", O.PrimaryKey, O.AutoInc)
-        def login = column[String]("login")
-
-        def * = (id, login) <> (User.tupled, User.unapply)
-    }
-
-For the `Users` class above the Scala compiler fails reporting:
-
-> value tupled is not a member of object model.User
-
-A solution is described in [Mapped Tables](http://slick.typesafe.com/doc/2.1.0/upgrade.html#mapped-tables) section of [UPGRADE GUIDES](http://slick.typesafe.com/doc/2.1.0/upgrade.html) document in the Slick manual:
-
-> Note that `.tupled` is only available for proper Scala functions.  
-> When using a case class, the companion object extends the correct function type by default, but only if you do not define the object yourself. In that case you should provide the right supertype manually.
-
-The mapping definition can look as follows:
-
-    class Users(tag: Tag) extends Table[User](tag, "users") {
-        def id    = column[Int]   ("id", O.PrimaryKey, O.AutoInc)
-        def login = column[String]("login")
-    
-        def * = (id, login) <> ((User.apply _).tupled, User.unapply)
-    }
-
-Note `(User.apply _).tupled`.
-
-## Mistake #6. JodaTime support
-
-For cases where you need to use JodaTime types in Slick you should use [slick-joda-mapper](https://github.com/tototoshi/slick-joda-mapper#slick-joda-mapper).
-
-Else you have to stick to `java.sql.Date`, `java.sql.Time`, `java.sql.Timestamp` as described in [Table Rows](http://slick.typesafe.com/doc/2.1.0/schemas.html?highlight=date#table-rows) in the Slick documentation.
-
-## Summary
-
-Using a non-default configuration is always a kind of minefield. Stay away from it unless you’re adventurous and have enough time and patience to fix issues along the way. You’ve been warned.
-]]></content>
   </entry>
   
 </feed>

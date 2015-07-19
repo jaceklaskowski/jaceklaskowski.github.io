@@ -1,0 +1,585 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Publishing Events Using Custom Producer for Apache Kafka - Mastering FP and OO with Scala</title>
+  <meta name="author" content="Jacek Laskowski">
+
+  
+  <meta name="description" content="I&rsquo;m a Scala proponent so when I found out that the Apache Kafka team has decided to switch to using Java as the main language of the new client &hellip;">
+  <meta name="keywords" content="apache, kafka, broker, scala">
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://blog.jaceklaskowski.pl/2015/07/19/publishing-events-using-custom-producer-for-apache-kafka.html">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="http://feeds.feedburner.com/MasteringFpWithScala" rel="alternate" title="Mastering FP and OO with Scala" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-45999426-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body    class="collapse-sidebar sidebar-footer" >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Mastering FP and OO with Scala</a></h1>
+  
+    <h2>Making use of functional and object-oriented programming on JVM</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="http://feeds.feedburner.com/MasteringFpWithScala" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="blog.jaceklaskowski.pl">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="http://linkedin.com/in/jaceklaskowski">About</a></li>
+  <li><a href="https://github.com/jaceklaskowski/jaceklaskowski.github.io">Sources on GitHub</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Publishing Events Using Custom Producer for Apache Kafka</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-07-19T23:04:21+02:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>19</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>11:04 pm</span></time>
+        
+        
+           | <a href="#disqus_thread"
+             data-disqus-identifier="http://blog.jaceklaskowski.pl">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>I&rsquo;m a <a href="http://www.scala-lang.org/">Scala</a> proponent so when I found out that <a href="https://cwiki.apache.org/confluence/display/KAFKA/Client+Rewrite">the Apache Kafka team has decided to switch to using Java as the main language of the new client API</a> it was beyond my imagination. <a href="http://akka.io/docs/">Akka</a>&rsquo;s fine with their Java/Scala APIs and so I can&rsquo;t believe <a href="http://kafka.apache.org/">Apache Kafka</a> couldn&rsquo;t offer similar APIs, too. It&rsquo;s even more weird when one finds out that Apache Kafka itself is written in Scala. Why on earth did they decide to do the migration?!</p>
+
+<p>In order to learn Kafka better, I developed a custom producer using the latest Kafka&rsquo;s Client API in Scala. I built Kafka from the source so I&rsquo;m at <strong>0.8.3-SNAPSHOT</strong> level. It was pretty surprising experience, esp. when I ran across  <a href="http://docs.oracle.com/javase/8/docs/api/java/util/concurrent/Future.html">java.util.concurrent.Future</a> that seems so limited to what <a href="http://docs.scala-lang.org/overviews/core/futures.html">scala.concurrent.Future</a> offers. No <code>map</code>, <code>flatMap</code> or such? So far I consider the switch to using Java for the Client API a big mistake.</p>
+
+<p>Here comes the complete Kafka producer I&rsquo;ve developed in Scala that&rsquo;s supposed to serve as a basis for my future development endeavours using the API in what&rsquo;s going to be in 0.8.3 release.</p>
+
+<!-- more -->
+
+
+<h2>Custom KafkaProducer in Scala</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">import</span> <span class="nn">java.util.concurrent.Future</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">import</span> <span class="nn">org.apache.kafka.clients.producer.RecordMetadata</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">object</span> <span class="nc">KafkaProducer</span> <span class="k">extends</span> <span class="nc">App</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">val</span> <span class="n">topic</span> <span class="k">=</span> <span class="n">util</span><span class="o">.</span><span class="nc">Try</span><span class="o">(</span><span class="n">args</span><span class="o">(</span><span class="mi">0</span><span class="o">)).</span><span class="n">getOrElse</span><span class="o">(</span><span class="s">&quot;my-topic-test&quot;</span><span class="o">)</span>
+</span><span class='line'>  <span class="n">println</span><span class="o">(</span><span class="n">s</span><span class="s">&quot;Connecting to $topic&quot;</span><span class="o">)</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">import</span> <span class="nn">org.apache.kafka.clients.producer.KafkaProducer</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">val</span> <span class="n">props</span> <span class="k">=</span> <span class="k">new</span> <span class="n">java</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="nc">Properties</span><span class="o">()</span>
+</span><span class='line'>  <span class="n">props</span><span class="o">.</span><span class="n">put</span><span class="o">(</span><span class="s">&quot;bootstrap.servers&quot;</span><span class="o">,</span> <span class="s">&quot;localhost:9092&quot;</span><span class="o">)</span>
+</span><span class='line'>  <span class="n">props</span><span class="o">.</span><span class="n">put</span><span class="o">(</span><span class="s">&quot;client.id&quot;</span><span class="o">,</span> <span class="s">&quot;KafkaProducer&quot;</span><span class="o">)</span>
+</span><span class='line'>  <span class="n">props</span><span class="o">.</span><span class="n">put</span><span class="o">(</span><span class="s">&quot;key.serializer&quot;</span><span class="o">,</span> <span class="s">&quot;org.apache.kafka.common.serialization.IntegerSerializer&quot;</span><span class="o">)</span>
+</span><span class='line'>  <span class="n">props</span><span class="o">.</span><span class="n">put</span><span class="o">(</span><span class="s">&quot;value.serializer&quot;</span><span class="o">,</span> <span class="s">&quot;org.apache.kafka.common.serialization.StringSerializer&quot;</span><span class="o">)</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">val</span> <span class="n">producer</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">KafkaProducer</span><span class="o">[</span><span class="kt">Integer</span>, <span class="kt">String</span><span class="o">](</span><span class="n">props</span><span class="o">)</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">import</span> <span class="nn">org.apache.kafka.clients.producer.ProducerRecord</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">val</span> <span class="n">polish</span> <span class="k">=</span> <span class="n">java</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">format</span><span class="o">.</span><span class="nc">DateTimeFormatter</span><span class="o">.</span><span class="n">ofPattern</span><span class="o">(</span><span class="s">&quot;dd.MM.yyyy H:mm:ss&quot;</span><span class="o">)</span>
+</span><span class='line'>  <span class="k">val</span> <span class="n">now</span> <span class="k">=</span> <span class="n">java</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="nc">LocalDateTime</span><span class="o">.</span><span class="n">now</span><span class="o">().</span><span class="n">format</span><span class="o">(</span><span class="n">polish</span><span class="o">)</span>
+</span><span class='line'>  <span class="k">val</span> <span class="n">record</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">ProducerRecord</span><span class="o">[</span><span class="kt">Integer</span>, <span class="kt">String</span><span class="o">](</span><span class="n">topic</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span> <span class="n">s</span><span class="s">&quot;hello at $now&quot;</span><span class="o">)</span>
+</span><span class='line'>  <span class="k">val</span> <span class="n">metaF</span><span class="k">:</span> <span class="kt">Future</span><span class="o">[</span><span class="kt">RecordMetadata</span><span class="o">]</span> <span class="k">=</span> <span class="n">producer</span><span class="o">.</span><span class="n">send</span><span class="o">(</span><span class="n">record</span><span class="o">)</span>
+</span><span class='line'>  <span class="k">val</span> <span class="n">meta</span> <span class="k">=</span> <span class="n">metaF</span><span class="o">.</span><span class="n">get</span><span class="o">()</span> <span class="c1">// blocking!</span>
+</span><span class='line'>  <span class="k">val</span> <span class="n">msgLog</span> <span class="k">=</span>
+</span><span class='line'>    <span class="n">s</span><span class="s">&quot;&quot;&quot;</span>
+</span><span class='line'><span class="s">       |offset    = ${meta.offset()}</span>
+</span><span class='line'><span class="s">       |partition = ${meta.partition()}</span>
+</span><span class='line'><span class="s">       |topic     = ${meta.topic()}</span>
+</span><span class='line'><span class="s">     &quot;&quot;&quot;</span><span class="o">.</span><span class="n">stripMargin</span>
+</span><span class='line'>  <span class="n">println</span><span class="o">(</span><span class="n">msgLog</span><span class="o">)</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">producer</span><span class="o">.</span><span class="n">close</span><span class="o">()</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Building Kafka from the sources</h2>
+
+<p>In order to run the client you should build Kafka from the sources first and publish the jars to the local Maven repository. The reason to have the build is that the producer uses the very latest Kafka Producer API.</p>
+
+<p>Building Kafka from the sources is as simple as executing <code>gradle -PscalaVersion=2.11.7 clean releaseTarGz</code> in the directory where you <code>git clone https://github.com/apache/kafka.git</code>d <a href="https://github.com/apache/kafka.git">the Kafka repo from GitHub</a>.</p>
+
+<pre><code>➜  kafka git:(trunk) gradle -PscalaVersion=2.11.7 clean releaseTarGz
+Building project 'core' with Scala version 2.11.7
+...
+BUILD SUCCESSFUL
+
+Total time: 1 mins 23.233 secs
+</code></pre>
+
+<p>I was building the distro against <strong>Scala 2.11.7</strong>.</p>
+
+<p>Once done, <code>core/build/distributions/kafka_2.11-0.8.3-SNAPSHOT.tgz</code> is where you find the release package.</p>
+
+<pre><code>➜  kafka git:(trunk) ✗ ls -l core/build/distributions/kafka_2.11-0.8.3-SNAPSHOT.tgz
+-rw-r--r--  1 jacek  staff  17006303 18 lip 13:19 core/build/distributions/kafka_2.11-0.8.3-SNAPSHOT.tgz
+</code></pre>
+
+<p>Unpack it and <code>cd</code> to it.</p>
+
+<pre><code>➜  kafka git:(trunk) ✗ tar -zxf core/build/distributions/kafka_2.11-0.8.3-SNAPSHOT.tgz
+➜  kafka git:(trunk) ✗ cd kafka_2.11-0.8.3-SNAPSHOT
+</code></pre>
+
+<h2>Zookeeper up and running</h2>
+
+<p>Running Zookeeper is the very first step you should do (as that&rsquo;s how Kafka maintains high-availability). Use <code>./bin/zookeeper-server-start.sh config/zookeeper.properties</code>:</p>
+
+<pre><code>➜  kafka_2.11-0.8.3-SNAPSHOT git:(trunk) ✗ ./bin/zookeeper-server-start.sh config/zookeeper.properties
+[2015-07-20 00:17:08,134] INFO Reading configuration from: config/zookeeper.properties (org.apache.zookeeper.server.quorum.QuorumPeerConfig)
+[2015-07-20 00:17:08,136] INFO autopurge.snapRetainCount set to 3 (org.apache.zookeeper.server.DatadirCleanupManager)
+[2015-07-20 00:17:08,136] INFO autopurge.purgeInterval set to 0 (org.apache.zookeeper.server.DatadirCleanupManager)
+[2015-07-20 00:17:08,136] INFO Purge task is not scheduled. (org.apache.zookeeper.server.DatadirCleanupManager)
+[2015-07-20 00:17:08,136] WARN Either no config or no quorum defined in config, running  in standalone mode (org.apache.zookeeper.server.quorum.QuorumPeerMain)
+[2015-07-20 00:17:08,153] INFO Reading configuration from: config/zookeeper.properties (org.apache.zookeeper.server.quorum.QuorumPeerConfig)
+[2015-07-20 00:17:08,154] INFO Starting server (org.apache.zookeeper.server.ZooKeeperServerMain)
+[2015-07-20 00:17:08,165] INFO Server environment:zookeeper.version=3.4.6-1569965, built on 02/20/2014 09:09 GMT (org.apache.zookeeper.server.ZooKeeperServer)
+[2015-07-20 00:17:08,165] INFO Server environment:host.name=192.168.1.9 (org.apache.zookeeper.server.ZooKeeperServer)
+[2015-07-20 00:17:08,165] INFO Server environment:java.version=1.8.0_45 (org.apache.zookeeper.server.ZooKeeperServer)
+...
+[2015-07-20 00:17:08,191] INFO binding to port 0.0.0.0/0.0.0.0:2181 (org.apache.zookeeper.server.NIOServerCnxnFactory)
+</code></pre>
+
+<h2>Kafka broker up and running</h2>
+
+<p>With Zookeeper up, start a Kafka broker using <code>./bin/kafka-server-start.sh config/server.properties</code> command:</p>
+
+<pre><code>➜  kafka_2.11-0.8.3-SNAPSHOT git:(trunk) ✗ ./bin/kafka-server-start.sh config/server.properties
+[2015-07-20 00:18:33,574] INFO KafkaConfig values:
+    advertised.host.name = null
+  ...
+    log.dir = /tmp/kafka-logs
+  ...
+    zookeeper.connect = localhost:2181
+    zookeeper.sync.time.ms = 2000
+    port = 9092
+  ...
+[2015-07-20 00:18:33,671] INFO starting (kafka.server.KafkaServer)
+[2015-07-20 00:18:33,673] INFO Connecting to zookeeper on localhost:2181 (kafka.server.KafkaServer)
+[2015-07-20 00:18:33,684] INFO Starting ZkClient event thread. (org.I0Itec.zkclient.ZkEventThread)
+[2015-07-20 00:18:33,693] INFO Client environment:zookeeper.version=3.4.6-1569965, built on 02/20/2014 09:09 GMT (org.apache.zookeeper.ZooKeeper)
+[2015-07-20 00:18:33,694] INFO Client environment:host.name=192.168.1.9 (org.apache.zookeeper.ZooKeeper)
+[2015-07-20 00:18:33,694] INFO Client environment:java.version=1.8.0_45 (org.apache.zookeeper.ZooKeeper)
+[2015-07-20 00:18:33,694] INFO Client environment:java.vendor=Oracle Corporation (org.apache.zookeeper.ZooKeeper)
+...
+[2015-07-20 00:18:34,414] INFO Registered broker 0 at path /brokers/ids/0 with addresses: PLAINTEXT -&gt; EndPoint(192.168.1.9,9092,PLAINTEXT) (kafka.utils.ZkUtils$)
+[2015-07-20 00:18:34,419] INFO [Kafka Server 0], started (kafka.server.KafkaServer)
+</code></pre>
+
+<h2>Create topic</h2>
+
+<p>You&rsquo;re now going to create <code>my-topic</code> topic where the custom producer is going to publish messages to. Of course, the name of the topic is arbitrary, but should match what the custom producer uses.</p>
+
+<pre><code>➜  kafka_2.11-0.8.3-SNAPSHOT git:(trunk) ✗ ./bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic my-topic-test
+Created topic "my-topic-test".
+</code></pre>
+
+<p>Check out the topics available using <code>./bin/kafka-topics.sh --list --zookeeper localhost:2181</code>. You should see one.</p>
+
+<pre><code>➜  kafka_2.11-0.8.3-SNAPSHOT git:(trunk) ✗ ./bin/kafka-topics.sh --list --zookeeper localhost:2181
+my-topic-test
+</code></pre>
+
+<h2>Scala/sbt project setup</h2>
+
+<p>Create a Scala/sbt project with the following <code>build.sbt</code>:</p>
+
+<pre><code>val kafkaVersion = "0.8.3-SNAPSHOT"
+
+scalaVersion := "2.11.7"
+
+resolvers += Resolver.mavenLocal
+
+libraryDependencies += "org.apache.kafka" % "kafka-clients" % kafkaVersion
+</code></pre>
+
+<p>Use the following <code>project/build.properties</code>:</p>
+
+<pre><code>sbt.version=0.13.9-RC3
+</code></pre>
+
+<h2>Sending messages using KafkaProducer - <code>sbt run</code></h2>
+
+<p>With the setup, you should now be able to run <code>sbt run</code> to run the custom Scala producer for Kafka.</p>
+
+<pre><code>[kafka-publisher]&gt; run
+[info] Running KafkaProducer
+Connecting to my-topic-test
+SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+
+offset    = 0
+partition = 0
+topic     = my-topic-test
+
+[success] Total time: 8 s, completed Jul 20, 2015 12:29:44 AM
+</code></pre>
+
+<p>Executing <code>sbt run</code> again should show a different offset for the sam partition and topic:</p>
+
+<pre><code>[kafka-publisher]&gt; run
+[info] Running KafkaProducer
+Connecting to my-topic-test
+SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+
+offset    = 1
+partition = 0
+topic     = my-topic-test
+
+[success] Total time: 0 s, completed Jul 20, 2015 12:30:47 AM
+</code></pre>
+
+<h2>Using kafkacat as a Kafka message consumer</h2>
+
+<p>If you really would like to see the message on the other, receiving side, I strongly recommend using <a href="https://github.com/edenhill/kafkacat">kafkacat</a> that, once installed, boils down to the following command:</p>
+
+<pre><code>➜  ~  kafkacat -C -b localhost:9092 -t my-topic-test
+hello at 20.07.2015 0:29:43
+hello at 20.07.2015 0:30:46
+</code></pre>
+
+<p>It will read all the messages already published to <code>my-topic-test</code> topic and print out others once they come.</p>
+
+<p>That&rsquo;s it. Congratulations!</p>
+
+<h2>Summary</h2>
+
+<p>The complete project is <a href="https://github.com/jaceklaskowski/kafka-producer">on GitHub in kafka-producer repo</a>.</p>
+
+<p>You may also want to read <a href="http://kafka.apache.org/documentation.html#quickstart">1.3 Quick Start</a> in the official documentation of Apache Kafka.</p>
+
+<p>Let me know what you think about the blog post in the <a href="#disqus_thread">Comments</a> section below or contact me at <a href="&#109;&#97;&#105;&#x6c;&#116;&#x6f;&#58;&#106;&#x61;&#99;&#101;&#107;&#64;&#106;&#x61;&#x70;&#x69;&#x6c;&#x61;&#46;&#x70;&#108;&#46;">&#106;&#x61;&#99;&#101;&#107;&#x40;&#106;&#97;&#x70;&#105;&#108;&#97;&#x2e;&#x70;&#108;&#x2e;</a></p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Jacek Laskowski</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-07-19T23:04:21+02:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>19</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>11:04 pm</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/categories/apache-kafka/'>apache-kafka</a>, <a class='category' href='/categories/scala/'>scala</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://blog.jaceklaskowski.pl/2015/07/19/publishing-events-using-custom-producer-for-apache-kafka.html" data-via="jaceklaskowski" data-counturl="http://blog.jaceklaskowski.pl/2015/07/19/publishing-events-using-custom-producer-for-apache-kafka.html" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/2015/07/14/apache-kafka-on-docker.html" title="Previous Post: Apache Kafka on Docker">&laquo; Apache Kafka on Docker</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2015/07/19/publishing-events-using-custom-producer-for-apache-kafka.html">Publishing Events Using Custom Producer for Apache Kafka</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2015/07/14/apache-kafka-on-docker.html">Apache Kafka on Docker</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2015/05/15/ad-hoc-polymorphism-in-scala-with-type-classes.html">Ad Hoc Polymorphism in Scala With Type Classes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2015/05/09/ditching-guices-at-singleton-in-favour-of-scalas-companion-object.html">Ditching Guice's @Singleton in Favour of Scala's (Companion) Object</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2015/04/12/using-autoplugin-in-sbt-for-common-settings-across-projects-in-multi-project-build.html">Using AutoPlugin in Sbt for Common Settings Across Projects in Multi-project Build</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/jaceklaskowski">@jaceklaskowski</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'jaceklaskowski',
+            count: 5,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section class="twitterOct">
+  <h1 style="margin-bottom: 0.4em"> Tweets </h1>
+  <a class="twitter-timeline"
+	 data-dnt="true" href="https://twitter.com/jaceklaskowski" 
+     data-widget-id="340586331971403776">
+     
+     Tweets by @jaceklaskowski
+  </a>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</section>
+
+
+<section>
+  <h1>Coderwall Badges</h1>
+  <p>
+    <script type="text/javascript">
+      function display_coderwall(args) {
+        var badges = args["data"]["badges"];
+        var wall = '';
+        for ( var i = 0; i < badges.length; i++ ) {
+          var alt_txt = badges[i]["name"];
+          var title_txt = badges[i]["name"] + ' - ' + badges[i]["description"];
+          wall += '<a href="http://coderwall.com/jaceklaskowski/"><img src="'
+            + badges[i]["badge"]
+            + '" width="48" height="48" alt="' + alt_txt
+            + '" title="' + title_txt
+            + '"/></a>';
+        }
+        document.write(wall);
+      }
+    </script>
+    <script src="http://coderwall.com/jaceklaskowski.json?callback=display_coderwall"></script>
+  </p>
+  
+  <p><a href="http://coderwall.com/jaceklaskowski"><img src="http://api.coderwall.com/jaceklaskowski/endorsecount.png" /></a></p>
+  
+</section>
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/117348138300416070551?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013-2015 - <a href="http://twitter.com/jaceklaskowski">Jacek Laskowski</a> -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'jaceklaskowski';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://blog.jaceklaskowski.pl/2015/07/19/publishing-events-using-custom-producer-for-apache-kafka.html';
+        var disqus_url = 'http://blog.jaceklaskowski.pl/2015/07/19/publishing-events-using-custom-producer-for-apache-kafka.html';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

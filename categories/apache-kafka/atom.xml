@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Apache-kafka | Mastering FP and OO with Scala]]></title>
   <link href="http://blog.jaceklaskowski.pl/categories/apache-kafka/atom.xml" rel="self"/>
   <link href="http://blog.jaceklaskowski.pl/"/>
-  <updated>2015-07-20T00:35:04+02:00</updated>
+  <updated>2015-07-20T00:41:54+02:00</updated>
   <id>http://blog.jaceklaskowski.pl/</id>
   <author>
     <name><![CDATA[Jacek Laskowski]]></name>
@@ -20,7 +20,7 @@
     <id>http://blog.jaceklaskowski.pl/2015/07/19/publishing-events-using-custom-producer-for-apache-kafka</id>
     <content type="html"><![CDATA[I'm a [Scala](http://www.scala-lang.org/) proponent so when I found out that [the Apache Kafka team has decided to switch to using Java as the main language of the new client API](https://cwiki.apache.org/confluence/display/KAFKA/Client+Rewrite) it was beyond my imagination. [Akka](http://akka.io/docs/)'s fine with their Java/Scala APIs and so I can't believe [Apache Kafka](http://kafka.apache.org/) couldn't offer similar APIs, too. It's even more weird when one finds out that Apache Kafka itself is written in Scala. Why on earth did they decide to do the migration?!
 
-In order to learn Kafka better, I developed a custom producer using the latest Kafka's Client API in Scala. I built Kafka from the source so I'm at **0.8.3-SNAPSHOT** level. It was pretty surprising experience, esp. when I ran across  [java.util.concurrent.Future](http://docs.oracle.com/javase/8/docs/api/java/util/concurrent/Future.html) that seems so limited to what [scala.concurrent.Future](http://docs.scala-lang.org/overviews/core/futures.html) offers. No `map`, `flatMap` or such? So far I consider the switch to using Java for the Client API a big mistake.
+In order to learn Kafka better, I developed a custom producer using the latest Kafka's Producer API in Scala. I built Kafka from the sources, and so I'm using the version **0.8.3-SNAPSHOT**. It was pretty surprising experience, esp. when I ran across  [java.util.concurrent.Future](http://docs.oracle.com/javase/8/docs/api/java/util/concurrent/Future.html) that seems so limited to what [scala.concurrent.Future](http://docs.scala-lang.org/overviews/core/futures.html) offers. No `map`, `flatMap` or such? So far I consider the switch to using Java for the Client API a big mistake.
 
 Here comes the complete Kafka producer I've developed in Scala that's supposed to serve as a basis for my future development endeavours using the API in what's going to be in 0.8.3 release.
 

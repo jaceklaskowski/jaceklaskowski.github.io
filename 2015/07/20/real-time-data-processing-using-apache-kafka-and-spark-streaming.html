@@ -1,0 +1,582 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Real-time Data Processing Using Apache Kafka and Spark Streaming (and Scala and Sbt) - Mastering FP and OO with Scala</title>
+  <meta name="author" content="Jacek Laskowski">
+
+  
+  <meta name="description" content="It&rsquo;s been a while since I worked with Spark Streaming. It was back then when I was working for a pet project that ultimately ended up as a &hellip;">
+  <meta name="keywords" content="apache, kafka, spark, spark-streaming, broker, scala, analytics, real-time, sbt">
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://blog.jaceklaskowski.pl/2015/07/20/real-time-data-processing-using-apache-kafka-and-spark-streaming.html">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="http://feeds.feedburner.com/MasteringFpWithScala" rel="alternate" title="Mastering FP and OO with Scala" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-45999426-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body    class="collapse-sidebar sidebar-footer" >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Mastering FP and OO with Scala</a></h1>
+  
+    <h2>Making use of functional and object-oriented programming on JVM</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="http://feeds.feedburner.com/MasteringFpWithScala" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="blog.jaceklaskowski.pl">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="http://linkedin.com/in/jaceklaskowski">About</a></li>
+  <li><a href="https://github.com/jaceklaskowski/jaceklaskowski.github.io">Sources on GitHub</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Real-time Data Processing Using Apache Kafka and Spark Streaming (and Scala and Sbt)</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-07-20T21:02:39+02:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>20</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>9:02 pm</span></time>
+        
+        
+           | <a href="#disqus_thread"
+             data-disqus-identifier="http://blog.jaceklaskowski.pl">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>It&rsquo;s been a while since I worked with <a href="http://spark.apache.org/streaming/">Spark Streaming</a>. It was back then when I was working for a pet project that ultimately ended up as a Typesafe Activator template <a href="http://www.typesafe.com/activator/template/spark-streaming-scala-akka">Spark Streaming with Scala and Akka</a> to get people going with the technologies.</p>
+
+<p>Time flies by very quickly and as <a href="http://blog.jaceklaskowski.pl/2015/07/14/apache-kafka-on-docker.html">the other blog posts</a> <a href="http://blog.jaceklaskowski.pl/2015/07/19/publishing-events-using-custom-producer-for-apache-kafka.html">may have showed</a> I&rsquo;m evaluating <a href="http://kafka.apache.org/">Apache Kafka</a> as a potential messaging and integration platform for my future projects. A lot is happening in so called <em>big data space</em> and Apache Kafka fits the bill in many dataflows around me so well. I&rsquo;m very glad it&rsquo;s mostly all <a href="http://www.scala-lang.org/">Scala</a> which we all <em>love</em> and are spending our time with. Ain&rsquo;t we?</p>
+
+<p>From <a href="http://spark.apache.org/docs/latest/streaming-programming-guide.html">Spark Streaming documentation</a> (Kafka bolded on purpose):</p>
+
+<blockquote><p>Spark Streaming is an extension of the core Spark API that enables scalable, high-throughput, fault-tolerant stream processing of live data streams. Data can be ingested from many sources like <strong>Kafka</strong>, Flume, Twitter, ZeroMQ, Kinesis, or TCP sockets, and can be processed using complex algorithms expressed with high-level functions like map, reduce, join and window.</p></blockquote>
+
+<p>Since Apache Kafka aims at being <strong>the central hub for real-time streams of data</strong> (see <a href="http://kafka.apache.org/documentation.html#uses">1.2 Use Cases</a> and <a href="http://www.confluent.io/blog/stream-data-platform-1/">Putting Apache Kafka To Use: A Practical Guide to Building a Stream Data Platform (Part 1)</a>) I couldn&rsquo;t deny myself the simple pleasure of giving it a go.</p>
+
+<p>Buckle up and ingest <em>some</em> data using Apache Kafka and Spark Streaming! You surely <em>will</em> love the infrastructure (if you haven&rsquo;t already). Be sure to type fast to see the potential of the platform at your fingertips.</p>
+
+<!-- more -->
+
+
+<h2>The project (using sbt)</h2>
+
+<p>Here is the sbt build file <code>build.sbt</code> for the project:</p>
+
+<pre><code>val sparkVersion = "1.4.1"
+scalaVersion := "2.11.7"
+
+libraryDependencies ++= Seq(
+  "org.apache.spark" %% "spark-streaming" % sparkVersion,
+  "org.apache.spark" %% "spark-streaming-kafka" % sparkVersion
+)
+</code></pre>
+
+<p>It uses the latest released versions of <strong>Spark Streaming 1.4.1</strong> and <strong>Scala 2.11.7</strong>.</p>
+
+<h2>Setting up Kafka broker</h2>
+
+<p>It assumes you&rsquo;ve already installed Apache Kafka. You may want to use Docker (see <a href="http://blog.jaceklaskowski.pl/2015/07/14/apache-kafka-on-docker.html">Apache Kafka on Docker</a>) or <a href="http://blog.jaceklaskowski.pl/2015/07/19/publishing-events-using-custom-producer-for-apache-kafka.html">build Kafka from the sources</a>. Whatever approach you choose, start Zookeeper and Kafka.</p>
+
+<h3>Starting Zookeeper</h3>
+
+<p>I&rsquo;m using the version of Kafka built from the sources and <code>./bin/zookeeper-server-start.sh</code> that comes with it.</p>
+
+<pre><code>➜  kafka_2.11-0.8.3-SNAPSHOT git:(trunk) ✗ ./bin/zookeeper-server-start.sh config/zookeeper.properties
+...
+[2015-07-21 06:51:39,614] INFO binding to port 0.0.0.0/0.0.0.0:2181 (org.apache.zookeeper.server.NIOServerCnxnFactory)
+</code></pre>
+
+<h3>Starting Kafka broker</h3>
+
+<p>Once Zookeeper is up and running (in the above case, listening to the port 2181), run a Kafka broker.</p>
+
+<pre><code>➜  kafka_2.11-0.8.3-SNAPSHOT git:(trunk) ✗ ./bin/kafka-server-start.sh config/server.properties
+...
+[2015-07-21 06:53:17,051] INFO Registered broker 0 at path /brokers/ids/0 with addresses: PLAINTEXT -&gt; EndPoint(192.168.1.9,9092,PLAINTEXT) (kafka.utils.ZkUtils$)
+[2015-07-21 06:53:17,058] INFO [Kafka Server 0], started (kafka.server.KafkaServer)
+</code></pre>
+
+<p>There are merely two commands to boot the entire environment up and that&rsquo;s it.</p>
+
+<h3>Creating topic - <code>spark-topic</code></h3>
+
+<p><strong>A topic</strong> is where you&rsquo;re going to send messages to and where Spark Streaming is consuming them from later on. It&rsquo;s the communication channel between producers and consumers and you&rsquo;ve got to have one.</p>
+
+<p>Create <code>spark-topic</code> topic. The name is arbitrary and pick whatever makes you happy, but use it consistently in the other places where the name&rsquo;s used.</p>
+
+<pre><code>➜  kafka_2.11-0.8.3-SNAPSHOT git:(trunk) ✗ ./bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic spark-topic
+Created topic "spark-topic".
+</code></pre>
+
+<p>You may want to check out the available topics.</p>
+
+<pre><code>➜  kafka_2.11-0.8.3-SNAPSHOT git:(trunk) ✗ ./bin/kafka-topics.sh --list --zookeeper localhost:2181
+spark-topic
+</code></pre>
+
+<p>You&rsquo;re now done with setting up Kafka for the demo.</p>
+
+<h3>(optional) Sending to and receiving messages from Kafka</h3>
+
+<p>Apache Kafka comes with two shell scripts to send and receive messages from topics. They&rsquo;re <code>kafka-console-producer.sh</code> and <code>kafka-console-consumer.sh</code>, respectively. They both use the console (stdin) as the input and output.</p>
+
+<p>Let&rsquo;s publish few messages to the <code>spark-topic</code> topic using <code>./bin/kafka-console-producer.sh</code>.</p>
+
+<pre><code>➜  kafka_2.11-0.8.3-SNAPSHOT git:(trunk) ✗ ./bin/kafka-console-producer.sh --broker-list localhost:9092 --topic spark-topic
+hello
+hi
+^D
+</code></pre>
+
+<p> You can keep the producer up in one terminal and use another terminal to consume the messages or just send a couple of messages and close the session. Kafka persists messages for a period of time.</p>
+
+<p>Consuming messages is as simple as running <code>./bin/kafka-console-consumer.sh</code>. Mind the option <code>--zookeeper</code> to point to Zookeeper where Kafka stores its configuration and <code>--from-beginning</code> that tells Kafka to process all persisted messages.</p>
+
+<pre><code>➜  kafka_2.11-0.8.3-SNAPSHOT git:(trunk) ✗ ./bin/kafka-console-consumer.sh --zookeeper localhost:2181 --topic spark-topic --from-beginning
+hello
+hi
+^DConsumed 2 messages
+</code></pre>
+
+<h2>Spark time!</h2>
+
+<p>Remember <code>build.sbt</code> above that sets the Scala/sbt project up with appropriate Scala version and Spark Streaming dependencies?</p>
+
+<pre><code>val sparkVersion = "1.4.1"
+scalaVersion := "2.11.7"
+
+libraryDependencies ++= Seq(
+  "org.apache.spark" %% "spark-streaming" % sparkVersion,
+  "org.apache.spark" %% "spark-streaming-kafka" % sparkVersion
+)
+</code></pre>
+
+<p>To learn a little about the integration between Spark Streaming and Apache Kafka you&rsquo;re going to use <code>sbt console</code> and type all the integration code line by line in the interactive console. You could have a simple Scala application, but I&rsquo;m leaving it to you as an exercise.</p>
+
+<p>You may want to read the scaladoc of <a href="https://spark.apache.org/docs/latest/api/scala/index.html#org.apache.spark.SparkConf">org.apache.spark.SparkConf</a> and <a href="https://spark.apache.org/docs/latest/api/scala/index.html#org.apache.spark.streaming.StreamingContext">org.apache.spark.streaming.StreamingContext</a> to learn about their purpose in the sample.</p>
+
+<pre><code>scala&gt; import org.apache.spark.SparkConf
+import org.apache.spark.SparkConf
+
+scala&gt; val conf = new SparkConf().setMaster("local[*]").setAppName("KafkaReceiver")
+conf: org.apache.spark.SparkConf = org.apache.spark.SparkConf@2f8bf5fc
+
+scala&gt; import org.apache.spark.streaming.StreamingContext
+import org.apache.spark.streaming.StreamingContext
+
+scala&gt; import org.apache.spark.streaming.Seconds
+import org.apache.spark.streaming.Seconds
+
+scala&gt; val ssc = new StreamingContext(conf, Seconds(10))
+Using Spark's default log4j profile: org/apache/spark/log4j-defaults.properties
+15/07/21 09:08:39 INFO SparkContext: Running Spark version 1.4.1
+...
+ssc: org.apache.spark.streaming.StreamingContext = org.apache.spark.streaming.StreamingContext@2ce5cc3
+
+scala&gt; import org.apache.spark.streaming.kafka.KafkaUtils
+import org.apache.spark.streaming.kafka.KafkaUtils
+
+// Note the name of the topic in use - spark-topic
+scala&gt; val kafkaStream = KafkaUtils.createStream(ssc, "localhost:2181","spark-streaming-consumer-group", Map("spark-topic" -&gt; 5))
+kafkaStream: org.apache.spark.streaming.dstream.ReceiverInputDStream[(String, String)] = org.apache.spark.streaming.kafka.KafkaInputDStream@4ab601ac
+
+// The very complex BIG data analytics
+scala&gt; kafkaStream.print()
+
+// Start the streaming context so Spark Streaming polls for messages
+scala&gt; ssc.start
+15/07/21 09:11:31 INFO ReceiverTracker: ReceiverTracker started
+15/07/21 09:11:31 INFO ForEachDStream: metadataCleanupDelay = -1
+...
+15/07/21 09:11:31 INFO StreamingContext: StreamingContext started
+</code></pre>
+
+<p>Spark Streaming is now connected to Apache Kafka and consumes messages every 10 seconds. Leave it running and switch to another terminal.</p>
+
+<p>Open a terminal to run a Kafka producer. You may want to use <code>kafkacat</code> (highly recommended) or the producer that comes with Apache Kafka - <code>kafka-console-producer.sh</code>.</p>
+
+<pre><code>➜  kafka_2.11-0.8.3-SNAPSHOT git:(trunk) ✗ ./bin/kafka-console-producer.sh --broker-list localhost:9092 --topic spark-topic
+hey spark, how are you doing today?
+</code></pre>
+
+<p>Switch to the terminal with Spark Streaming running and see the message printed out.</p>
+
+<pre><code>15/07/21 09:12:00 INFO DAGScheduler: ResultStage 1 (print at &lt;console&gt;:18) finished in 0.016 s
+15/07/21 09:12:00 INFO DAGScheduler: Job 1 finished: print at &lt;console&gt;:18, took 0.030530 s
+-------------------------------------------
+Time: 1437462720000 ms
+-------------------------------------------
+(null,hey spark, how are you doing today?)
+
+15/07/21 09:12:00 INFO JobScheduler: Finished job streaming job 1437462720000 ms.1 from job set of time 1437462720000 ms
+</code></pre>
+
+<p>Congratulations! You&rsquo;ve earned the Spark Streaming and Apache Kafka integration badge! Close Spark Streaming&rsquo;s context using</p>
+
+<pre><code>scala&gt; ssc.stop
+</code></pre>
+
+<p>or simply press <code>Ctrl+C</code>. Shut down Apache Kafka and Zookeeper, too. Done.</p>
+
+<h2>(bonus) Building Apache Spark from the sources</h2>
+
+<p>You could use the very latest version of Spark Streaming in which the latest and greatest development is going on and lives on <a href="https://github.com/apache/spark/commits/master">the master branch</a>.</p>
+
+<p>Following the official documentation <a href="http://spark.apache.org/docs/latest/building-spark.html#building-with-buildmvn">Building with build/mvn</a><sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup>, execute the following two commands. Please note the versions in the build as it uses <strong>Scala 2.11.7</strong> and <strong>Hadoop 2.7.1</strong>.</p>
+
+<pre><code>➜  spark git:(master) ./dev/change-version-to-2.11.sh
+➜  spark git:(master) ✗ ./build/mvn -Pyarn -Phadoop-2.6 -Dhadoop.version=2.7.1 -Dscala-2.11 -DskipTests clean install
+...
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Summary:
+[INFO]
+[INFO] Spark Project Parent POM ........................... SUCCESS [  2.696 s]
+[INFO] Spark Project Launcher ............................. SUCCESS [  7.346 s]
+[INFO] Spark Project Networking ........................... SUCCESS [  6.577 s]
+[INFO] Spark Project Shuffle Streaming Service ............ SUCCESS [  4.052 s]
+[INFO] Spark Project Unsafe ............................... SUCCESS [  3.591 s]
+[INFO] Spark Project Core ................................. SUCCESS [01:43 min]
+[INFO] Spark Project Bagel ................................ SUCCESS [  4.704 s]
+[INFO] Spark Project GraphX ............................... SUCCESS [ 10.014 s]
+[INFO] Spark Project Streaming ............................ SUCCESS [ 21.804 s]
+[INFO] Spark Project Catalyst ............................. SUCCESS [ 28.271 s]
+[INFO] Spark Project SQL .................................. SUCCESS [ 34.811 s]
+[INFO] Spark Project ML Library ........................... SUCCESS [ 45.990 s]
+[INFO] Spark Project Tools ................................ SUCCESS [  1.964 s]
+[INFO] Spark Project Hive ................................. SUCCESS [ 39.831 s]
+[INFO] Spark Project REPL ................................. SUCCESS [  3.219 s]
+[INFO] Spark Project YARN ................................. SUCCESS [  5.109 s]
+[INFO] Spark Project Assembly ............................. SUCCESS [01:10 min]
+[INFO] Spark Project External Twitter ..................... SUCCESS [  5.204 s]
+[INFO] Spark Project External Flume Sink .................. SUCCESS [  5.472 s]
+[INFO] Spark Project External Flume ....................... SUCCESS [  6.292 s]
+[INFO] Spark Project External Flume Assembly .............. SUCCESS [  2.345 s]
+[INFO] Spark Project External MQTT ........................ SUCCESS [  5.361 s]
+[INFO] Spark Project External ZeroMQ ...................... SUCCESS [  6.006 s]
+[INFO] Spark Project External Kafka ....................... SUCCESS [ 13.850 s]
+[INFO] Spark Project Examples ............................. SUCCESS [01:15 min]
+[INFO] Spark Project External Kafka Assembly .............. SUCCESS [ 27.458 s]
+[INFO] Spark Project YARN Shuffle Service ................. SUCCESS [  4.636 s]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 09:06 min
+[INFO] Finished at: 2015-07-21T06:48:02+02:00
+[INFO] Final Memory: 76M/905M
+[INFO] ------------------------------------------------------------------------
+</code></pre>
+
+<p>The jars for the version are at your command in the Maven local repository. Switch the version of Spark Streaming to <strong>1.5.0-SNAPSHOT</strong> and start over. It is known to work.</p>
+
+<h2>Summary</h2>
+
+<p>As it turns out setting up a working configuration of Apache Kafka and Spark Streaming is just few clicks away. There are a couple of places that need improvement, but what the article has showed could be a good starting point for other real-time big data analytics using <strong>Apache Kafka</strong> as <strong>the central hub for real-time streams of data</strong> that are then processed <strong>using complex algorithms</strong> in <strong>Spark Streaming</strong>.</p>
+
+<p>Once the data&rsquo;s processed, Spark Streaming could be publishing results into yet another Kafka topic and/or store in Hadoop for later. It seems I&rsquo;ve got a very powerful setup I&rsquo;m not yet fully aware of where I should apply to.</p>
+
+<p>Let me know what you think about the topic<sup id="fnref:2"><a href="#fn:2" rel="footnote">2</a></sup> of the blog post in the <a href="#disqus_thread">Comments</a> section below or contact me at <a href="&#109;&#97;&#105;&#x6c;&#116;&#x6f;&#x3a;&#x6a;&#x61;&#99;&#x65;&#107;&#64;&#106;&#97;&#x70;&#x69;&#108;&#97;&#x2e;&#112;&#108;&#46;">&#x6a;&#97;&#99;&#101;&#x6b;&#64;&#106;&#97;&#112;&#105;&#108;&#97;&#46;&#112;&#x6c;&#x2e;</a> Follow the author as <a href="https://twitter.com/jaceklaskowski">@jaceklaskowski</a> on Twitter, too.</p>
+<div class="footnotes">
+<hr/>
+<ol>
+<li id="fn:1">
+<p><em>I really really wish the Apache Spark project hadn&rsquo;t migrated the build to Apache Maven from the top-notch interactive build tool - <a href="http://www.scala-sbt.org/">sbt</a></em><a href="#fnref:1" rev="footnote">&#8617;</a></p></li>
+<li id="fn:2">
+<p>pun intended<a href="#fnref:2" rev="footnote">&#8617;</a></p></li>
+</ol>
+</div>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Jacek Laskowski</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-07-20T21:02:39+02:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>20</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>9:02 pm</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/categories/apache-kafka/'>apache-kafka</a>, <a class='category' href='/categories/apache-spark/'>apache-spark</a>, <a class='category' href='/categories/sbt/'>sbt</a>, <a class='category' href='/categories/scala/'>scala</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://blog.jaceklaskowski.pl/2015/07/20/real-time-data-processing-using-apache-kafka-and-spark-streaming.html" data-via="jaceklaskowski" data-counturl="http://blog.jaceklaskowski.pl/2015/07/20/real-time-data-processing-using-apache-kafka-and-spark-streaming.html" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/2015/07/19/publishing-events-using-custom-producer-for-apache-kafka.html" title="Previous Post: Publishing events using custom producer for Apache Kafka">&laquo; Publishing events using custom producer for Apache Kafka</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2015/07/20/real-time-data-processing-using-apache-kafka-and-spark-streaming.html">Real-time Data Processing Using Apache Kafka and Spark Streaming (and Scala and Sbt)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2015/07/19/publishing-events-using-custom-producer-for-apache-kafka.html">Publishing Events Using Custom Producer for Apache Kafka</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2015/07/14/apache-kafka-on-docker.html">Apache Kafka on Docker</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2015/05/15/ad-hoc-polymorphism-in-scala-with-type-classes.html">Ad Hoc Polymorphism in Scala With Type Classes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2015/05/09/ditching-guices-at-singleton-in-favour-of-scalas-companion-object.html">Ditching Guice's @Singleton in Favour of Scala's (Companion) Object</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/jaceklaskowski">@jaceklaskowski</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'jaceklaskowski',
+            count: 5,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section class="twitterOct">
+  <h1 style="margin-bottom: 0.4em"> Tweets </h1>
+  <a class="twitter-timeline"
+	 data-dnt="true" href="https://twitter.com/jaceklaskowski" 
+     data-widget-id="340586331971403776">
+     
+     Tweets by @jaceklaskowski
+  </a>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</section>
+
+
+<section>
+  <h1>Coderwall Badges</h1>
+  <p>
+    <script type="text/javascript">
+      function display_coderwall(args) {
+        var badges = args["data"]["badges"];
+        var wall = '';
+        for ( var i = 0; i < badges.length; i++ ) {
+          var alt_txt = badges[i]["name"];
+          var title_txt = badges[i]["name"] + ' - ' + badges[i]["description"];
+          wall += '<a href="http://coderwall.com/jaceklaskowski/"><img src="'
+            + badges[i]["badge"]
+            + '" width="48" height="48" alt="' + alt_txt
+            + '" title="' + title_txt
+            + '"/></a>';
+        }
+        document.write(wall);
+      }
+    </script>
+    <script src="http://coderwall.com/jaceklaskowski.json?callback=display_coderwall"></script>
+  </p>
+  
+  <p><a href="http://coderwall.com/jaceklaskowski"><img src="http://api.coderwall.com/jaceklaskowski/endorsecount.png" /></a></p>
+  
+</section>
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/117348138300416070551?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013-2015 - <a href="http://twitter.com/jaceklaskowski">Jacek Laskowski</a> -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'jaceklaskowski';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://blog.jaceklaskowski.pl/2015/07/20/real-time-data-processing-using-apache-kafka-and-spark-streaming.html';
+        var disqus_url = 'http://blog.jaceklaskowski.pl/2015/07/20/real-time-data-processing-using-apache-kafka-and-spark-streaming.html';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

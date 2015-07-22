@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Apache-kafka | Mastering FP and OO with Scala]]></title>
   <link href="http://blog.jaceklaskowski.pl/categories/apache-kafka/atom.xml" rel="self"/>
   <link href="http://blog.jaceklaskowski.pl/"/>
-  <updated>2015-07-21T21:20:47+02:00</updated>
+  <updated>2015-07-22T09:16:58+02:00</updated>
   <id>http://blog.jaceklaskowski.pl/</id>
   <author>
     <name><![CDATA[Jacek Laskowski]]></name>
@@ -399,7 +399,7 @@ With Zookeeper up, start a Kafka broker using `./bin/kafka-server-start.sh confi
     [2015-07-20 00:18:34,414] INFO Registered broker 0 at path /brokers/ids/0 with addresses: PLAINTEXT -> EndPoint(192.168.1.9,9092,PLAINTEXT) (kafka.utils.ZkUtils$)
     [2015-07-20 00:18:34,419] INFO [Kafka Server 0], started (kafka.server.KafkaServer)
 
-## Create topic
+## Creating topic
 
 You're now going to create `my-topic` topic where the custom producer is going to publish messages to. Of course, the name of the topic is arbitrary, but should match what the custom producer uses.
 
@@ -477,7 +477,9 @@ The complete project is [on GitHub in kafka-producer repo](https://github.com/ja
 
 You may also want to read [1.3 Quick Start](http://kafka.apache.org/documentation.html#quickstart) in the official documentation of Apache Kafka.
 
-Let me know what you think about the blog post in the [Comments](#disqus_thread) section below or contact me at jacek@japila.pl.
+Let me know what you think about the topic[^1] of the blog post in the [Comments](#disqus_thread) section below or contact me at jacek@japila.pl. Follow the author as [@jaceklaskowski](https://twitter.com/jaceklaskowski) on Twitter, too.
+
+[^1]: pun intended
 ]]></content>
   </entry>
   
@@ -657,7 +659,9 @@ I'm a big fan of [homebrew](http://brew.sh/) and highly recommend it to anyone u
 
 With these two docker images - [wurstmeister/kafka](https://registry.hub.docker.com/u/wurstmeister/kafka/) and [wurstmeister/zookeeper](https://registry.hub.docker.com/u/wurstmeister/zookeeper/) - you can run **Apache Kafka** without much changing your local workstation to install it together with the necessary components like Apache ZooKeeper. You don't need to worry about upgrading the software and its dependencies except docker itself (and boot2docker if you're lucky to be on Mac OS). That saves you from spending time on installation and ensures proper functioning of your machine and the software. Moreover, the Docker images could be deployed to other machines and guarantee a consistent environment of the software inside.
 
-Let me know what you think about the article in the [Comments](#disqus_thread) section below or contact me at jacek@japila.pl.
+Let me know what you think about the topic[^1] of the blog post in the [Comments](#disqus_thread) section below or contact me at jacek@japila.pl. Follow the author as [@jaceklaskowski](https://twitter.com/jaceklaskowski) on Twitter, too.
+
+[^1]: pun intended
 ]]></content>
   </entry>
   

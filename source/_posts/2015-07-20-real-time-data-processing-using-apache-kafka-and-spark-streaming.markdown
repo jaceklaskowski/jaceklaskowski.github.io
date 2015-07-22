@@ -174,50 +174,50 @@ or simply press `Ctrl+C`. Shut down Apache Kafka and Zookeeper, too. Done.
 
 You could use the very latest version of Spark Streaming in which the latest and greatest development is going on and lives on [the master branch](https://github.com/apache/spark/commits/master).
 
-Following the official documentation [Building with build/mvn](http://spark.apache.org/docs/latest/building-spark.html#building-with-buildmvn)[^1], execute the following two commands. Please note the versions in the build as it uses **Scala 2.11.7** and **Hadoop 2.7.1**.
+Following the official documentation [Building Spark](http://spark.apache.org/docs/latest/building-spark.html)[^1], execute the following two commands. Please note the versions in the build as it uses **Scala 2.11.7** and **Hadoop 2.7.1**.
 
-    ➜  spark git:(master) ./dev/change-version-to-2.11.sh
+    ➜  spark git:(master) ./dev/change-scala-version.sh 2.11
     ➜  spark git:(master) ✗ ./build/mvn -Pyarn -Phadoop-2.6 -Dhadoop.version=2.7.1 -Dscala-2.11 -DskipTests clean install
     ...
     [INFO] ------------------------------------------------------------------------
     [INFO] Reactor Summary:
     [INFO]
-    [INFO] Spark Project Parent POM ........................... SUCCESS [  2.696 s]
-    [INFO] Spark Project Launcher ............................. SUCCESS [  7.346 s]
-    [INFO] Spark Project Networking ........................... SUCCESS [  6.577 s]
-    [INFO] Spark Project Shuffle Streaming Service ............ SUCCESS [  4.052 s]
-    [INFO] Spark Project Unsafe ............................... SUCCESS [  3.591 s]
-    [INFO] Spark Project Core ................................. SUCCESS [01:43 min]
-    [INFO] Spark Project Bagel ................................ SUCCESS [  4.704 s]
-    [INFO] Spark Project GraphX ............................... SUCCESS [ 10.014 s]
-    [INFO] Spark Project Streaming ............................ SUCCESS [ 21.804 s]
-    [INFO] Spark Project Catalyst ............................. SUCCESS [ 28.271 s]
-    [INFO] Spark Project SQL .................................. SUCCESS [ 34.811 s]
-    [INFO] Spark Project ML Library ........................... SUCCESS [ 45.990 s]
-    [INFO] Spark Project Tools ................................ SUCCESS [  1.964 s]
-    [INFO] Spark Project Hive ................................. SUCCESS [ 39.831 s]
-    [INFO] Spark Project REPL ................................. SUCCESS [  3.219 s]
-    [INFO] Spark Project YARN ................................. SUCCESS [  5.109 s]
-    [INFO] Spark Project Assembly ............................. SUCCESS [01:10 min]
-    [INFO] Spark Project External Twitter ..................... SUCCESS [  5.204 s]
-    [INFO] Spark Project External Flume Sink .................. SUCCESS [  5.472 s]
-    [INFO] Spark Project External Flume ....................... SUCCESS [  6.292 s]
-    [INFO] Spark Project External Flume Assembly .............. SUCCESS [  2.345 s]
-    [INFO] Spark Project External MQTT ........................ SUCCESS [  5.361 s]
-    [INFO] Spark Project External ZeroMQ ...................... SUCCESS [  6.006 s]
-    [INFO] Spark Project External Kafka ....................... SUCCESS [ 13.850 s]
-    [INFO] Spark Project Examples ............................. SUCCESS [01:15 min]
-    [INFO] Spark Project External Kafka Assembly .............. SUCCESS [ 27.458 s]
-    [INFO] Spark Project YARN Shuffle Service ................. SUCCESS [  4.636 s]
+    [INFO] Spark Project Parent POM ........................... SUCCESS [  3.220 s]
+    [INFO] Spark Project Launcher ............................. SUCCESS [ 11.681 s]
+    [INFO] Spark Project Networking ........................... SUCCESS [  9.907 s]
+    [INFO] Spark Project Shuffle Streaming Service ............ SUCCESS [  6.187 s]
+    [INFO] Spark Project Unsafe ............................... SUCCESS [  5.758 s]
+    [INFO] Spark Project Core ................................. SUCCESS [02:43 min]
+    [INFO] Spark Project Bagel ................................ SUCCESS [  8.570 s]
+    [INFO] Spark Project GraphX ............................... SUCCESS [ 19.496 s]
+    [INFO] Spark Project Streaming ............................ SUCCESS [ 36.986 s]
+    [INFO] Spark Project Catalyst ............................. SUCCESS [ 57.976 s]
+    [INFO] Spark Project SQL .................................. SUCCESS [ 57.685 s]
+    [INFO] Spark Project ML Library ........................... SUCCESS [01:10 min]
+    [INFO] Spark Project Tools ................................ SUCCESS [  5.609 s]
+    [INFO] Spark Project Hive ................................. SUCCESS [ 46.276 s]
+    [INFO] Spark Project REPL ................................. SUCCESS [  6.747 s]
+    [INFO] Spark Project YARN ................................. SUCCESS [ 12.052 s]
+    [INFO] Spark Project Assembly ............................. SUCCESS [01:11 min]
+    [INFO] Spark Project External Twitter ..................... SUCCESS [  7.838 s]
+    [INFO] Spark Project External Flume Sink .................. SUCCESS [  6.701 s]
+    [INFO] Spark Project External Flume ....................... SUCCESS [  9.614 s]
+    [INFO] Spark Project External Flume Assembly .............. SUCCESS [  2.135 s]
+    [INFO] Spark Project External MQTT ........................ SUCCESS [  7.247 s]
+    [INFO] Spark Project External ZeroMQ ...................... SUCCESS [  7.550 s]
+    [INFO] Spark Project External Kafka ....................... SUCCESS [ 12.960 s]
+    [INFO] Spark Project Examples ............................. SUCCESS [01:28 min]
+    [INFO] Spark Project External Kafka Assembly .............. SUCCESS [ 27.143 s]
+    [INFO] Spark Project YARN Shuffle Service ................. SUCCESS [  7.143 s]
     [INFO] ------------------------------------------------------------------------
     [INFO] BUILD SUCCESS
     [INFO] ------------------------------------------------------------------------
-    [INFO] Total time: 09:06 min
-    [INFO] Finished at: 2015-07-21T06:48:02+02:00
-    [INFO] Final Memory: 76M/905M
+    [INFO] Total time: 12:49 min
+    [INFO] Finished at: 2015-07-22T11:02:46+02:00
+    [INFO] Final Memory: 85M/958M
     [INFO] ------------------------------------------------------------------------
 
-The jars for the version are at your command in the Maven local repository. Switch the version of Spark Streaming to **1.5.0-SNAPSHOT** and start over. It is known to work.
+The jars for the version are at your command in the Maven local repository. Switch the version of Spark Streaming to **1.5.0-SNAPSHOT** and start over.
 
 ## Summary
 

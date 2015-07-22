@@ -5,7 +5,7 @@ date: 2015-07-20 21:02:39 +0200
 comments: true
 categories: [apache-kafka, apache-spark, scala, sbt]
 sidebar: collapse
-keywords: apache, kafka, spark, spark-streaming, broker, scala, analytics, real-time, sbt
+keywords: apache, kafka, pubsub, broker, spark, spark-streaming, scala, analytics, real-time, sbt
 published: true
 ---
 It's been a while since I worked with [Spark Streaming](http://spark.apache.org/streaming/). It was back then when I was working for a pet project that ultimately ended up as a Typesafe Activator template [Spark Streaming with Scala and Akka](http://www.typesafe.com/activator/template/spark-streaming-scala-akka) to get people going with the technologies.

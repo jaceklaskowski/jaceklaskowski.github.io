@@ -5,7 +5,7 @@ date: 2015-07-19 23:04:21 +0200
 comments: true
 categories: [apache-kafka, scala]
 sidebar: collapse
-keywords: apache, kafka, broker, scala
+keywords: apache, kafka, pubsub, broker, scala
 published: true
 ---
 I'm a [Scala](http://www.scala-lang.org/) proponent so when I found out that [the Apache Kafka team has decided to switch to using Java as the main language of the new client API](https://cwiki.apache.org/confluence/display/KAFKA/Client+Rewrite) it was beyond my imagination. [Akka](http://akka.io/docs/)'s fine with their Java/Scala APIs and so I can't believe [Apache Kafka](http://kafka.apache.org/) couldn't offer similar APIs, too. It's even more weird when one finds out that Apache Kafka itself is written in Scala. Why on earth did they decide to do the migration?!
@@ -125,7 +125,7 @@ With Zookeeper up, start a Kafka broker using `./bin/kafka-server-start.sh confi
     [2015-07-20 00:18:34,414] INFO Registered broker 0 at path /brokers/ids/0 with addresses: PLAINTEXT -> EndPoint(192.168.1.9,9092,PLAINTEXT) (kafka.utils.ZkUtils$)
     [2015-07-20 00:18:34,419] INFO [Kafka Server 0], started (kafka.server.KafkaServer)
 
-## Create topic
+## Creating topic
 
 You're now going to create `my-topic` topic where the custom producer is going to publish messages to. Of course, the name of the topic is arbitrary, but should match what the custom producer uses.
 
@@ -203,4 +203,6 @@ The complete project is [on GitHub in kafka-producer repo](https://github.com/ja
 
 You may also want to read [1.3 Quick Start](http://kafka.apache.org/documentation.html#quickstart) in the official documentation of Apache Kafka.
 
-Let me know what you think about the blog post in the [Comments](#disqus_thread) section below or contact me at jacek@japila.pl.
+Let me know what you think about the topic[^1] of the blog post in the [Comments](#disqus_thread) section below or contact me at jacek@japila.pl. Follow the author as [@jaceklaskowski](https://twitter.com/jaceklaskowski) on Twitter, too.
+
+[^1]: pun intended

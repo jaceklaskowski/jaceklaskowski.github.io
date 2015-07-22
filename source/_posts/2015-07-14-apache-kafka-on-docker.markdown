@@ -5,7 +5,7 @@ date: 2015-07-14 20:59:33 +0200
 comments: true
 categories: [apache-kafka, docker]
 sidebar: collapse
-keywords: apache, kafka, pubsub, broker
+keywords: apache, kafka, pubsub, broker, scala
 published: true
 ---
 [{% img left /images/kafka_logo.png Apache Kafka %}](http://kafka.apache.org/)
@@ -179,4 +179,6 @@ I'm a big fan of [homebrew](http://brew.sh/) and highly recommend it to anyone u
 
 With these two docker images - [wurstmeister/kafka](https://registry.hub.docker.com/u/wurstmeister/kafka/) and [wurstmeister/zookeeper](https://registry.hub.docker.com/u/wurstmeister/zookeeper/) - you can run **Apache Kafka** without much changing your local workstation to install it together with the necessary components like Apache ZooKeeper. You don't need to worry about upgrading the software and its dependencies except docker itself (and boot2docker if you're lucky to be on Mac OS). That saves you from spending time on installation and ensures proper functioning of your machine and the software. Moreover, the Docker images could be deployed to other machines and guarantee a consistent environment of the software inside.
 
-Let me know what you think about the article in the [Comments](#disqus_thread) section below or contact me at jacek@japila.pl.
+Let me know what you think about the topic[^1] of the blog post in the [Comments](#disqus_thread) section below or contact me at jacek@japila.pl. Follow the author as [@jaceklaskowski](https://twitter.com/jaceklaskowski) on Twitter, too.
+
+[^1]: pun intended

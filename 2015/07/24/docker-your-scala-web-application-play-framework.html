@@ -1,0 +1,471 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Docker Your Scala Web Application (Play Framework) - Mastering FP and OO with Scala</title>
+  <meta name="author" content="Jacek Laskowski">
+
+  
+  <meta name="description" content="We&rsquo;re experimenting with Docker in the DeepSense.io project. There might be a case or two in the other Scala company in Warsaw - HCore. I&rsquo &hellip;">
+  <meta name="keywords" content="docker, scala, sbt, playframework">
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://blog.jaceklaskowski.pl/2015/07/24/docker-your-scala-web-application-play-framework.html">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="http://feeds.feedburner.com/MasteringFpWithScala" rel="alternate" title="Mastering FP and OO with Scala" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-45999426-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body    class="collapse-sidebar sidebar-footer" >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Mastering FP and OO with Scala</a></h1>
+  
+    <h2>Making use of functional and object-oriented programming on JVM</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="http://feeds.feedburner.com/MasteringFpWithScala" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="blog.jaceklaskowski.pl">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="http://linkedin.com/in/jaceklaskowski">About</a></li>
+  <li><a href="https://github.com/jaceklaskowski/jaceklaskowski.github.io">Sources on GitHub</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Docker Your Scala Web Application (Play Framework)</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-07-24T23:03:07+02:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>24</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>11:03 pm</span></time>
+        
+        
+           | <a href="#disqus_thread"
+             data-disqus-identifier="http://blog.jaceklaskowski.pl">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>We&rsquo;re experimenting with <a href="https://www.docker.com/">Docker</a> in the <a href="http://deepsense.io/">DeepSense.io</a> project. There might be a case or two in the other Scala company in Warsaw - <a href="http://www.hcore.com/">HCore</a>. I&rsquo;ve also been noticing interest in using Docker in Scala projects in <a href="http://www.javeo.eu/">Javeo</a> where the <a href="http://www.meetup.com/WarszawScaLa/">Warsaw Scala Enthusiasts</a> meetups are taking place. The Docker space seems very hot for Scala developers in Warsaw, Poland. And these companies <em>are</em> hiring Scala developers!</p>
+
+<p>I didn&rsquo;t know deploying Scala web applications might be so easy until the very recent Warsaw Scala Enthusiasts meetup when <a href="http://www.meetup.com/WarszawScaLa/members/95521122/">Rafal Krzewski</a> introduced me to one of the two <a href="http://www.scala-sbt.org/">sbt</a> plugins for Docker -  <a href="http://www.scala-sbt.org/sbt-native-packager/">sbt-native-packager</a> (the other is <a href="https://github.com/marcuslonnberg/sbt-docker">sbt-docker</a> that they say is even better).</p>
+
+<p>The blog post shows how easy it is to use Docker as a means of deploying Scala web applications using Play Framework (that actually uses sbt-native-packager under the covers).</p>
+
+<!-- more -->
+
+
+<h2>Creating Play Framework web application</h2>
+
+<p>Create a new web application using Typesafe Activator tool using <code>activator new</code> command:</p>
+
+<pre><code>➜  docker-playground  activator new play-dockerized play-scala
+
+Fetching the latest list of templates...
+
+OK, application "play-dockerized" is being created using the "play-scala" template.
+
+To run "play-dockerized" from the command line, "cd play-dockerized" then:
+/Users/jacek/dev/sandbox/docker-playground/play-dockerized/activator run
+
+To run the test for "play-dockerized" from the command line, "cd play-dockerized" then:
+/Users/jacek/dev/sandbox/docker-playground/play-dockerized/activator test
+
+To run the Activator UI for "play-dockerized" from the command line, "cd play-dockerized" then:
+/Users/jacek/dev/sandbox/docker-playground/play-dockerized/activator ui
+</code></pre>
+
+<p><code>cd</code> the <code>play-dockerized</code> directory and execute <code>sbt run</code> to start the application:</p>
+
+<pre><code>➜  play-dockerized  sbt run
+[info] Loading global plugins from /Users/jacek/.sbt/0.13/plugins
+[info] Updating {file:/Users/jacek/.sbt/0.13/plugins/}global-plugins...
+[info] Resolving org.fusesource.jansi#jansi;1.4 ...
+[info] Done updating.
+[info] Loading project definition from /Users/jacek/dev/sandbox/docker-playground/play-dockerized/project
+[info] Updating {file:/Users/jacek/dev/sandbox/docker-playground/play-dockerized/project/}play-dockerized-build...
+[info] Resolving org.fusesource.jansi#jansi;1.4 ...
+[info] Done updating.
+[info] Set current project to play-dockerized (in build file:/Users/jacek/dev/sandbox/docker-playground/play-dockerized/)
+[info] Updating {file:/Users/jacek/dev/sandbox/docker-playground/play-dockerized/}root...
+[info] Resolving jline#jline;2.12.1 ...
+[info] Done updating.
+
+--- (Running the application, auto-reloading is enabled) ---
+
+[info] p.a.l.c.ActorSystemProvider - Starting application default Akka system: application
+[info] p.c.s.NettyServer - Listening for HTTP on /0:0:0:0:0:0:0:0:9000
+
+(Server started, use Ctrl+D to stop and go back to the console...)
+</code></pre>
+
+<p>You should now be able to access <a href="http://localhost:9000.">http://localhost:9000.</a> It&rsquo;s a vanilla <strong>Play Framework 2.4.2</strong> web application.</p>
+
+<p><img class="left" src="/images/docker-play-youre-using-play-2-4-2.png" title="Play Framework's default welcome page" ></p>
+
+<h2>Publishing Docker image - <code>docker:publishLocal</code></h2>
+
+<p>Play comes with <strong>sbt-native-packager</strong> plugin so stop the previous command (using Ctrl+D) and execute <code>sbt docker:publishLocal</code>:</p>
+
+<pre><code>➜  play-dockerized  sbt docker:publishLocal
+...
+[info] Digest: sha256:66638b21de4b16af589f54cbd3e2698919efd529583b732a593613f35e813f0b
+[info] Status: Downloaded newer image for java:latest
+[info]  ---&gt; 49ebfec495e1
+[info] Step 1 : WORKDIR /opt/docker
+[info]  ---&gt; Running in ac01dbacaf66
+[info]  ---&gt; 271ea5c0bd1e
+[info] Removing intermediate container ac01dbacaf66
+[info] Step 2 : ADD opt /opt
+[info]  ---&gt; 9c423c2d2f0c
+[info] Removing intermediate container 3087077a2680
+[info] Step 3 : RUN chown -R daemon:daemon .
+[info]  ---&gt; Running in bd40460a5e7d
+[info]  ---&gt; aeec9392fc83
+[info] Removing intermediate container bd40460a5e7d
+[info] Step 4 : USER daemon
+[info]  ---&gt; Running in 461907ca0474
+[info]  ---&gt; 4f0ad20b6a7f
+[info] Removing intermediate container 461907ca0474
+[info] Step 5 : ENTRYPOINT bin/play-dockerized
+[info]  ---&gt; Running in 09aa91f09bc5
+[info]  ---&gt; 7f2afe7c4918
+[info] Removing intermediate container 09aa91f09bc5
+[info] Step 6 : CMD
+[info]  ---&gt; Running in 99c12a3604a3
+[info]  ---&gt; 617942a5bc6f
+[info] Removing intermediate container 99c12a3604a3
+[info] Successfully built 617942a5bc6f
+[info] Built image play-dockerized:1.0-SNAPSHOT
+[success] Total time: 101 s, completed Jul 23, 2015 8:31:18 AM
+</code></pre>
+
+<p>That was the exact moment when I realized how clever the sbt-native-packager plugin is to leverage well-known <code>publishLocal</code> task to publish to Docker repository (that&rsquo;s merely scoped to <code>docker</code> to change the way it works).</p>
+
+<p>You&rsquo;ve just created a brand new Docker image <code>play-dockerized:1.0-SNAPSHOT</code>. Use <code>docker images</code> command to check it out:</p>
+
+<pre><code>➜  play-dockerized  docker images
+REPOSITORY          TAG                 IMAGE ID            CREATED             VIRTUAL SIZE
+play-dockerized     1.0-SNAPSHOT        617942a5bc6f        2 minutes ago       892.7 MB
+</code></pre>
+
+<h2>Docker my time!</h2>
+
+<p>You can start a container off the <code>play-dockerized</code> image using <code>docker run</code> command:</p>
+
+<pre><code>➜  play-dockerized  docker run --name play-8080 -p 8080:9000 play-dockerized:1.0-SNAPSHOT
+[info] - play.api.libs.concurrent.ActorSystemProvider - Starting application default Akka system: application
+[info] - play.api.Play - Application started (Prod)
+[info] - play.core.server.NettyServer - Listening for HTTP on /0:0:0:0:0:0:0:0:9000
+</code></pre>
+
+<p>The other command line options for <code>docker run</code> are <code>-p</code> to expose port <code>9000</code> outside Docker&rsquo;s virtual network (that&rsquo;s locally available as <code>8080</code>) and <code>--name</code> to give the container a friendly name (instead of relying on a cryptic hash).</p>
+
+<p><img class="left" src="/images/docker-play-new-app-ready.png" title="Play Framework inside Docker" ></p>
+
+<p>In another terminal execute <code>docker ps</code> to see the container running:</p>
+
+<pre><code>➜  play-dockerized  docker ps -a
+CONTAINER ID        IMAGE                          COMMAND                CREATED             STATUS              PORTS                    NAMES
+511ca96e64a4        play-dockerized:1.0-SNAPSHOT   "bin/play-dockerized   10 minutes ago      Up 5 seconds        0.0.0.0:8080-&gt;9000/tcp   play-8080
+</code></pre>
+
+<p>Stop the container with <code>docker stop play-8080</code>. The Play Framework web app is no longer accessible. To start it again, execute <code>docker start play-8080</code>.</p>
+
+<h2>Summary</h2>
+
+<p>It&rsquo;s so easy to have a Docker image of a Play Framework/Scala web application that I hardly believe I could have lived without using it for so long. Once an application becomes a Docker image you can use the other commands to play with it, mainly to deploy the image to any environment to have a consistent and exact environment. Love it so much now. And you can deploy the image to <a href="https://hub.docker.com/">Docker Hub</a> (similarly how you publish the sources of your excellent applications to GitHub).</p>
+
+<p>Let me know what you think about the topic of the blog post in the <a href="#disqus_thread">Comments</a> section below or contact me at <a href="&#109;&#x61;&#105;&#x6c;&#116;&#111;&#x3a;&#x6a;&#x61;&#99;&#101;&#107;&#64;&#106;&#x61;&#112;&#x69;&#x6c;&#x61;&#46;&#x70;&#108;&#46;">&#x6a;&#97;&#x63;&#101;&#x6b;&#64;&#x6a;&#x61;&#112;&#105;&#108;&#x61;&#46;&#112;&#108;&#x2e;</a> Follow the author as <a href="https://twitter.com/jaceklaskowski">@jaceklaskowski</a> on Twitter, too.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Jacek Laskowski</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-07-24T23:03:07+02:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>24</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>11:03 pm</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/categories/docker/'>docker</a>, <a class='category' href='/categories/play-framework/'>play-framework</a>, <a class='category' href='/categories/sbt/'>sbt</a>, <a class='category' href='/categories/scala/'>scala</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://blog.jaceklaskowski.pl/2015/07/24/docker-your-scala-web-application-play-framework.html" data-via="jaceklaskowski" data-counturl="http://blog.jaceklaskowski.pl/2015/07/24/docker-your-scala-web-application-play-framework.html" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/2015/07/20/real-time-data-processing-using-apache-kafka-and-spark-streaming.html" title="Previous Post: Real-time data processing using Apache Kafka and Spark Streaming (and Scala and sbt)">&laquo; Real-time data processing using Apache Kafka and Spark Streaming (and Scala and sbt)</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2015/07/24/docker-your-scala-web-application-play-framework.html">Docker Your Scala Web Application (Play Framework)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2015/07/20/real-time-data-processing-using-apache-kafka-and-spark-streaming.html">Real-time Data Processing Using Apache Kafka and Spark Streaming (and Scala and Sbt)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2015/07/19/publishing-events-using-custom-producer-for-apache-kafka.html">Publishing Events Using Custom Producer for Apache Kafka</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2015/07/14/apache-kafka-on-docker.html">Apache Kafka on Docker</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2015/05/15/ad-hoc-polymorphism-in-scala-with-type-classes.html">Ad Hoc Polymorphism in Scala With Type Classes</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/jaceklaskowski">@jaceklaskowski</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'jaceklaskowski',
+            count: 5,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section class="twitterOct">
+  <h1 style="margin-bottom: 0.4em"> Tweets </h1>
+  <a class="twitter-timeline"
+	 data-dnt="true" href="https://twitter.com/jaceklaskowski" 
+     data-widget-id="340586331971403776">
+     
+     Tweets by @jaceklaskowski
+  </a>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</section>
+
+
+<section>
+  <h1>Coderwall Badges</h1>
+  <p>
+    <script type="text/javascript">
+      function display_coderwall(args) {
+        var badges = args["data"]["badges"];
+        var wall = '';
+        for ( var i = 0; i < badges.length; i++ ) {
+          var alt_txt = badges[i]["name"];
+          var title_txt = badges[i]["name"] + ' - ' + badges[i]["description"];
+          wall += '<a href="http://coderwall.com/jaceklaskowski/"><img src="'
+            + badges[i]["badge"]
+            + '" width="48" height="48" alt="' + alt_txt
+            + '" title="' + title_txt
+            + '"/></a>';
+        }
+        document.write(wall);
+      }
+    </script>
+    <script src="http://coderwall.com/jaceklaskowski.json?callback=display_coderwall"></script>
+  </p>
+  
+  <p><a href="http://coderwall.com/jaceklaskowski"><img src="http://api.coderwall.com/jaceklaskowski/endorsecount.png" /></a></p>
+  
+</section>
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/117348138300416070551?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013-2015 - <a href="http://twitter.com/jaceklaskowski">Jacek Laskowski</a> -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'jaceklaskowski';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://blog.jaceklaskowski.pl/2015/07/24/docker-your-scala-web-application-play-framework.html';
+        var disqus_url = 'http://blog.jaceklaskowski.pl/2015/07/24/docker-your-scala-web-application-play-framework.html';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Scala | Mastering FP and OO with Scala]]></title>
   <link href="http://blog.jaceklaskowski.pl/categories/scala/atom.xml" rel="self"/>
   <link href="http://blog.jaceklaskowski.pl/"/>
-  <updated>2015-07-22T11:10:47+02:00</updated>
+  <updated>2015-07-25T00:07:45+02:00</updated>
   <id>http://blog.jaceklaskowski.pl/</id>
   <author>
     <name><![CDATA[Jacek Laskowski]]></name>
@@ -12,6 +12,138 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Docker Your Scala Web Application (Play Framework)]]></title>
+    <link href="http://blog.jaceklaskowski.pl/2015/07/24/docker-your-scala-web-application-play-framework.html"/>
+    <updated>2015-07-24T23:03:07+02:00</updated>
+    <id>http://blog.jaceklaskowski.pl/2015/07/24/docker-your-scala-web-application-play-framework</id>
+    <content type="html"><![CDATA[We're experimenting with [Docker](https://www.docker.com/) in the [DeepSense.io](http://deepsense.io/) project. There might be a case or two in the other Scala company in Warsaw - [HCore](http://www.hcore.com/). I've also been noticing interest in using Docker in Scala projects in [Javeo](http://www.javeo.eu/) where the [Warsaw Scala Enthusiasts](http://www.meetup.com/WarszawScaLa/) meetups are taking place. The Docker space seems very hot for Scala developers in Warsaw, Poland. And these companies *are* hiring Scala developers!
+
+I didn't know deploying Scala web applications might be so easy until the very recent Warsaw Scala Enthusiasts meetup when [Rafal Krzewski](http://www.meetup.com/WarszawScaLa/members/95521122/) introduced me to one of the two [sbt](http://www.scala-sbt.org/) plugins for Docker -  [sbt-native-packager](http://www.scala-sbt.org/sbt-native-packager/) (the other is [sbt-docker](https://github.com/marcuslonnberg/sbt-docker) that they say is even better).
+
+The blog post shows how easy it is to use Docker as a means of deploying Scala web applications using Play Framework (that actually uses sbt-native-packager under the covers).
+
+<!-- more -->
+
+## Creating Play Framework web application
+
+Create a new web application using Typesafe Activator tool using `activator new` command:
+
+    ➜  docker-playground  activator new play-dockerized play-scala
+
+    Fetching the latest list of templates...
+
+    OK, application "play-dockerized" is being created using the "play-scala" template.
+
+    To run "play-dockerized" from the command line, "cd play-dockerized" then:
+    /Users/jacek/dev/sandbox/docker-playground/play-dockerized/activator run
+
+    To run the test for "play-dockerized" from the command line, "cd play-dockerized" then:
+    /Users/jacek/dev/sandbox/docker-playground/play-dockerized/activator test
+
+    To run the Activator UI for "play-dockerized" from the command line, "cd play-dockerized" then:
+    /Users/jacek/dev/sandbox/docker-playground/play-dockerized/activator ui
+
+`cd` the `play-dockerized` directory and execute `sbt run` to start the application:
+
+    ➜  play-dockerized  sbt run
+    [info] Loading global plugins from /Users/jacek/.sbt/0.13/plugins
+    [info] Updating {file:/Users/jacek/.sbt/0.13/plugins/}global-plugins...
+    [info] Resolving org.fusesource.jansi#jansi;1.4 ...
+    [info] Done updating.
+    [info] Loading project definition from /Users/jacek/dev/sandbox/docker-playground/play-dockerized/project
+    [info] Updating {file:/Users/jacek/dev/sandbox/docker-playground/play-dockerized/project/}play-dockerized-build...
+    [info] Resolving org.fusesource.jansi#jansi;1.4 ...
+    [info] Done updating.
+    [info] Set current project to play-dockerized (in build file:/Users/jacek/dev/sandbox/docker-playground/play-dockerized/)
+    [info] Updating {file:/Users/jacek/dev/sandbox/docker-playground/play-dockerized/}root...
+    [info] Resolving jline#jline;2.12.1 ...
+    [info] Done updating.
+
+    --- (Running the application, auto-reloading is enabled) ---
+
+    [info] p.a.l.c.ActorSystemProvider - Starting application default Akka system: application
+    [info] p.c.s.NettyServer - Listening for HTTP on /0:0:0:0:0:0:0:0:9000
+
+    (Server started, use Ctrl+D to stop and go back to the console...)
+
+You should now be able to access http://localhost:9000. It's a vanilla **Play Framework 2.4.2** web application.
+
+<img class="left" src="/images/docker-play-youre-using-play-2-4-2.png" title="Play Framework's default welcome page" >
+
+## Publishing Docker image - `docker:publishLocal`
+
+Play comes with **sbt-native-packager** plugin so stop the previous command (using Ctrl+D) and execute `sbt docker:publishLocal`:
+
+    ➜  play-dockerized  sbt docker:publishLocal
+    ...
+    [info] Digest: sha256:66638b21de4b16af589f54cbd3e2698919efd529583b732a593613f35e813f0b
+    [info] Status: Downloaded newer image for java:latest
+    [info]  ---> 49ebfec495e1
+    [info] Step 1 : WORKDIR /opt/docker
+    [info]  ---> Running in ac01dbacaf66
+    [info]  ---> 271ea5c0bd1e
+    [info] Removing intermediate container ac01dbacaf66
+    [info] Step 2 : ADD opt /opt
+    [info]  ---> 9c423c2d2f0c
+    [info] Removing intermediate container 3087077a2680
+    [info] Step 3 : RUN chown -R daemon:daemon .
+    [info]  ---> Running in bd40460a5e7d
+    [info]  ---> aeec9392fc83
+    [info] Removing intermediate container bd40460a5e7d
+    [info] Step 4 : USER daemon
+    [info]  ---> Running in 461907ca0474
+    [info]  ---> 4f0ad20b6a7f
+    [info] Removing intermediate container 461907ca0474
+    [info] Step 5 : ENTRYPOINT bin/play-dockerized
+    [info]  ---> Running in 09aa91f09bc5
+    [info]  ---> 7f2afe7c4918
+    [info] Removing intermediate container 09aa91f09bc5
+    [info] Step 6 : CMD
+    [info]  ---> Running in 99c12a3604a3
+    [info]  ---> 617942a5bc6f
+    [info] Removing intermediate container 99c12a3604a3
+    [info] Successfully built 617942a5bc6f
+    [info] Built image play-dockerized:1.0-SNAPSHOT
+    [success] Total time: 101 s, completed Jul 23, 2015 8:31:18 AM
+
+That was the exact moment when I realized how clever the sbt-native-packager plugin is to leverage well-known `publishLocal` task to publish to Docker repository (that's merely scoped to `docker` to change the way it works).
+
+You've just created a brand new Docker image `play-dockerized:1.0-SNAPSHOT`. Use `docker images` command to check it out:
+
+    ➜  play-dockerized  docker images
+    REPOSITORY          TAG                 IMAGE ID            CREATED             VIRTUAL SIZE
+    play-dockerized     1.0-SNAPSHOT        617942a5bc6f        2 minutes ago       892.7 MB
+
+## Docker my time!
+
+You can start a container off the `play-dockerized` image using `docker run` command:
+
+    ➜  play-dockerized  docker run --name play-8080 -p 8080:9000 play-dockerized:1.0-SNAPSHOT
+    [info] - play.api.libs.concurrent.ActorSystemProvider - Starting application default Akka system: application
+    [info] - play.api.Play - Application started (Prod)
+    [info] - play.core.server.NettyServer - Listening for HTTP on /0:0:0:0:0:0:0:0:9000
+
+The other command line options for `docker run` are `-p` to expose port `9000` outside Docker's virtual network (that's locally available as `8080`) and `--name` to give the container a friendly name (instead of relying on a cryptic hash).
+
+<img class="left" src="/images/docker-play-new-app-ready.png" title="Play Framework inside Docker" >
+
+In another terminal execute `docker ps` to see the container running:
+
+    ➜  play-dockerized  docker ps -a
+    CONTAINER ID        IMAGE                          COMMAND                CREATED             STATUS              PORTS                    NAMES
+    511ca96e64a4        play-dockerized:1.0-SNAPSHOT   "bin/play-dockerized   10 minutes ago      Up 5 seconds        0.0.0.0:8080->9000/tcp   play-8080
+
+Stop the container with `docker stop play-8080`. The Play Framework web app is no longer accessible. To start it again, execute `docker start play-8080`.
+
+## Summary
+
+It's so easy to have a Docker image of a Play Framework/Scala web application that I hardly believe I could have lived without using it for so long. Once an application becomes a Docker image you can use the other commands to play with it, mainly to deploy the image to any environment to have a consistent and exact environment. Love it so much now. And you can deploy the image to [Docker Hub](https://hub.docker.com/) (similarly how you publish the sources of your excellent applications to GitHub).
+
+Let me know what you think about the topic of the blog post in the [Comments](#disqus_thread) section below or contact me at jacek@japila.pl. Follow the author as [@jaceklaskowski](https://twitter.com/jaceklaskowski) on Twitter, too.
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Real-time Data Processing Using Apache Kafka and Spark Streaming (and Scala and Sbt)]]></title>
@@ -783,107 +915,6 @@ I think there's the issue of how most Scala developers (I'm meeting) think -- th
 Just this week I had a pleasure to meet two teams that both use Guice because nobody introduced viable alternatives (even when they use one already - Scala!). I don't consider myself skilled enough, either, since I'm pretty much a Guice newbie and hence just unable to counter the Guice's way of solving problems. It's that something inside me that is telling me that Guice is dragged along unnecessarily and gives a false perception of being the right fit to dependency injection-looking problems (even when it introduces more problems, mostly related to learning a yet another framework, than it solves). I'm glad Spring is far heavier as it would likely have found its way in the projects, too.
 
 It has worked fine for Arek and I'm hoping it's going to work fine for me soon, too. I'll simply have to find it out and promote the right approach.
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Daily Routines to Learn Scala With IntelliJ IDEA]]></title>
-    <link href="http://blog.jaceklaskowski.pl/2015/03/28/daily-routines-to-learn-scala-with-intellij-idea.html"/>
-    <updated>2015-03-28T12:54:28+01:00</updated>
-    <id>http://blog.jaceklaskowski.pl/2015/03/28/daily-routines-to-learn-scala-with-intellij-idea</id>
-    <content type="html"><![CDATA[[<img class="left" src="/images/scala-idea-intellij-idea-14-1.png" title="IntelliJ IDEA 14.1 is Here!" >](http://blog.jetbrains.com/idea/2015/03/intellij-idea-14-1-is-here/) So, you've got a moment to learn [Scala](http://www.scala-lang.org/) and have [IntelliJ IDEA](https://www.jetbrains.com/idea/) with [Scala plugin](https://plugins.jetbrains.com/plugin/?id=1347) installed. Your wish is to *maximize* the mental outcome given the time at hand with *little to no effort* to set up a productive working environment. You may even think you may have gotten one, but, unless you're doing what I'm describing here, you're actually far from truly having it. I'm asking you to go *the extra mile*!
-
-In this blog post I'm introducing you to two modes in the recently-shipped [IntelliJ IDEA 14.1](http://blog.jetbrains.com/idea/2015/03/intellij-idea-14-1-is-here/) -- **Full Screen** and **Distraction Free** modes -- and the few keystrokes I use in the development environment to have a comfortable place to learn Scala. I'm sure you'll have found few ideas to improve your way into your own personal Scala nirvana.
-
-Let's go minimalistic, full screen, distraction-free, mouse- and touchpad-less!
-
-You may find the blog post [What to Check Out in Scala Plugin 1.4.x for IntelliJ IDEA 14 & 14.1](http://blog.jetbrains.com/scala/2015/03/26/what-to-check-out-in-scala-plugin-1-4-x-for-intellij-idea-14-14-1/) helpful, too.
-
-*Side note* It came as a complete surprise to me to have noticed that I've been writing the blog post exactly a month after the last one.
-
-<!-- more -->
-
-## Why I'm using IntelliJ IDEA to learn Scala?
-
-I'm using IntelliJ IDEA daily.
-
-I begin a day switching to the desktop where the IDE awaits my attention and keep it open (until a mandatory reboot following a system update). I was using other IDEs -- NetBeans IDE or Eclipse IDE -- in the past to develop applications in Java or Java EE, but things have changed since I switched focus on Scala entirely.
-
-The reason for the switch was to master the Scala language not the other available IDEs, and given IntelliJ IDEA have always been receiving positive marks it's with me nowadays. When I need a full-blown IDE, it's IntelliJ IDEA with the Scala plugin. Period.
-
-There's another tool that supports learning Scala beautifully -- **Scala REPL**. However it's often too rudimentary and limiting, for quick rendezvous I prefer it with Sublime Text 3 and sbt. For more advanced sessions nothing beats the beloved IDE - IntelliJ IDEA.
-
-I think it was [Tomasz Nurkiewicz](http://www.nurkiewicz.com/) -- [an IntelliJ IDEA expert](http://blog.jetbrains.com/idea/2014/05/annotated-java-monthly-april-2014/) -- who first showed the beauty of using IntelliJ IDEA mouse- and touchpad-less. Thanks Tomek!
-
-## Minimalistic workspace
-
-[I remember the tweet from Adrian Gruntkowski](https://twitter.com/adrgrunt/status/552479034031239168) very well when the need to go minimalistic was first planted in my head. Adrian mentioned a user guide to set up a minimalistic workspace in IntelliJ IDEA (though it was for CursiveClojure) and the story began.
-
-<img class="center" src="/images/scala-idea-tweet-minimalistic-workspace.png" title="Adrian mentions minimalistic workspace" >
-
-It took me a while to get used to it, but it was worth it! I just needed a mixture of [Sublime Text 3](http://www.sublimetext.com/3) and IntelliJ IDEA as the Scala development environment and think I've found mine already.
-
-## A day with Scala and IntelliJ IDEA
-
-Be warned that I'm working on Mac OS X with `Mac OS X 10.5+` keymap so your milleage may vary.
-
-The blog post assumes you've got a Scala project imported or created from scratch already. I don't bother explaining how to do it. In either case, IntelliJ IDEA should open with a Scala project so switching between files makes sense.
-
-### Minimalistic IntelliJ IDEA
-
-Follow [CursiveClojure UI](https://cursiveclojure.com/userguide/ui.html) to have a minimalistic, clutter-free workspace. It's a good start and boils down to turning off the toolbars, deselecting Toolbar and Navigation Bars in the View menu and finally disabling the Editor Tabs. That's a very good start.
-
-Start by pressing `Cmd + Ctrl + F` to enter full screen.
-
-You should have the IDE looked like as in the following screenshot.
-
-<img class="center" src="/images/scala-idea-minimalistic-workspace.png" title="Minimalistic workspace following CursiveClojure UI" >
-
-Press `Shift` key twice to open **Search everywhere** popup.
-
-<img class="center" src="/images/scala-idea-search-action-popup.png" title="Search action popup" >
-
-You may also want to use `Cmd + Shift + A` to search for actions only.
-
-<img class="center" src="/images/scala-idea-search-actions-only.png" title="Search actions only popup" >
-
-Type in **pre mod** or (better) **preMod** to execute **Enter Presentation Mode** action. In IDEA 14.1 there's far more productive mode - **Distraction Free Mode** so type in **distMod** instead.
-
-<img class="center" src="/images/scala-idea-search-action-enter-distration-free-mode.png" title="Enter Distraction Free Mode" >
-
-Either way -- Presentation or Distraction mode -- you've got a clean desk and should concentrate on Scala much easier (with the goodies of IntelliJ IDEA at your fingertips).
-
-Following the advice in the empty workspace of IntelliJ IDEA, use `Cmd + E` to switch between files or `Cmd + Shift + E` to switch between files that were recently edited.
-
-<img class="center" src="/images/scala-idea-recently-edited-files.png" title="Recently Edited Files popup" >
-
-Use `Cmd + O` to open traits or classes. Use `Cmd + Shift + O` to open any file like `build.sbt` or project resources.
-
-<img class="center" src="/images/scala-idea-enter-file-name-build-sbt.png" title="Enter file name popup" >
-
-And the last but not least, install [BashSupport plugin](https://plugins.jetbrains.com/plugin/4230) to have a fully-supported terminal inside IntelliJ IDEA. Use `Alt + F12` to open a terminal session. I use it to have sbt shell open for `~ test` to have the tests executed every time the main and test sources change.
-
-<img class="center" src="/images/scala-idea-terminal-window-sbt-test.png" title="Terminal window with sbt test" >
-
-I use the terminal to open Scala REPL when I need to try out a new API.
-
-<img class="center" src="/images/scala-idea-terminal-window-scala-repl.png" title="Terminal window with Scala REPL" >
-
-There are also `Cmd + KeyUp` to select files from other directories in a project, or just switch to Project view with `Cmd + 1`. You could use `Alt + F1` to select the target to view the currently open file.
-
-<img class="center" src="/images/scala-idea-change-directory-cmd-keyup.png" title="Cmd + KeyUp" >
-
-## Summary
-
-There are plenty of ways and tools to help you learn Scala in a pleasant environment. I've been using Sublime Text 3 and sbt for quite some time, and found myself very productive with this combo. In my case, though, *enough* turned out to be *lazy to learn more advanced developer tools*, i.e. IntelliJ IDEA.
-
-Once I switched to IntelliJ IDEA and started using the features like Full Screen and Distraction Free modes with proper keystrokes, it became the development environment of choice to get full steam ahead into Scala.
-
-[There ain't no such thing as a free lunch](http://en.wikipedia.org/wiki/There_ain%27t_no_such_thing_as_a_free_lunch) and it does take time to hop onto a new tooling and change habits. New things can often be getting into your way until you find them useful. As much as habits can help (speeding things up), they should not rule out others and mark them worse by default. As [Learn, Unlearn And Relearn: How To Stay Current And Get Ahead](http://www.forbes.com/sites/margiewarrell/2014/02/03/learn-unlearn-and-relearn/) says:
-
-> Whatever the reasons, once the basics are covered, many people tend to stick with what they know and avoid situations or challenges where they may mess up or be forced to learn something new, thus creating a safe, secure and comfortable (and confining) world for themselves.
-
-Give the tips from the blog post a try and a month later you will have found they're as pleasant as yours. Or bring you even more joy! Let me know how it's worked out in the Comments section below.
 ]]></content>
   </entry>
   

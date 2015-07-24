@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: Play Framework | Mastering FP and OO with Scala]]></title>
+  <title><![CDATA[Category: Play-framework | Mastering FP and OO with Scala]]></title>
   <link href="http://blog.jaceklaskowski.pl/categories/play-framework/atom.xml" rel="self"/>
   <link href="http://blog.jaceklaskowski.pl/"/>
-  <updated>2015-07-22T11:10:47+02:00</updated>
+  <updated>2015-07-25T00:07:45+02:00</updated>
   <id>http://blog.jaceklaskowski.pl/</id>
   <author>
     <name><![CDATA[Jacek Laskowski]]></name>
@@ -14,350 +14,135 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Mistakes Introducing Slick for Database Access Under Play Framework 2.3.4 and 2.4.0-M1]]></title>
-    <link href="http://blog.jaceklaskowski.pl/2014/09/12/mistakes-introducing-slick-for-database-access-under-play-framework-2-dot-3-4-and-2-dot-4-0-m1.html"/>
-    <updated>2014-09-12T21:47:50+02:00</updated>
-    <id>http://blog.jaceklaskowski.pl/2014/09/12/mistakes-introducing-slick-for-database-access-under-play-framework-2-dot-3-4-and-2-dot-4-0-m1</id>
-    <content type="html"><![CDATA[This is a summary of my attempt to run [Slick](http://slick.typesafe.com/) under [Play Framework](https://www.playframework.com/) **2.3.4** and **2.4.0-M1** that ultimately turned out a quite successful endeavour.
+    <title type="html"><![CDATA[Docker Your Scala Web Application (Play Framework)]]></title>
+    <link href="http://blog.jaceklaskowski.pl/2015/07/24/docker-your-scala-web-application-play-framework.html"/>
+    <updated>2015-07-24T23:03:07+02:00</updated>
+    <id>http://blog.jaceklaskowski.pl/2015/07/24/docker-your-scala-web-application-play-framework</id>
+    <content type="html"><![CDATA[We're experimenting with [Docker](https://www.docker.com/) in the [DeepSense.io](http://deepsense.io/) project. There might be a case or two in the other Scala company in Warsaw - [HCore](http://www.hcore.com/). I've also been noticing interest in using Docker in Scala projects in [Javeo](http://www.javeo.eu/) where the [Warsaw Scala Enthusiasts](http://www.meetup.com/WarszawScaLa/) meetups are taking place. The Docker space seems very hot for Scala developers in Warsaw, Poland. And these companies *are* hiring Scala developers!
 
-I’m currently using Play’s Anorm and writing the queries myself didn’t seem to be something I much liked. I’ve been seeing Slick has had a good press so it was a no-brainer to pick it as an alternative.
+I didn't know deploying Scala web applications might be so easy until the very recent Warsaw Scala Enthusiasts meetup when [Rafal Krzewski](http://www.meetup.com/WarszawScaLa/members/95521122/) introduced me to one of the two [sbt](http://www.scala-sbt.org/) plugins for Docker -  [sbt-native-packager](http://www.scala-sbt.org/sbt-native-packager/) (the other is [sbt-docker](https://github.com/marcuslonnberg/sbt-docker) that they say is even better).
 
-<!-- more -->
-
-## Mistake #1. Hurting myself with cutting edge versions
-
-Reading the documentation at http://slick.typesafe.com/ was not very informative as there was no word about how to embed it in a Play Framework application. There should really be a "Getting started with Slick and Play Framework" tutorial since both are part of [The Typesafe Reactive Platform](https://typesafe.com/platform).
-
-I added Slick to `build.sbt` as follows:
-
-    "com.typesafe.slick" %% "slick" % “2.1.0"
-
-And then I realised that I’d have had to do:
-
-    Database.forURL("jdbc:h2:mem:test1", driver = "org.h2.Driver") withSession {
-      implicit session =>
-      // <- write queries here
-    }
-
-but Play Framework gives me:
-
-    DB.withConnection("sayenedb") { implicit c =>
-        ...
-    }
-
-It was certainly not the way to follow. I needed a solution that would read database configuration from Play's.
-
-## Mistake #2. Using play-slick with Play 2.4.0-M1
-
-Time has come to give [play-slick](https://github.com/playframework/play-slick) a serious try. The project aims to make *"Slick a first-class citizen of Play 2.x.”*
-
-It took me a while to abandon the idea of running play-slick with Play 2.4.0-M1 since [this](https://groups.google.com/d/msg/play-framework/m_bxuqgSKgk/Z4WgfUer19wJ):
-
-> The purpose of this release is to get feedback about the approach to dependency injection that we're implementing in Play 2.4.  The old Play plugins mechanism is going to be deprecated.  For a detailed overview of the different styles of DI available in Play 2.4, please read here:
-
-> https://www.playframework.com/documentation/2.4.x/ScalaDependencyInjection
-https://www.playframework.com/documentation/2.4.x/ScalaCompileTimeDependencyInjection
-https://www.playframework.com/documentation/2.4.x/JavaDependencyInjection
-
-I reported [an issue for play-slick](https://github.com/playframework/play-slick/issues/208) hoping that the developers notice the missing integration point and the support for 2.4 will come...sooner (?)
-
-## Mistake #3. Using custom db configuration in Play
-
-The application uses no `db.default` configuration in `application.conf` in Play - just a custom one. The result?
-
-    [error] application -
-
-    ! @6jg39b0pk - Internal server error, for (GET) [/tips/wgcategories] ->
-
-    play.api.Configuration$$anon$1: Configuration error[Slick error : jdbc driver not defined in application.conf for db.default.driver key]
-         at play.api.Configuration$.play$api$Configuration$$configError(Configuration.scala:94) ~[play_2.11-2.3.4.jar:2.3.4]
-         at play.api.Configuration.reportError(Configuration.scala:743) ~[play_2.11-2.3.4.jar:2.3.4]
-         at play.api.db.slick.Config$$anonfun$1.apply(Config.scala:64) ~[play-slick_2.11-0.8.0.jar:0.8.0]
-         at play.api.db.slick.Config$$anonfun$1.apply(Config.scala:64) ~[play-slick_2.11-0.8.0.jar:0.8.0]
-         at scala.Option.getOrElse(Option.scala:120) ~[scala-library-2.11.2.jar:na]
-
-I had to add the following entries to work it around:
-
-    db.default.driver=org.postgresql.Driver
-    db.default.url=${?DB_CONN}
-
-`DB_CONN` is the property I set up at command line at Play startup.
-
-Using two datasources required following [Advanced drivers configuration](https://github.com/playframework/play-slick/wiki/ScalaSlickDrivers) and applying the (in)famous Cake pattern.
-
-## Mistake #4. Copying examples to production code - PostgreSQL is case sensitive for field names in quotes
-
-I had the following in my Component:
-
-    def id = column[Int]("ID", O.PrimaryKey, O.AutoInc)
-
-That generated a query with `"ID"` in `select` clause that in turn resulted in the following error:
-
-    STATEMENT:  select s13."ID", s13."name" from “xxx" s13;
-    ERROR:  column s13.ID does not exist at character 8
-
-[As Rene pointed out in his tweet](https://twitter.com/rgielen/status/510501297473462272):
-
-> @jaceklaskowski not true - #PostgreSQL follows SQL standard. Columns names are case insensitive unless created with quotation marks
-
-He was right - changing `ID` to `id` has indeed fixed the issue.
-
-    def id = column[Int]("id", O.PrimaryKey, O.AutoInc)
-
-## Mistake #5. [SI-3664] Explicit case class companion does not extend Function / override toString
-
-There's an issue reported against the Scala compiler - [[SI-3664] Explicit case class companion does not extend Function / override toString](https://issues.scala-lang.org/browse/SI-3664) - that stands in a way for the `*` projection, i.e. `def * = ...`, in your table description:
-
-    class Users(tag: Tag) extends Table[User](tag, "users") {
-        def id    = column[Int]   ("id", O.PrimaryKey, O.AutoInc)
-        def login = column[String]("login")
-
-        def * = (id, login) <> (User.tupled, User.unapply)
-    }
-
-For the `Users` class above the Scala compiler fails reporting:
-
-> value tupled is not a member of object model.User
-
-A solution is described in [Mapped Tables](http://slick.typesafe.com/doc/2.1.0/upgrade.html#mapped-tables) section of [UPGRADE GUIDES](http://slick.typesafe.com/doc/2.1.0/upgrade.html) document in the Slick manual:
-
-> Note that `.tupled` is only available for proper Scala functions.  
-> When using a case class, the companion object extends the correct function type by default, but only if you do not define the object yourself. In that case you should provide the right supertype manually.
-
-The mapping definition can look as follows:
-
-    class Users(tag: Tag) extends Table[User](tag, "users") {
-        def id    = column[Int]   ("id", O.PrimaryKey, O.AutoInc)
-        def login = column[String]("login")
-    
-        def * = (id, login) <> ((User.apply _).tupled, User.unapply)
-    }
-
-Note `(User.apply _).tupled`.
-
-## Mistake #6. JodaTime support
-
-For cases where you need to use JodaTime types in Slick you should use [slick-joda-mapper](https://github.com/tototoshi/slick-joda-mapper#slick-joda-mapper).
-
-Else you have to stick to `java.sql.Date`, `java.sql.Time`, `java.sql.Timestamp` as described in [Table Rows](http://slick.typesafe.com/doc/2.1.0/schemas.html?highlight=date#table-rows) in the Slick documentation.
-
-## Summary
-
-Using a non-default configuration is always a kind of minefield. Stay away from it unless you’re adventurous and have enough time and patience to fix issues along the way. You’ve been warned.
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Getting Started With Play Framework and AngularJS - Day 1]]></title>
-    <link href="http://blog.jaceklaskowski.pl/2014/09/08/getting-started-with-play-framework-and-angularjs-day-1.html"/>
-    <updated>2014-09-08T12:42:49+02:00</updated>
-    <id>http://blog.jaceklaskowski.pl/2014/09/08/getting-started-with-play-framework-and-angularjs-day-1</id>
-    <content type="html"><![CDATA[Let's face it -- there are tons of very good tutorials about how to get started with [Play Framework](https://www.playframework.com/) and [AngularJS](https://angularjs.org/) to build modern web applications, and despite the fact there are still quite a few people out there who keep asking me about writing mine. Since writing tutorials is a way to clear up understanding of a topic to me, I found it very compelling to help myself and others using the two - Play and Angular - properly. Well, the *properly* part comes with your comments when I fix the parts that are outdated or plain wrong.
-
-So, here it is. The yet another tutorial series about developing web applications in Play Framework (with Scala) and AngularJS (in JavaScript). Let's get rolling!
-
-**NOTE** It's a work in progress. Watch this space until the note has disappeared and the blog post become feature-complete.
+The blog post shows how easy it is to use Docker as a means of deploying Scala web applications using Play Framework (that actually uses sbt-native-packager under the covers).
 
 <!-- more -->
 
-## Step 1. Installing Typesafe Activator
+## Creating Play Framework web application
 
-Download Typesafe Activator from http://typesafe.com/activator and install it in a directory. Add the directory to `PATH` so you'll be able to execute `activator` from any place in your file system without having to use the fully-qualified path.
+Create a new web application using Typesafe Activator tool using `activator new` command:
 
-Execute `activator ui` to open up Activator UI in a browser. Go to http://localhost:8888.
-
-See what's available in the UI and once you're satisfied, go to the command line where `activator ui` is running and press `Ctrl+C` to stop the UI process.
-
-## Step 2. Creating hello-play-tutorial web application
-
-In a directory of your choice, execute `activator new hello-play-tutorial play-scala` to create a web application using [the Play Scala Seed template](https://typesafe.com/activator/template/play-scala).
-
-**Pro-tip:** Read the output from the command so you learn what you can do with `activator` that I'm not going to cover in the article.
-
-    ➜  sandbox  activator new hello-play-tutorial play-scala
+    ➜  docker-playground  activator new play-dockerized play-scala
 
     Fetching the latest list of templates...
 
-    OK, application "hello-play-tutorial" is being created using the "play-scala" template.
+    OK, application "play-dockerized" is being created using the "play-scala" template.
 
-    To run "hello-play-tutorial" from the command line, "cd hello-play-tutorial" then:
-    /Users/jacek/sandbox/hello-play-tutorial/activator run
+    To run "play-dockerized" from the command line, "cd play-dockerized" then:
+    /Users/jacek/dev/sandbox/docker-playground/play-dockerized/activator run
 
-    To run the test for "hello-play-tutorial" from the command line, "cd hello-play-tutorial" then:
-    /Users/jacek/sandbox/hello-play-tutorial/activator test
+    To run the test for "play-dockerized" from the command line, "cd play-dockerized" then:
+    /Users/jacek/dev/sandbox/docker-playground/play-dockerized/activator test
 
-    To run the Activator UI for "hello-play-tutorial" from the command line, "cd hello-play-tutorial" then:
-    /Users/jacek/sandbox/hello-play-tutorial/activator ui
+    To run the Activator UI for "play-dockerized" from the command line, "cd play-dockerized" then:
+    /Users/jacek/dev/sandbox/docker-playground/play-dockerized/activator ui
 
-Change the working directory to `hello-play-tutorial` and run `activator run`. Wait until the message `(Server started, use Ctrl+D to stop and go back to the console...)` has showed up.
+`cd` the `play-dockerized` directory and execute `sbt run` to start the application:
 
-    ➜  sandbox  cd hello-play-tutorial
-    ➜  hello-play-tutorial  activator run
+    ➜  play-dockerized  sbt run
     [info] Loading global plugins from /Users/jacek/.sbt/0.13/plugins
-    [info] Loading project definition from /Users/jacek/sandbox/hello-play-tutorial/project
-    [info] Updating {file:/Users/jacek/sandbox/hello-play-tutorial/project/}hello-play-tutorial-build...
+    [info] Updating {file:/Users/jacek/.sbt/0.13/plugins/}global-plugins...
     [info] Resolving org.fusesource.jansi#jansi;1.4 ...
     [info] Done updating.
-    [info] Set current project to hello-play-tutorial (in build file:/Users/jacek/sandbox/hello-play-tutorial/)
-    [info] Updating {file:/Users/jacek/sandbox/hello-play-tutorial/}root...
-    [info] Resolving jline#jline;2.11 ...
+    [info] Loading project definition from /Users/jacek/dev/sandbox/docker-playground/play-dockerized/project
+    [info] Updating {file:/Users/jacek/dev/sandbox/docker-playground/play-dockerized/project/}play-dockerized-build...
+    [info] Resolving org.fusesource.jansi#jansi;1.4 ...
+    [info] Done updating.
+    [info] Set current project to play-dockerized (in build file:/Users/jacek/dev/sandbox/docker-playground/play-dockerized/)
+    [info] Updating {file:/Users/jacek/dev/sandbox/docker-playground/play-dockerized/}root...
+    [info] Resolving jline#jline;2.12.1 ...
     [info] Done updating.
 
-    --- (Running the application from SBT, auto-reloading is enabled) ---
+    --- (Running the application, auto-reloading is enabled) ---
 
-    [info] play - Listening for HTTP on /0:0:0:0:0:0:0:0:9000
+    [info] p.a.l.c.ActorSystemProvider - Starting application default Akka system: application
+    [info] p.c.s.NettyServer - Listening for HTTP on /0:0:0:0:0:0:0:0:9000
 
     (Server started, use Ctrl+D to stop and go back to the console...)
 
-Visit http://localhost:9000 to open up the web application in a browser.
+You should now be able to access http://localhost:9000. It's a vanilla **Play Framework 2.4.2** web application.
 
-**Pro-tip:** Read the content of the welcome page so you know what the sample application offers beyond what is included in the article.
+<img class="left" src="/images/docker-play-youre-using-play-2-4-2.png" title="Play Framework's default welcome page" >
 
-## Step 3. (optional) Deploying to a cloud service - CloudBees
+## Publishing Docker image - `docker:publishLocal`
 
-According to the official documentation of Play Framework in [Deploying to Cloudbees](https://www.playframework.com/documentation/2.4.x/Deploying-to-CloudBees):
+Play comes with **sbt-native-packager** plugin so stop the previous command (using Ctrl+D) and execute `sbt docker:publishLocal`:
 
->CloudBees support Play dists natively - with Jenkins and continuous deployment
-
-that is in turn confirmed in the official documentation of CloudBees in [RUN@cloud » Play Framework](https://developer.cloudbees.com/bin/view/RUN/Playframework):
-
->CloudBees includes first-class support for running Play! applications in the Cloud.
-
-Install [CloudBees SDK](http://developer.cloudbees.com/bin/view/RUN/BeesSDK). On Mac OS X it's just that easy as `brew install cloudbees-sdk`.
-
-Start with `bees init` and provide necessary configuration information before moving on to deploying the Play application.
-
-Execute `bees app:create hello-play-tutorial -t play2` to configure the application on CloudBees.
-
-    ➜  hello-play-tutorial git:(master) bees app:create hello-play-tutorial -t play2
-    Application: jaceklaskowski/hello-play-tutorial
-        url: hello-play-tutorial.jaceklaskowski.eu.cloudbees.net
-
-Create a new git repository under `Repos` in the CloudBees Administrative Console and execute `git init` followed by `git add -am 'Initial commit'` in the directory.
-
-    ➜  hello-play-tutorial git:(master) git remote add cloudbees https://git.cloudbees.com/jaceklaskowski/hello-play-tutorial.git
-    ➜  hello-play-tutorial git:(master) git push --mirror cloudbees
-    Counting objects: 30, done.
-    Delta compression using up to 8 threads.
-    Compressing objects: 100% (25/25), done.
-    Writing objects: 100% (30/30), 1010.69 KiB | 0 bytes/s, done.
-    Total 30 (delta 0), reused 0 (delta 0)
-    To https://git.cloudbees.com/jaceklaskowski/hello-play-tutorial.git
-     * [new branch]      master -> master
-    ➜  hello-play-tutorial git:(master) activator clean dist
+    ➜  play-dockerized  sbt docker:publishLocal
     ...
-    ➜  hello-play-tutorial git:(master) bees app:deploy -t play2 -a hello-play-tutorial target/universal/hello-play-tutorial-1.0-SNAPSHOT.zip
-    Deploying application jaceklaskowski/hello-play-tutorial (environment: ): target/universal/hello-play-tutorial-1.0-SNAPSHOT.zip
-    Application parameters: {containerType=play2}
-    ........................uploaded 25%
-    ........................uploaded 50%
-    ........................uploaded 75%
-    ........................upload completed
-    deploying application to server(s)...
-    Application jaceklaskowski/hello-play-tutorial deployed: http://hello-play-tutorial.jaceklaskowski.eu.cloudbees.net
+    [info] Digest: sha256:66638b21de4b16af589f54cbd3e2698919efd529583b732a593613f35e813f0b
+    [info] Status: Downloaded newer image for java:latest
+    [info]  ---> 49ebfec495e1
+    [info] Step 1 : WORKDIR /opt/docker
+    [info]  ---> Running in ac01dbacaf66
+    [info]  ---> 271ea5c0bd1e
+    [info] Removing intermediate container ac01dbacaf66
+    [info] Step 2 : ADD opt /opt
+    [info]  ---> 9c423c2d2f0c
+    [info] Removing intermediate container 3087077a2680
+    [info] Step 3 : RUN chown -R daemon:daemon .
+    [info]  ---> Running in bd40460a5e7d
+    [info]  ---> aeec9392fc83
+    [info] Removing intermediate container bd40460a5e7d
+    [info] Step 4 : USER daemon
+    [info]  ---> Running in 461907ca0474
+    [info]  ---> 4f0ad20b6a7f
+    [info] Removing intermediate container 461907ca0474
+    [info] Step 5 : ENTRYPOINT bin/play-dockerized
+    [info]  ---> Running in 09aa91f09bc5
+    [info]  ---> 7f2afe7c4918
+    [info] Removing intermediate container 09aa91f09bc5
+    [info] Step 6 : CMD
+    [info]  ---> Running in 99c12a3604a3
+    [info]  ---> 617942a5bc6f
+    [info] Removing intermediate container 99c12a3604a3
+    [info] Successfully built 617942a5bc6f
+    [info] Built image play-dockerized:1.0-SNAPSHOT
+    [success] Total time: 101 s, completed Jul 23, 2015 8:31:18 AM
 
-Access http://hello-play-tutorial.jaceklaskowski.eu.cloudbees.net (mind that yours is different) to see the application deployed and running.
+That was the exact moment when I realized how clever the sbt-native-packager plugin is to leverage well-known `publishLocal` task to publish to Docker repository (that's merely scoped to `docker` to change the way it works).
 
-Set up a Jenkins job so the application's deployed every `git push cloudbees`.]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[JSON in Play Framework With JsValue and Reads]]></title>
-    <link href="http://blog.jaceklaskowski.pl/2014/09/02/json-in-play-framework-with-jsvalue-and-reads.html"/>
-    <updated>2014-09-02T16:00:00+02:00</updated>
-    <id>http://blog.jaceklaskowski.pl/2014/09/02/json-in-play-framework-with-jsvalue-and-reads</id>
-    <content type="html"><![CDATA[There are many ways to learn [the Scala programming language](http://www.scala-lang.org/) and the vast number of libraries for the language. Mine is to use [sbt](http://www.scala-sbt.org/) console in a customized project with required dependencies that are automatically downloaded by sbt. All (analysing, downloading, setting up CLASSPATH and such) is handled by the tooling itself not me. Share your approach if it appears smarter.
+You've just created a brand new Docker image `play-dockerized:1.0-SNAPSHOT`. Use `docker images` command to check it out:
 
-In this installment, I'm presenting a sbt build for learning the JSON API from the [play-json](https://www.playframework.com/documentation/2.4.x/ScalaJson) module in the [play.api.libs.json](https://www.playframework.com/documentation/2.4.x/api/scala/index.html#play.api.libs.json.package) package in [Play Framework 2.4.0-M1](https://www.playframework.com/).
+    ➜  play-dockerized  docker images
+    REPOSITORY          TAG                 IMAGE ID            CREATED             VIRTUAL SIZE
+    play-dockerized     1.0-SNAPSHOT        617942a5bc6f        2 minutes ago       892.7 MB
 
-<!-- more -->
+## Docker my time!
 
-It’s a code-mainly version of the article [JSON Macro Inception](https://www.playframework.com/documentation/2.4.x/ScalaJsonInception) from the official documentation of Play Framework.
+You can start a container off the `play-dockerized` image using `docker run` command:
 
-Start a new activator/sbt project with the following build definition in `build.sbt`:
+    ➜  play-dockerized  docker run --name play-8080 -p 8080:9000 play-dockerized:1.0-SNAPSHOT
+    [info] - play.api.libs.concurrent.ActorSystemProvider - Starting application default Akka system: application
+    [info] - play.api.Play - Application started (Prod)
+    [info] - play.core.server.NettyServer - Listening for HTTP on /0:0:0:0:0:0:0:0:9000
 
-    scalaVersion := "2.11.2"
+The other command line options for `docker run` are `-p` to expose port `9000` outside Docker's virtual network (that's locally available as `8080`) and `--name` to give the container a friendly name (instead of relying on a cryptic hash).
 
-    val playVersion = "2.4.0-M1"
+<img class="left" src="/images/docker-play-new-app-ready.png" title="Play Framework inside Docker" >
 
-    libraryDependencies += "com.typesafe.play" %% "play-json" % playVersion
+In another terminal execute `docker ps` to see the container running:
 
-On the command line execute `sbt` and then, while in the sbt shell, `console`.
+    ➜  play-dockerized  docker ps -a
+    CONTAINER ID        IMAGE                          COMMAND                CREATED             STATUS              PORTS                    NAMES
+    511ca96e64a4        play-dockerized:1.0-SNAPSHOT   "bin/play-dockerized   10 minutes ago      Up 5 seconds        0.0.0.0:8080->9000/tcp   play-8080
 
-    > console
-    [info] Starting scala interpreter...
-    [info]
-    Welcome to Scala version 2.11.2 (Java HotSpot(TM) 64-Bit Server VM, Java 1.8.0_20).
-    Type in expressions to have them evaluated.
-    Type :help for more information.
+Stop the container with `docker stop play-8080`. The Play Framework web app is no longer accessible. To start it again, execute `docker start play-8080`.
 
-When you see the above (the Java version might be different depending on your configuration), you’re in an interactive development environment - Scala REPL - with play-json library and Scala 2.11.2. The world of JSON’s (almost) yours!
+## Summary
 
-`:pa` (a shortcut for `:paste`) enters paste mode so you can copy and paste entire Scala statements.
+It's so easy to have a Docker image of a Play Framework/Scala web application that I hardly believe I could have lived without using it for so long. Once an application becomes a Docker image you can use the other commands to play with it, mainly to deploy the image to any environment to have a consistent and exact environment. Love it so much now. And you can deploy the image to [Docker Hub](https://hub.docker.com/) (similarly how you publish the sources of your excellent applications to GitHub).
 
-    scala> :pa
-    // Entering paste mode (ctrl-D to finish)
-
-    import play.api.libs.functional.syntax._
-    import play.api.libs.json._
-
-    // Exiting paste mode, now interpreting.
-
-    import play.api.libs.functional.syntax._
-    import play.api.libs.json._
-
-    scala> case class Person(name: String, age: Int, lovesChocolate: Boolean)
-    defined class Person
-
-    scala> :pa
-    // Entering paste mode (ctrl-D to finish)
-
-    implicit val personReads = (
-      (__ \ 'name).read[String] and
-      (__ \ 'age).read[Int] and
-      (__ \ 'lovesChocolate).read[Boolean]
-    )(Person)
-
-    // Exiting paste mode, now interpreting.
-
-    personReads: play.api.libs.json.Reads[Person] = play.api.libs.json.Reads$$anon$8@5c2b898d
-
-    scala> val jsonStr = """{ "name" : "Jacek", "age" : 41, "lovesChocolate": true }"""
-    jsonStr: String = { "name" : "Jacek", "age" : 41, "lovesChocolate": true }
-
-    scala> val json = play.api.libs.json.Json.parse(jsonStr)
-    json: play.api.libs.json.JsValue = {"name":"Jacek","age":41,"lovesChocolate":true}
-
-    scala> val jacek: Person = json
-    <console>:18: error: type mismatch;
-     found   : play.api.libs.json.JsValue
-     required: Person
-           val jacek: Person = json
-                               ^
-
-    scala> val jacek: Person = json.as[Person]
-    jacek: Person = Person(Jacek,41,true)
-
-    scala> implicit val personReads = Json.reads[Person]
-    personReads: play.api.libs.json.Reads[Person] = play.api.libs.json.Reads$$anon$8@5e930aa2
-
-With the playground you can play with JSON types in Play however you like. Start with the trait [play.api.libs.json.JsValue](https://www.playframework.com/documentation/2.4.x/api/scala/index.html#play.api.libs.json.JsValue) and then learn what [play.api.libs.json.Reads[T]](https://www.playframework.com/documentation/2.4.x/api/scala/index.html#play.api.libs.json.Reads) offers. They're the cornerstone of the JSON API in Play.
-
-The entire code to paste (`:pa` or `:paste` in sbt console) follows. Note the simplifications codenamed **JSON Inception**.
-
-    import play.api.libs.json._
-
-    case class Person(name: String, age: Int, lovesChocolate: Boolean)
-
-    val jsonStr = """{ "name" : "Jacek", "age" : 41, "lovesChocolate": true }"""
-
-    val json = play.api.libs.json.Json.parse(jsonStr)
-
-    implicit val personReads = Json.reads[Person]
-
-    val jacek: Person = json.as[Person]
-
-Once you’re done, press `Ctrl+D` twice to exit `console` and the sbt shell afterwards.]]></content>
+Let me know what you think about the topic of the blog post in the [Comments](#disqus_thread) section below or contact me at jacek@japila.pl. Follow the author as [@jaceklaskowski](https://twitter.com/jaceklaskowski) on Twitter, too.
+]]></content>
   </entry>
   
 </feed>

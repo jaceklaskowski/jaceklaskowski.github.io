@@ -4,7 +4,7 @@
   <title><![CDATA[Mastering FP and OO with Scala]]></title>
   <link href="http://blog.jaceklaskowski.pl/atom.xml" rel="self"/>
   <link href="http://blog.jaceklaskowski.pl/"/>
-  <updated>2015-07-22T11:10:47+02:00</updated>
+  <updated>2015-07-25T00:07:45+02:00</updated>
   <id>http://blog.jaceklaskowski.pl/</id>
   <author>
     <name><![CDATA[Jacek Laskowski]]></name>
@@ -12,6 +12,145 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Docker Your Scala Web Application (Play Framework)]]></title>
+    <link href="http://blog.jaceklaskowski.pl/2015/07/24/docker-your-scala-web-application-play-framework.html"/>
+    <updated>2015-07-24T23:03:07+02:00</updated>
+    <id>http://blog.jaceklaskowski.pl/2015/07/24/docker-your-scala-web-application-play-framework</id>
+    <content type="html"><![CDATA[<p>We&rsquo;re experimenting with <a href="https://www.docker.com/">Docker</a> in the <a href="http://deepsense.io/">DeepSense.io</a> project. There might be a case or two in the other Scala company in Warsaw - <a href="http://www.hcore.com/">HCore</a>. I&rsquo;ve also been noticing interest in using Docker in Scala projects in <a href="http://www.javeo.eu/">Javeo</a> where the <a href="http://www.meetup.com/WarszawScaLa/">Warsaw Scala Enthusiasts</a> meetups are taking place. The Docker space seems very hot for Scala developers in Warsaw, Poland. And these companies <em>are</em> hiring Scala developers!</p>
+
+<p>I didn&rsquo;t know deploying Scala web applications might be so easy until the very recent Warsaw Scala Enthusiasts meetup when <a href="http://www.meetup.com/WarszawScaLa/members/95521122/">Rafal Krzewski</a> introduced me to one of the two <a href="http://www.scala-sbt.org/">sbt</a> plugins for Docker -  <a href="http://www.scala-sbt.org/sbt-native-packager/">sbt-native-packager</a> (the other is <a href="https://github.com/marcuslonnberg/sbt-docker">sbt-docker</a> that they say is even better).</p>
+
+<p>The blog post shows how easy it is to use Docker as a means of deploying Scala web applications using Play Framework (that actually uses sbt-native-packager under the covers).</p>
+
+<!-- more -->
+
+
+<h2>Creating Play Framework web application</h2>
+
+<p>Create a new web application using Typesafe Activator tool using <code>activator new</code> command:</p>
+
+<pre><code>➜  docker-playground  activator new play-dockerized play-scala
+
+Fetching the latest list of templates...
+
+OK, application "play-dockerized" is being created using the "play-scala" template.
+
+To run "play-dockerized" from the command line, "cd play-dockerized" then:
+/Users/jacek/dev/sandbox/docker-playground/play-dockerized/activator run
+
+To run the test for "play-dockerized" from the command line, "cd play-dockerized" then:
+/Users/jacek/dev/sandbox/docker-playground/play-dockerized/activator test
+
+To run the Activator UI for "play-dockerized" from the command line, "cd play-dockerized" then:
+/Users/jacek/dev/sandbox/docker-playground/play-dockerized/activator ui
+</code></pre>
+
+<p><code>cd</code> the <code>play-dockerized</code> directory and execute <code>sbt run</code> to start the application:</p>
+
+<pre><code>➜  play-dockerized  sbt run
+[info] Loading global plugins from /Users/jacek/.sbt/0.13/plugins
+[info] Updating {file:/Users/jacek/.sbt/0.13/plugins/}global-plugins...
+[info] Resolving org.fusesource.jansi#jansi;1.4 ...
+[info] Done updating.
+[info] Loading project definition from /Users/jacek/dev/sandbox/docker-playground/play-dockerized/project
+[info] Updating {file:/Users/jacek/dev/sandbox/docker-playground/play-dockerized/project/}play-dockerized-build...
+[info] Resolving org.fusesource.jansi#jansi;1.4 ...
+[info] Done updating.
+[info] Set current project to play-dockerized (in build file:/Users/jacek/dev/sandbox/docker-playground/play-dockerized/)
+[info] Updating {file:/Users/jacek/dev/sandbox/docker-playground/play-dockerized/}root...
+[info] Resolving jline#jline;2.12.1 ...
+[info] Done updating.
+
+--- (Running the application, auto-reloading is enabled) ---
+
+[info] p.a.l.c.ActorSystemProvider - Starting application default Akka system: application
+[info] p.c.s.NettyServer - Listening for HTTP on /0:0:0:0:0:0:0:0:9000
+
+(Server started, use Ctrl+D to stop and go back to the console...)
+</code></pre>
+
+<p>You should now be able to access <a href="http://localhost:9000.">http://localhost:9000.</a> It&rsquo;s a vanilla <strong>Play Framework 2.4.2</strong> web application.</p>
+
+<p><img class="left" src="http://blog.jaceklaskowski.pl/images/docker-play-youre-using-play-2-4-2.png" title="Play Framework's default welcome page" ></p>
+
+<h2>Publishing Docker image - <code>docker:publishLocal</code></h2>
+
+<p>Play comes with <strong>sbt-native-packager</strong> plugin so stop the previous command (using Ctrl+D) and execute <code>sbt docker:publishLocal</code>:</p>
+
+<pre><code>➜  play-dockerized  sbt docker:publishLocal
+...
+[info] Digest: sha256:66638b21de4b16af589f54cbd3e2698919efd529583b732a593613f35e813f0b
+[info] Status: Downloaded newer image for java:latest
+[info]  ---&gt; 49ebfec495e1
+[info] Step 1 : WORKDIR /opt/docker
+[info]  ---&gt; Running in ac01dbacaf66
+[info]  ---&gt; 271ea5c0bd1e
+[info] Removing intermediate container ac01dbacaf66
+[info] Step 2 : ADD opt /opt
+[info]  ---&gt; 9c423c2d2f0c
+[info] Removing intermediate container 3087077a2680
+[info] Step 3 : RUN chown -R daemon:daemon .
+[info]  ---&gt; Running in bd40460a5e7d
+[info]  ---&gt; aeec9392fc83
+[info] Removing intermediate container bd40460a5e7d
+[info] Step 4 : USER daemon
+[info]  ---&gt; Running in 461907ca0474
+[info]  ---&gt; 4f0ad20b6a7f
+[info] Removing intermediate container 461907ca0474
+[info] Step 5 : ENTRYPOINT bin/play-dockerized
+[info]  ---&gt; Running in 09aa91f09bc5
+[info]  ---&gt; 7f2afe7c4918
+[info] Removing intermediate container 09aa91f09bc5
+[info] Step 6 : CMD
+[info]  ---&gt; Running in 99c12a3604a3
+[info]  ---&gt; 617942a5bc6f
+[info] Removing intermediate container 99c12a3604a3
+[info] Successfully built 617942a5bc6f
+[info] Built image play-dockerized:1.0-SNAPSHOT
+[success] Total time: 101 s, completed Jul 23, 2015 8:31:18 AM
+</code></pre>
+
+<p>That was the exact moment when I realized how clever the sbt-native-packager plugin is to leverage well-known <code>publishLocal</code> task to publish to Docker repository (that&rsquo;s merely scoped to <code>docker</code> to change the way it works).</p>
+
+<p>You&rsquo;ve just created a brand new Docker image <code>play-dockerized:1.0-SNAPSHOT</code>. Use <code>docker images</code> command to check it out:</p>
+
+<pre><code>➜  play-dockerized  docker images
+REPOSITORY          TAG                 IMAGE ID            CREATED             VIRTUAL SIZE
+play-dockerized     1.0-SNAPSHOT        617942a5bc6f        2 minutes ago       892.7 MB
+</code></pre>
+
+<h2>Docker my time!</h2>
+
+<p>You can start a container off the <code>play-dockerized</code> image using <code>docker run</code> command:</p>
+
+<pre><code>➜  play-dockerized  docker run --name play-8080 -p 8080:9000 play-dockerized:1.0-SNAPSHOT
+[info] - play.api.libs.concurrent.ActorSystemProvider - Starting application default Akka system: application
+[info] - play.api.Play - Application started (Prod)
+[info] - play.core.server.NettyServer - Listening for HTTP on /0:0:0:0:0:0:0:0:9000
+</code></pre>
+
+<p>The other command line options for <code>docker run</code> are <code>-p</code> to expose port <code>9000</code> outside Docker&rsquo;s virtual network (that&rsquo;s locally available as <code>8080</code>) and <code>--name</code> to give the container a friendly name (instead of relying on a cryptic hash).</p>
+
+<p><img class="left" src="http://blog.jaceklaskowski.pl/images/docker-play-new-app-ready.png" title="Play Framework inside Docker" ></p>
+
+<p>In another terminal execute <code>docker ps</code> to see the container running:</p>
+
+<pre><code>➜  play-dockerized  docker ps -a
+CONTAINER ID        IMAGE                          COMMAND                CREATED             STATUS              PORTS                    NAMES
+511ca96e64a4        play-dockerized:1.0-SNAPSHOT   "bin/play-dockerized   10 minutes ago      Up 5 seconds        0.0.0.0:8080-&gt;9000/tcp   play-8080
+</code></pre>
+
+<p>Stop the container with <code>docker stop play-8080</code>. The Play Framework web app is no longer accessible. To start it again, execute <code>docker start play-8080</code>.</p>
+
+<h2>Summary</h2>
+
+<p>It&rsquo;s so easy to have a Docker image of a Play Framework/Scala web application that I hardly believe I could have lived without using it for so long. Once an application becomes a Docker image you can use the other commands to play with it, mainly to deploy the image to any environment to have a consistent and exact environment. Love it so much now. And you can deploy the image to <a href="https://hub.docker.com/">Docker Hub</a> (similarly how you publish the sources of your excellent applications to GitHub).</p>
+
+<p>Let me know what you think about the topic of the blog post in the <a href="#disqus_thread">Comments</a> section below or contact me at <a href="&#109;&#x61;&#105;&#x6c;&#116;&#111;&#x3a;&#x6a;&#x61;&#99;&#101;&#107;&#64;&#106;&#x61;&#112;&#x69;&#x6c;&#x61;&#46;&#x70;&#108;&#46;">&#x6a;&#97;&#x63;&#101;&#x6b;&#64;&#x6a;&#x61;&#112;&#105;&#108;&#x61;&#46;&#112;&#108;&#x2e;</a> Follow the author as <a href="https://twitter.com/jaceklaskowski">@jaceklaskowski</a> on Twitter, too.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Real-time Data Processing Using Apache Kafka and Spark Streaming (and Scala and Sbt)]]></title>
@@ -249,7 +388,7 @@ Time: 1437462720000 ms
 
 <p>Once the data&rsquo;s processed, Spark Streaming could be publishing results into yet another Kafka topic and/or store in Hadoop for later. It seems I&rsquo;ve got a very powerful setup I&rsquo;m not yet fully aware of where I should apply to.</p>
 
-<p>Let me know what you think about the topic<sup id="fnref:2"><a href="#fn:2" rel="footnote">2</a></sup> of the blog post in the <a href="#disqus_thread">Comments</a> section below or contact me at <a href="&#109;&#97;&#x69;&#x6c;&#x74;&#x6f;&#58;&#x6a;&#97;&#x63;&#x65;&#107;&#64;&#106;&#97;&#112;&#x69;&#x6c;&#x61;&#x2e;&#x70;&#108;&#x2e;">&#x6a;&#x61;&#99;&#101;&#x6b;&#x40;&#x6a;&#97;&#112;&#105;&#108;&#x61;&#x2e;&#x70;&#x6c;&#46;</a> Follow the author as <a href="https://twitter.com/jaceklaskowski">@jaceklaskowski</a> on Twitter, too.</p>
+<p>Let me know what you think about the topic<sup id="fnref:2"><a href="#fn:2" rel="footnote">2</a></sup> of the blog post in the <a href="#disqus_thread">Comments</a> section below or contact me at <a href="&#x6d;&#97;&#x69;&#x6c;&#x74;&#111;&#58;&#x6a;&#x61;&#x63;&#101;&#x6b;&#x40;&#x6a;&#97;&#112;&#x69;&#108;&#x61;&#46;&#x70;&#x6c;&#x2e;">&#106;&#x61;&#x63;&#101;&#107;&#x40;&#106;&#97;&#112;&#105;&#108;&#97;&#x2e;&#112;&#108;&#46;</a> Follow the author as <a href="https://twitter.com/jaceklaskowski">@jaceklaskowski</a> on Twitter, too.</p>
 <div class="footnotes">
 <hr/>
 <ol>
@@ -512,7 +651,7 @@ hello at 20.07.2015 0:30:46
 
 <p>You may also want to read <a href="http://kafka.apache.org/documentation.html#quickstart">1.3 Quick Start</a> in the official documentation of Apache Kafka.</p>
 
-<p>Let me know what you think about the topic<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup> of the blog post in the <a href="#disqus_thread">Comments</a> section below or contact me at <a href="&#109;&#97;&#105;&#x6c;&#x74;&#111;&#x3a;&#106;&#x61;&#99;&#x65;&#x6b;&#x40;&#106;&#x61;&#112;&#105;&#108;&#97;&#x2e;&#x70;&#x6c;&#x2e;">&#106;&#x61;&#x63;&#101;&#107;&#64;&#x6a;&#97;&#112;&#x69;&#x6c;&#x61;&#46;&#x70;&#108;&#46;</a> Follow the author as <a href="https://twitter.com/jaceklaskowski">@jaceklaskowski</a> on Twitter, too.</p>
+<p>Let me know what you think about the topic<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup> of the blog post in the <a href="#disqus_thread">Comments</a> section below or contact me at <a href="&#109;&#x61;&#x69;&#108;&#x74;&#111;&#x3a;&#x6a;&#97;&#99;&#101;&#x6b;&#x40;&#106;&#x61;&#112;&#x69;&#x6c;&#x61;&#46;&#112;&#108;&#x2e;">&#x6a;&#97;&#x63;&#x65;&#x6b;&#x40;&#106;&#97;&#x70;&#x69;&#108;&#x61;&#46;&#112;&#108;&#x2e;</a> Follow the author as <a href="https://twitter.com/jaceklaskowski">@jaceklaskowski</a> on Twitter, too.</p>
 <div class="footnotes">
 <hr/>
 <ol>
@@ -708,7 +847,7 @@ wurstmeister/zookeeper   latest              a3075a3d32da        9 months ago   
 
 <p>With these two docker images - <a href="https://registry.hub.docker.com/u/wurstmeister/kafka/">wurstmeister/kafka</a> and <a href="https://registry.hub.docker.com/u/wurstmeister/zookeeper/">wurstmeister/zookeeper</a> - you can run <strong>Apache Kafka</strong> without much changing your local workstation to install it together with the necessary components like Apache ZooKeeper. You don&rsquo;t need to worry about upgrading the software and its dependencies except docker itself (and boot2docker if you&rsquo;re lucky to be on Mac OS). That saves you from spending time on installation and ensures proper functioning of your machine and the software. Moreover, the Docker images could be deployed to other machines and guarantee a consistent environment of the software inside.</p>
 
-<p>Let me know what you think about the topic<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup> of the blog post in the <a href="#disqus_thread">Comments</a> section below or contact me at <a href="&#109;&#x61;&#x69;&#x6c;&#116;&#x6f;&#58;&#106;&#97;&#99;&#x65;&#x6b;&#64;&#x6a;&#97;&#112;&#105;&#108;&#97;&#46;&#112;&#x6c;&#x2e;">&#106;&#x61;&#x63;&#101;&#107;&#x40;&#106;&#x61;&#x70;&#x69;&#108;&#97;&#x2e;&#x70;&#108;&#x2e;</a> Follow the author as <a href="https://twitter.com/jaceklaskowski">@jaceklaskowski</a> on Twitter, too.</p>
+<p>Let me know what you think about the topic<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup> of the blog post in the <a href="#disqus_thread">Comments</a> section below or contact me at <a href="&#x6d;&#x61;&#x69;&#x6c;&#x74;&#x6f;&#58;&#x6a;&#97;&#x63;&#101;&#107;&#64;&#x6a;&#x61;&#x70;&#105;&#x6c;&#x61;&#46;&#x70;&#108;&#x2e;">&#106;&#97;&#99;&#x65;&#107;&#x40;&#x6a;&#97;&#112;&#105;&#x6c;&#97;&#46;&#x70;&#108;&#x2e;</a> Follow the author as <a href="https://twitter.com/jaceklaskowski">@jaceklaskowski</a> on Twitter, too.</p>
 <div class="footnotes">
 <hr/>
 <ol>
@@ -2274,292 +2413,6 @@ res0: Double = 29.787899999999745
 <p>as a kind of placeholder for future tips and tricks<a href="#fnref:1" rev="footnote">&#8617;</a></p></li>
 </ol>
 </div>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[How Much One Ought to Know Eta Expansion]]></title>
-    <link href="http://blog.jaceklaskowski.pl/2013/11/23/how-much-one-ought-to-know-eta-expansion.html"/>
-    <updated>2013-11-23T22:20:23+01:00</updated>
-    <id>http://blog.jaceklaskowski.pl/2013/11/23/how-much-one-ought-to-know-eta-expansion</id>
-    <content type="html"><![CDATA[<p>Have you ever wondered how much you should understand the concept of <strong>eta expansion</strong> to master <a href="http://scala-lang.org/">Scala</a>? I have and hence the page in which I&rsquo;m going to collect the wisdom (dug out of Internet) with its applications.</p>
-
-<!-- more -->
-
-
-<p><strong>NOTE</strong>: The page is supposed to be a Wiki page not a blog post. It&rsquo;s therefore subject to change without notice. When I find out how to use <a href="http://jekyllrb.com/">Jekyll</a> and <a href="http://pages.github.com/">GitHub Pages</a> to power a Wiki-like system, I&rsquo;ll migrate it there right away.</p>
-
-<h2>Eta expansion? Uh, oh, are we in trouble?</h2>
-
-<p>Quoting the answer to <a href="http://stackoverflow.com/a/155655/1305344">What is the difference between a method and a function</a> on StackOverflow:</p>
-
-<blockquote><p>A function is a piece of code that is called by name. It can be passed data to operate on (ie. the parameters) and can optionally return data (the return value).</p>
-
-<p>All data that is passed to a function is explicitly passed.</p>
-
-<p>A method is a piece of code that is called by name that is associated with an object. In most respects it is identical to a function except for two key differences.</p>
-
-<p>1. It is implicitly passed the object for which it was called</p>
-
-<p>2. It is able to operate on data that is contained within the class (remembering that an object is an instance of a class - the class is the definition, the object is an instance of that data)"</p></blockquote>
-
-<p>Let&rsquo;s start with the following example.</p>
-
-<pre><code>scala&gt; def foo = 5
-foo: Int
-
-scala&gt; val f = foo _
-f: () =&gt; Int = &lt;function0&gt;
-</code></pre>
-
-<p>Do you happen to know the name of <em>the (implicit) conversion</em> when the underscore is applied to a method (as if it stood for its parameters) and you eventually end up with a value - <em>a function</em> (that some call <em>a function value</em>)? That&rsquo;s <em>eta expansion</em> which is a means of coercing (converting) methods into functions in Scala.</p>
-
-<p><code>f</code> is a value of <code>() =&gt; Int</code> type or an instance of <code>&lt;function0&gt;</code>. It may have been written as:</p>
-
-<pre><code>scala&gt; def foo() = 5
-foo: ()Int
-</code></pre>
-
-<p>Almost.</p>
-
-<p>Can you spot the difference between these three definitions: <code>def foo = 5</code> and <code>def foo() = 5</code> and <code>val f = foo _</code>?</p>
-
-<p>In Scala, <strong>a function</strong> is <em>always</em> a (object) value of a function type that&rsquo;s a syntactic sugar for a <code>Function</code> trait, e.g. <code>Int =&gt; Boolean</code> corresponds to Function1[Int, Boolean]. As a value the function value can be assigned to a name, i.e. can be named.</p>
-
-<p>On the other hand, <strong>a method</strong> of a class is <em>always</em> a member of the type the class represents and as such doesn&rsquo;t have its own type. It has a signature, though, e.g. <code>()Int</code> that looks like a function type, e.g. <code>() =&gt; Int</code>.</p>
-
-<p>A method <em>always</em> belongs to an instance of a class yet looks similar to a function signature-wise.</p>
-
-<p>Think of a method, say <code>foo</code>, that accepts a value of a function type.</p>
-
-<pre><code>scala&gt; def foo(bar: () =&gt; Int) = bar()
-baz: (bar: () =&gt; Int)Int
-
-scala&gt; object A {
-     |   def baz() = 5
-     | }
-defined module A
-
-scala&gt; foo(A.baz)
-res13: Int = 5
-
-scala&gt; val ff = A.baz _
-ff: () =&gt; Int = &lt;function0&gt;
-
-scala&gt; foo(ff)
-res14: Int = 5
-</code></pre>
-
-<p>During compilation the call <code>foo(A.baz)</code> was transformed to a call to a function value that in turn calls the method <code>baz</code> on the <code>A</code> sole object. It may have been written as:</p>
-
-<pre><code>scala&gt; val fv: () =&gt; Int = () =&gt; A.baz()
-fv: () =&gt; Int = &lt;function0&gt;
-
-scala&gt; foo(fv)
-res15: Int = 5
-</code></pre>
-
-<p>The function value <code>fv</code> is of <code>Function0[Int]</code> type.</p>
-
-<pre><code>scala&gt; val fv: Function0[Int] = new Function0[Int] {
-     |   def apply() = A.baz()
-     | }
-fv: () =&gt; Int = &lt;function0&gt;
-
-scala&gt; foo(fv)
-res17: Int = 5
-</code></pre>
-
-<p>Quoting the answer to <a href="http://stackoverflow.com/a/6651099/1305344">When do I have to treat my methods as partially applied functions in Scala?</a> on StackOverflow:</p>
-
-<blockquote><p>You have to write the <code>_</code> whenever the compiler is not explicitly expecting a <code>Function</code> object.</p></blockquote>
-
-<pre><code>scala&gt; def foo(n: Int) = n
-foo: (n: Int)Int
-
-scala&gt; val bar = foo
-&lt;console&gt;:8: error: missing arguments for method foo;
-follow this method with `_' if you want to treat it as a partially applied function
-       val bar = foo
-                 ^
-
-scala&gt; val bar: Int =&gt; Int = foo
-bar: Int =&gt; Int = &lt;function1&gt;
-</code></pre>
-
-<h2>Uniform access principle</h2>
-
-<p>Interestingly, uniform access principle makes understanding eta expansion a bit tricker.</p>
-
-<pre><code>scala&gt; object A {
-     |   def foo(bar: () =&gt; Int) = 1
-     |   def foo(n: Int) = 2
-     | }
-defined module A
-
-scala&gt; def f() = 4
-f: ()Int
-
-scala&gt; def baz() = 4
-baz: ()Int
-</code></pre>
-
-<p>Guess what happens when you execute <code>A.foo(baz)</code>.</p>
-
-<pre><code>scala&gt; A.foo(baz)
-res0: Int = 2
-</code></pre>
-
-<p>What about calling <code>A.foo</code> with <code>baz _</code>?</p>
-
-<pre><code>scala&gt; A.foo(baz _)
-res1: Int = 1
-</code></pre>
-
-<p>Can you explain why? Visit <a href="http://stackoverflow.com/q/17324247/1305344" title="Eta-expansion between methods and functions with overloaded methods in Scala">Eta-expansion between methods and functions with overloaded methods in Scala</a> on StackOverflow for more information.</p>
-
-<p>There&rsquo;s another example that is not easy to explain.</p>
-
-<pre><code>scala&gt; def fm: Map[Int, String] = Map(0 -&gt; "zero")
-fm: Map[Int,String]
-
-scala&gt; fm.isInstanceOf[Function1[Int, String]]
-res15: Boolean = true
-
-scala&gt; def g: Int =&gt; String = fm
-g: Int =&gt; String
-</code></pre>
-
-<p>Since <code>fm</code> is of the <code>Map[Int, String]</code> type and <a href="http://www.scala-lang.org/api/current/index.html#scala.collection.immutable.Map">scala.collection.immutable.Map</a> inherits from <a href="http://www.scala-lang.org/api/current/index.html#scala.Function1">scala.Function1</a>, one can assign <code>fm</code> to <code>g</code>. That works fine.</p>
-
-<p>Can you explain why the following sample doesn&rsquo;t work?</p>
-
-<pre><code>scala&gt; def fm(): Map[Int, String] = Map(0 -&gt; "zero")
-fm: ()Map[Int,String]
-
-scala&gt; def g: Int =&gt; String = fm
-&lt;console&gt;:8: error: type mismatch;
- found   : () =&gt; Map[Int,String]
- required: Int =&gt; String
-       def g: Int =&gt; String = fm
-                              ^
-</code></pre>
-
-<p>Note that <code>fm</code> got merely the brackets and they&rsquo;re indeed equal.</p>
-
-<pre><code>scala&gt; fm() == fm
-res16: Boolean = true
-</code></pre>
-
-<p>See <a href="https://issues.scala-lang.org/browse/SI-7187">SI-7187 eta expansion should not precede empty application</a>.</p>
-
-<h2>Eta expansion and overloaded methods</h2>
-
-<p>When there&rsquo;s an object of a type with overloaded methods the underscore <code>_</code> may yield different results.</p>
-
-<p>It may resolve to a one-or-more-argument method.</p>
-
-<pre><code>scala&gt; object A {
-     |   def foo = 5
-     |   def foo(n: Int) = 10
-     | }
-defined module A
-
-scala&gt; A.foo _
-res6: () =&gt; Int = &lt;function0&gt;
-</code></pre>
-
-<p>The underscore insists on specifying the type of a function value when there&rsquo;s ambiguity regarding the method it should be applied to. And it doesn&rsquo;t matter what the order of parameter types in the overloaded methods is.</p>
-
-<pre><code>scala&gt; object A {
-     |   def foo(n: Int) = 5
-     |   def foo(s: String, n: Int) = 10
-     | }
-defined module A
-
-scala&gt; A.foo _
-&lt;console&gt;:9: error: ambiguous reference to overloaded definition,
-both method foo in object A of type (n: Int, m: Int)Int
-and  method foo in object A of type (n: Int)Int
-match expected type ?
-              A.foo _
-                ^
-
-scala&gt; A.foo _ : ((Int, Int) =&gt; Int)
-res5: (Int, Int) =&gt; Int = &lt;function2&gt;
-</code></pre>
-
-<p>Interestingly, the underscore is more forgiving (regarding the explicit type of the function value) when there are two overloaded methods of which one accepts a single parameter of the type <a href="http://www.scala-lang.org/api/current/scala/AnyRef.html">AnyRef</a>. In such case, the other method - the no-AnyRef method is chosen.</p>
-
-<pre><code>scala&gt; object A {
-     |   def foo(a: AnyRef) = 5
-     |   def foo(s: String, n: Int) = 10
-     | }
-defined module A
-
-scala&gt; A.foo _
-res5: (String, Int) =&gt; Int = &lt;function2&gt;
-</code></pre>
-
-<h2>Use case - Abstracting over arity</h2>
-
-<p>With eta expansion you may forget about the arity of a method.</p>
-
-<pre><code>scala&gt; class A {
-     |   def foo(x: Int, y: Int, z: Int) = 5
-     | }
-defined class A
-
-scala&gt; def bar(x: A) = x.foo _
-bar: (x: A)(Int, Int, Int) =&gt; Int
-</code></pre>
-
-<p>It&rsquo;s certainly far simpler (and still type-safe) than doing it explicitly.</p>
-
-<pre><code>scala&gt; def bar(x: A) = x.foo(_, _, _)
-bar: (x: A)(Int, Int, Int) =&gt; Int
-</code></pre>
-
-<p>When there is another three-argument method in the <code>A</code> class, you&rsquo;d need to specify the parameter types explicitly that makes using the approach even more troublesome.</p>
-
-<pre><code>scala&gt; def bar(x: A) = x.foo(_: Int, _: Int, _: Int)
-bar: (x: A)(Int, Int, Int) =&gt; Int
-</code></pre>
-
-<h2>Scala Specification about Eta Expansion</h2>
-
-<p>In <strong>6.26.5 Eta Expansion</strong> <a href="http://scala-lang.org/files/archive/nightly/pdfs/ScalaReference.pdf">Scala Language Specification (PDF)</a> says:</p>
-
-<blockquote><p>Eta-expansion converts an expression of method type to an equivalent expression
-of function type.</p></blockquote>
-
-<p>The section belongs to <strong>6.26 Implicit Conversions</strong> that gives another perspective on what eta expansion is - it&rsquo;s <em>an implicit converstion</em>.</p>
-
-<p>In <strong>6.26 Implicit Conversions</strong> the Scala Language Specification says:</p>
-
-<blockquote><p>Implicit conversions can be applied to expressions whose type does not match their
-expected type, to qualifiers in selections, and to unapplied methods.</p></blockquote>
-
-<p>It goes further into when a type is compatible to another.</p>
-
-<blockquote><p>We say, a type T is compatible to a type U if T conforms to U after applying eta-expansion (§6.26.5) and view applications (§7.3).</p></blockquote>
-
-<p>In <strong>6.26.2 Method Conversions</strong> the Scala Language Specification says:</p>
-
-<blockquote><p><strong>Eta Expansion.</strong> Otherwise, if the method is not a constructor, and the expected
-type pt is a function type (Ts') => T', eta-expansion (§6.26.5) is performed on the
-expression e.</p></blockquote>
-
-<h2>References (where wisdom came from)</h2>
-
-<ul>
-<li><a href="http://gleichmann.wordpress.com/2011/01/09/functional-scala-turning-methods-into-functions/">Functional Scala: Turning Methods into Functions (or WTF is eta expansion?)</a></li>
-<li><a href="https://groups.google.com/d/msg/scala-language/FrDJiagB8CY/3NVmhdKe0vgJ">Eta expansion, meet overloading</a></li>
-<li><a href="http://scala-lang.org/files/archive/nightly/pdfs/ScalaReference.pdf">Scala Language Specification (PDF)</a></li>
-<li><a href="http://stackoverflow.com/q/17324247/1305344">Eta-expansion between methods and functions with overloaded methods in Scala</a></li>
-<li><a href="http://tpolecat.github.io/2014/06/09/methods-functions.html">Methods are not Functions</a></li>
-</ul>
 
 ]]></content>
   </entry>

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Sbt | Mastering FP and OO with Scala]]></title>
   <link href="http://blog.jaceklaskowski.pl/categories/sbt/atom.xml" rel="self"/>
   <link href="http://blog.jaceklaskowski.pl/"/>
-  <updated>2015-07-22T11:10:47+02:00</updated>
+  <updated>2015-07-25T00:07:45+02:00</updated>
   <id>http://blog.jaceklaskowski.pl/</id>
   <author>
     <name><![CDATA[Jacek Laskowski]]></name>
@@ -12,6 +12,138 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Docker Your Scala Web Application (Play Framework)]]></title>
+    <link href="http://blog.jaceklaskowski.pl/2015/07/24/docker-your-scala-web-application-play-framework.html"/>
+    <updated>2015-07-24T23:03:07+02:00</updated>
+    <id>http://blog.jaceklaskowski.pl/2015/07/24/docker-your-scala-web-application-play-framework</id>
+    <content type="html"><![CDATA[We're experimenting with [Docker](https://www.docker.com/) in the [DeepSense.io](http://deepsense.io/) project. There might be a case or two in the other Scala company in Warsaw - [HCore](http://www.hcore.com/). I've also been noticing interest in using Docker in Scala projects in [Javeo](http://www.javeo.eu/) where the [Warsaw Scala Enthusiasts](http://www.meetup.com/WarszawScaLa/) meetups are taking place. The Docker space seems very hot for Scala developers in Warsaw, Poland. And these companies *are* hiring Scala developers!
+
+I didn't know deploying Scala web applications might be so easy until the very recent Warsaw Scala Enthusiasts meetup when [Rafal Krzewski](http://www.meetup.com/WarszawScaLa/members/95521122/) introduced me to one of the two [sbt](http://www.scala-sbt.org/) plugins for Docker -  [sbt-native-packager](http://www.scala-sbt.org/sbt-native-packager/) (the other is [sbt-docker](https://github.com/marcuslonnberg/sbt-docker) that they say is even better).
+
+The blog post shows how easy it is to use Docker as a means of deploying Scala web applications using Play Framework (that actually uses sbt-native-packager under the covers).
+
+<!-- more -->
+
+## Creating Play Framework web application
+
+Create a new web application using Typesafe Activator tool using `activator new` command:
+
+    ➜  docker-playground  activator new play-dockerized play-scala
+
+    Fetching the latest list of templates...
+
+    OK, application "play-dockerized" is being created using the "play-scala" template.
+
+    To run "play-dockerized" from the command line, "cd play-dockerized" then:
+    /Users/jacek/dev/sandbox/docker-playground/play-dockerized/activator run
+
+    To run the test for "play-dockerized" from the command line, "cd play-dockerized" then:
+    /Users/jacek/dev/sandbox/docker-playground/play-dockerized/activator test
+
+    To run the Activator UI for "play-dockerized" from the command line, "cd play-dockerized" then:
+    /Users/jacek/dev/sandbox/docker-playground/play-dockerized/activator ui
+
+`cd` the `play-dockerized` directory and execute `sbt run` to start the application:
+
+    ➜  play-dockerized  sbt run
+    [info] Loading global plugins from /Users/jacek/.sbt/0.13/plugins
+    [info] Updating {file:/Users/jacek/.sbt/0.13/plugins/}global-plugins...
+    [info] Resolving org.fusesource.jansi#jansi;1.4 ...
+    [info] Done updating.
+    [info] Loading project definition from /Users/jacek/dev/sandbox/docker-playground/play-dockerized/project
+    [info] Updating {file:/Users/jacek/dev/sandbox/docker-playground/play-dockerized/project/}play-dockerized-build...
+    [info] Resolving org.fusesource.jansi#jansi;1.4 ...
+    [info] Done updating.
+    [info] Set current project to play-dockerized (in build file:/Users/jacek/dev/sandbox/docker-playground/play-dockerized/)
+    [info] Updating {file:/Users/jacek/dev/sandbox/docker-playground/play-dockerized/}root...
+    [info] Resolving jline#jline;2.12.1 ...
+    [info] Done updating.
+
+    --- (Running the application, auto-reloading is enabled) ---
+
+    [info] p.a.l.c.ActorSystemProvider - Starting application default Akka system: application
+    [info] p.c.s.NettyServer - Listening for HTTP on /0:0:0:0:0:0:0:0:9000
+
+    (Server started, use Ctrl+D to stop and go back to the console...)
+
+You should now be able to access http://localhost:9000. It's a vanilla **Play Framework 2.4.2** web application.
+
+<img class="left" src="/images/docker-play-youre-using-play-2-4-2.png" title="Play Framework's default welcome page" >
+
+## Publishing Docker image - `docker:publishLocal`
+
+Play comes with **sbt-native-packager** plugin so stop the previous command (using Ctrl+D) and execute `sbt docker:publishLocal`:
+
+    ➜  play-dockerized  sbt docker:publishLocal
+    ...
+    [info] Digest: sha256:66638b21de4b16af589f54cbd3e2698919efd529583b732a593613f35e813f0b
+    [info] Status: Downloaded newer image for java:latest
+    [info]  ---> 49ebfec495e1
+    [info] Step 1 : WORKDIR /opt/docker
+    [info]  ---> Running in ac01dbacaf66
+    [info]  ---> 271ea5c0bd1e
+    [info] Removing intermediate container ac01dbacaf66
+    [info] Step 2 : ADD opt /opt
+    [info]  ---> 9c423c2d2f0c
+    [info] Removing intermediate container 3087077a2680
+    [info] Step 3 : RUN chown -R daemon:daemon .
+    [info]  ---> Running in bd40460a5e7d
+    [info]  ---> aeec9392fc83
+    [info] Removing intermediate container bd40460a5e7d
+    [info] Step 4 : USER daemon
+    [info]  ---> Running in 461907ca0474
+    [info]  ---> 4f0ad20b6a7f
+    [info] Removing intermediate container 461907ca0474
+    [info] Step 5 : ENTRYPOINT bin/play-dockerized
+    [info]  ---> Running in 09aa91f09bc5
+    [info]  ---> 7f2afe7c4918
+    [info] Removing intermediate container 09aa91f09bc5
+    [info] Step 6 : CMD
+    [info]  ---> Running in 99c12a3604a3
+    [info]  ---> 617942a5bc6f
+    [info] Removing intermediate container 99c12a3604a3
+    [info] Successfully built 617942a5bc6f
+    [info] Built image play-dockerized:1.0-SNAPSHOT
+    [success] Total time: 101 s, completed Jul 23, 2015 8:31:18 AM
+
+That was the exact moment when I realized how clever the sbt-native-packager plugin is to leverage well-known `publishLocal` task to publish to Docker repository (that's merely scoped to `docker` to change the way it works).
+
+You've just created a brand new Docker image `play-dockerized:1.0-SNAPSHOT`. Use `docker images` command to check it out:
+
+    ➜  play-dockerized  docker images
+    REPOSITORY          TAG                 IMAGE ID            CREATED             VIRTUAL SIZE
+    play-dockerized     1.0-SNAPSHOT        617942a5bc6f        2 minutes ago       892.7 MB
+
+## Docker my time!
+
+You can start a container off the `play-dockerized` image using `docker run` command:
+
+    ➜  play-dockerized  docker run --name play-8080 -p 8080:9000 play-dockerized:1.0-SNAPSHOT
+    [info] - play.api.libs.concurrent.ActorSystemProvider - Starting application default Akka system: application
+    [info] - play.api.Play - Application started (Prod)
+    [info] - play.core.server.NettyServer - Listening for HTTP on /0:0:0:0:0:0:0:0:9000
+
+The other command line options for `docker run` are `-p` to expose port `9000` outside Docker's virtual network (that's locally available as `8080`) and `--name` to give the container a friendly name (instead of relying on a cryptic hash).
+
+<img class="left" src="/images/docker-play-new-app-ready.png" title="Play Framework inside Docker" >
+
+In another terminal execute `docker ps` to see the container running:
+
+    ➜  play-dockerized  docker ps -a
+    CONTAINER ID        IMAGE                          COMMAND                CREATED             STATUS              PORTS                    NAMES
+    511ca96e64a4        play-dockerized:1.0-SNAPSHOT   "bin/play-dockerized   10 minutes ago      Up 5 seconds        0.0.0.0:8080->9000/tcp   play-8080
+
+Stop the container with `docker stop play-8080`. The Play Framework web app is no longer accessible. To start it again, execute `docker start play-8080`.
+
+## Summary
+
+It's so easy to have a Docker image of a Play Framework/Scala web application that I hardly believe I could have lived without using it for so long. Once an application becomes a Docker image you can use the other commands to play with it, mainly to deploy the image to any environment to have a consistent and exact environment. Love it so much now. And you can deploy the image to [Docker Hub](https://hub.docker.com/) (similarly how you publish the sources of your excellent applications to GitHub).
+
+Let me know what you think about the topic of the blog post in the [Comments](#disqus_thread) section below or contact me at jacek@japila.pl. Follow the author as [@jaceklaskowski](https://twitter.com/jaceklaskowski) on Twitter, too.
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Real-time Data Processing Using Apache Kafka and Spark Streaming (and Scala and Sbt)]]></title>
@@ -449,24 +581,6 @@ If you happened to want to see the code in action, execute `sbt consoleProject` 
 </span><span class='line'>
 </span><span class='line'>scala&gt; val s = sfk(init.ScopedKey[Int](scope=5, key=number))
 </span><span class='line'>s: String = 5:number...ScopedKey(5,number)</span></code></pre></td></tr></table></div></figure>]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Beginner "Guide" to Sbt 0.13 and IntelliJ IDEA 13]]></title>
-    <link href="http://blog.jaceklaskowski.pl/2013/12/07/beginner-guide-to-sbt-0-dot-13-and-intellij-idea-13.html"/>
-    <updated>2013-12-07T16:39:37+01:00</updated>
-    <id>http://blog.jaceklaskowski.pl/2013/12/07/beginner-guide-to-sbt-0-dot-13-and-intellij-idea-13</id>
-    <content type="html"><![CDATA[<img class="left" src="/images/intellij-idea-13-new-logo.png" title="The logo of IntelliJ IDEA 13" > It has not been very long ago when the only way to work with [sbt](http://www.scala-sbt.org/) projects in [IntelliJ IDEA](http://www.jetbrains.com/idea/) was to use the [sbt-idea](https://github.com/mpeltonen/sbt-idea) plugin that aimed at *"creating IntelliJ IDEA project files"*.
-
-[With the recent release of IntelliJ IDEA 13](http://www.jetbrains.com/idea/whatsnew/) (build: 133.193,  released: December 3, 2013) it's no longer true - the version comes with built-in sbt support and the support is available in [the free Community Edition](http://www.jetbrains.com/idea/download/index.html), too.
-
-My recent, rather quite frequent visits on [StackOverflow](http://stackoverflow.com/) have showed that there's one question very often asked - **How to start using sbt with IntelliJ IDEA?** It turns out that the latest version of IntelliJ IDEA 13 squashed it pretty neatly and the built-in sbt support made the question irrelevant.
-
-Unless it changes, the page remains empty[^1]. What a surprise, isn't it? I've always been thinking about writing the best beginner guide and here it is...at long last!
-
-On to querying [StackOverflow's #sbt tag](http://stackoverflow.com/questions/tagged/sbt) for questions about *a* sbt support in IntelliJ IDEA 13.
-
-[^1]: as a kind of placeholder for future tips and tricks]]></content>
   </entry>
   
 </feed>

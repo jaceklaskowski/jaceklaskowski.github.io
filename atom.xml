@@ -4,7 +4,7 @@
   <title><![CDATA[Mastering FP and OO with Scala]]></title>
   <link href="http://blog.jaceklaskowski.pl/atom.xml" rel="self"/>
   <link href="http://blog.jaceklaskowski.pl/"/>
-  <updated>2015-07-25T00:07:45+02:00</updated>
+  <updated>2015-08-17T11:54:20+02:00</updated>
   <id>http://blog.jaceklaskowski.pl/</id>
   <author>
     <name><![CDATA[Jacek Laskowski]]></name>
@@ -12,6 +12,78 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Why Docker - Writing Docs Using Jekyll]]></title>
+    <link href="http://blog.jaceklaskowski.pl/2015/08/17/why-docker-writing-docs-using-jekyll.html"/>
+    <updated>2015-08-17T11:06:45+02:00</updated>
+    <id>http://blog.jaceklaskowski.pl/2015/08/17/why-docker-writing-docs-using-jekyll</id>
+    <content type="html"><![CDATA[<p><strong>Spoiler</strong> I&rsquo;m so much into <a href="https://www.docker.com/">Docker</a> that I could sing songs about how much it made my life easier. And yours soon, too.</p>
+
+<p>Just today I&rsquo;ve got a request to review changes to introduce <a href="http://jekyllrb.com/">Jekyll</a> as the documentation framework. I was earlier proposing it myself so I knew what the outcome of the review could be - APPROVED.</p>
+
+<p><em>But&hellip;</em></p>
+
+<p>I also knew that the guy who proposed the change was fighting the installation of Ruby gems and Jekyll to have a complete working environment for the documentation system on his own laptop. He was on Linux while I&rsquo;m on Mac OS. He finally got it sorted out, but the final solution was not satisfactory to me - he installed additional dependencies onto his local machine directly and suggested the very same steps in README so others could follow his steps. I simply couldn&rsquo;t approve it. Sorry.</p>
+
+<p>The alternative was to use Docker and the <a href="https://github.com/jekyll/docker-jekyll">docker-jekyll</a> image. It makes Jekyll running in a self-contained container with no system-wide interaction with the local machine. And it&rsquo;s officially supported and maintained by the Jekyll project itself.</p>
+
+<!-- more -->
+
+
+<h2>Using Jekyll inside Docker</h2>
+
+<p>The steps to use Jekyll without installing Ruby, gems and other dependencies locally is to use the <a href="https://github.com/jekyll/docker-jekyll">docker-jekyll</a> image. It&rsquo;s very safe because it&rsquo;s a self-contained image and I&rsquo;m not &ldquo;infecting&rdquo; my local working machine in any way (except installing Docker and pulling the image, but that&rsquo;s acceptable).</p>
+
+<p>Install Docker on your platform and do the following.</p>
+
+<p>Go to the <code>docs</code> directory where your documentation lives and execute:</p>
+
+<pre><code>docker run --rm --volume=$(pwd):/srv/jekyll -t -p 4000:4000 jekyll/stable jekyll build
+</code></pre>
+
+<p>It will generate the docs from the sources and save the output into the current working directory (under <code>_site</code>).</p>
+
+<p>Serve the docs using <code>jekyll s</code> which is the default command while spinning up a new docker-jekyll container.</p>
+
+<pre><code>docker run --rm --volume=$(pwd):/srv/jekyll -t --name=jekyll -p 4000:4000 jekyll/stable
+</code></pre>
+
+<p>Mind the name for the container - <strong>jekyll</strong> - so it&rsquo;s easier to work with it later on.</p>
+
+<pre><code>➜  docs git:(39fd9c9) ✗ docker run --rm --volume=$(pwd):/srv/jekyll -t --name=jekyll -p 4000:4000 jekyll/stable
+Configuration file: /srv/jekyll/_config.yml
+            Source: /srv/jekyll
+       Destination: /srv/jekyll/_site
+      Generating...
+                    done.
+ Auto-regeneration: enabled for '/srv/jekyll'
+Configuration file: /srv/jekyll/_config.yml
+    Server address: http://0.0.0.0:4000/
+  Server running... press ctrl-c to stop.
+</code></pre>
+
+<p>Open <a href="http://0.0.0.0:4000/">http://0.0.0.0:4000/</a> and have fun!</p>
+
+<p>For people on Mac OS: You are supposed to use <a href="https://docs.docker.com/machine/">Docker Machine</a> and so the IP address is <code>docker-machine ip dev</code> where <code>dev</code> is the name of the machine.</p>
+
+<p>Stop the container using <code>docker stop jekyll</code>.</p>
+
+<pre><code>➜  docs git:(39fd9c9) ✗ docker ps
+CONTAINER ID        IMAGE               COMMAND              CREATED             STATUS              PORTS                    NAMES
+b6bb07d8b8aa        jekyll/stable       "/usr/bin/startup"   26 seconds ago      Up 26 seconds       0.0.0.0:4000-&gt;4000/tcp   jekyll
+➜  docs git:(39fd9c9) ✗ docker stop jekyll
+jekyll
+➜  docs git:(39fd9c9) ✗ docker ps
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+➜  docs git:(39fd9c9) ✗
+</code></pre>
+
+<p>Happy Dockering!</p>
+
+<p>Let me know what you think about the topic of the blog post in the <a href="#disqus_thread">Comments</a> section below or contact me at <a href="&#109;&#x61;&#x69;&#x6c;&#116;&#x6f;&#58;&#106;&#97;&#x63;&#x65;&#107;&#x40;&#x6a;&#x61;&#112;&#105;&#108;&#x61;&#x2e;&#x70;&#x6c;&#46;">&#106;&#97;&#99;&#x65;&#107;&#64;&#x6a;&#97;&#112;&#105;&#x6c;&#97;&#x2e;&#112;&#108;&#x2e;</a> Follow the author as <a href="https://twitter.com/jaceklaskowski">@jaceklaskowski</a> on Twitter, too.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Docker Your Scala Web Application (Play Framework)]]></title>
@@ -148,7 +220,7 @@ CONTAINER ID        IMAGE                          COMMAND                CREATE
 
 <p>It&rsquo;s so easy to have a Docker image of a Play Framework/Scala web application that I hardly believe I could have lived without using it for so long. Once an application becomes a Docker image you can use the other commands to play with it, mainly to deploy the image to any environment to have a consistent and exact environment. Love it so much now. And you can deploy the image to <a href="https://hub.docker.com/">Docker Hub</a> (similarly how you publish the sources of your excellent applications to GitHub).</p>
 
-<p>Let me know what you think about the topic of the blog post in the <a href="#disqus_thread">Comments</a> section below or contact me at <a href="&#109;&#x61;&#105;&#x6c;&#116;&#111;&#x3a;&#x6a;&#x61;&#99;&#101;&#107;&#64;&#106;&#x61;&#112;&#x69;&#x6c;&#x61;&#46;&#x70;&#108;&#46;">&#x6a;&#97;&#x63;&#101;&#x6b;&#64;&#x6a;&#x61;&#112;&#105;&#108;&#x61;&#46;&#112;&#108;&#x2e;</a> Follow the author as <a href="https://twitter.com/jaceklaskowski">@jaceklaskowski</a> on Twitter, too.</p>
+<p>Let me know what you think about the topic of the blog post in the <a href="#disqus_thread">Comments</a> section below or contact me at <a href="&#109;&#97;&#x69;&#x6c;&#116;&#111;&#x3a;&#106;&#97;&#99;&#101;&#x6b;&#64;&#x6a;&#x61;&#x70;&#x69;&#x6c;&#x61;&#46;&#x70;&#x6c;&#x2e;">&#106;&#x61;&#99;&#101;&#x6b;&#x40;&#106;&#x61;&#x70;&#105;&#108;&#97;&#46;&#112;&#x6c;&#46;</a> Follow the author as <a href="https://twitter.com/jaceklaskowski">@jaceklaskowski</a> on Twitter, too.</p>
 ]]></content>
   </entry>
   
@@ -388,7 +460,7 @@ Time: 1437462720000 ms
 
 <p>Once the data&rsquo;s processed, Spark Streaming could be publishing results into yet another Kafka topic and/or store in Hadoop for later. It seems I&rsquo;ve got a very powerful setup I&rsquo;m not yet fully aware of where I should apply to.</p>
 
-<p>Let me know what you think about the topic<sup id="fnref:2"><a href="#fn:2" rel="footnote">2</a></sup> of the blog post in the <a href="#disqus_thread">Comments</a> section below or contact me at <a href="&#x6d;&#97;&#x69;&#x6c;&#x74;&#111;&#58;&#x6a;&#x61;&#x63;&#101;&#x6b;&#x40;&#x6a;&#97;&#112;&#x69;&#108;&#x61;&#46;&#x70;&#x6c;&#x2e;">&#106;&#x61;&#x63;&#101;&#107;&#x40;&#106;&#97;&#112;&#105;&#108;&#97;&#x2e;&#112;&#108;&#46;</a> Follow the author as <a href="https://twitter.com/jaceklaskowski">@jaceklaskowski</a> on Twitter, too.</p>
+<p>Let me know what you think about the topic<sup id="fnref:2"><a href="#fn:2" rel="footnote">2</a></sup> of the blog post in the <a href="#disqus_thread">Comments</a> section below or contact me at <a href="&#109;&#97;&#105;&#108;&#116;&#x6f;&#x3a;&#x6a;&#x61;&#99;&#101;&#x6b;&#64;&#106;&#x61;&#112;&#105;&#x6c;&#x61;&#x2e;&#112;&#108;&#x2e;">&#x6a;&#97;&#x63;&#101;&#x6b;&#x40;&#x6a;&#97;&#x70;&#x69;&#108;&#x61;&#46;&#112;&#108;&#x2e;</a> Follow the author as <a href="https://twitter.com/jaceklaskowski">@jaceklaskowski</a> on Twitter, too.</p>
 <div class="footnotes">
 <hr/>
 <ol>
@@ -651,7 +723,7 @@ hello at 20.07.2015 0:30:46
 
 <p>You may also want to read <a href="http://kafka.apache.org/documentation.html#quickstart">1.3 Quick Start</a> in the official documentation of Apache Kafka.</p>
 
-<p>Let me know what you think about the topic<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup> of the blog post in the <a href="#disqus_thread">Comments</a> section below or contact me at <a href="&#109;&#x61;&#x69;&#108;&#x74;&#111;&#x3a;&#x6a;&#97;&#99;&#101;&#x6b;&#x40;&#106;&#x61;&#112;&#x69;&#x6c;&#x61;&#46;&#112;&#108;&#x2e;">&#x6a;&#97;&#x63;&#x65;&#x6b;&#x40;&#106;&#97;&#x70;&#x69;&#108;&#x61;&#46;&#112;&#108;&#x2e;</a> Follow the author as <a href="https://twitter.com/jaceklaskowski">@jaceklaskowski</a> on Twitter, too.</p>
+<p>Let me know what you think about the topic<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup> of the blog post in the <a href="#disqus_thread">Comments</a> section below or contact me at <a href="&#x6d;&#97;&#x69;&#x6c;&#x74;&#x6f;&#x3a;&#106;&#x61;&#99;&#101;&#107;&#64;&#x6a;&#97;&#112;&#105;&#x6c;&#x61;&#46;&#112;&#x6c;&#x2e;">&#106;&#97;&#99;&#x65;&#x6b;&#x40;&#106;&#97;&#112;&#105;&#108;&#x61;&#x2e;&#x70;&#108;&#46;</a> Follow the author as <a href="https://twitter.com/jaceklaskowski">@jaceklaskowski</a> on Twitter, too.</p>
 <div class="footnotes">
 <hr/>
 <ol>
@@ -847,7 +919,7 @@ wurstmeister/zookeeper   latest              a3075a3d32da        9 months ago   
 
 <p>With these two docker images - <a href="https://registry.hub.docker.com/u/wurstmeister/kafka/">wurstmeister/kafka</a> and <a href="https://registry.hub.docker.com/u/wurstmeister/zookeeper/">wurstmeister/zookeeper</a> - you can run <strong>Apache Kafka</strong> without much changing your local workstation to install it together with the necessary components like Apache ZooKeeper. You don&rsquo;t need to worry about upgrading the software and its dependencies except docker itself (and boot2docker if you&rsquo;re lucky to be on Mac OS). That saves you from spending time on installation and ensures proper functioning of your machine and the software. Moreover, the Docker images could be deployed to other machines and guarantee a consistent environment of the software inside.</p>
 
-<p>Let me know what you think about the topic<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup> of the blog post in the <a href="#disqus_thread">Comments</a> section below or contact me at <a href="&#x6d;&#x61;&#x69;&#x6c;&#x74;&#x6f;&#58;&#x6a;&#97;&#x63;&#101;&#107;&#64;&#x6a;&#x61;&#x70;&#105;&#x6c;&#x61;&#46;&#x70;&#108;&#x2e;">&#106;&#97;&#99;&#x65;&#107;&#x40;&#x6a;&#97;&#112;&#105;&#x6c;&#97;&#46;&#x70;&#108;&#x2e;</a> Follow the author as <a href="https://twitter.com/jaceklaskowski">@jaceklaskowski</a> on Twitter, too.</p>
+<p>Let me know what you think about the topic<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup> of the blog post in the <a href="#disqus_thread">Comments</a> section below or contact me at <a href="&#x6d;&#97;&#105;&#108;&#116;&#111;&#58;&#x6a;&#x61;&#x63;&#x65;&#107;&#x40;&#106;&#97;&#112;&#105;&#x6c;&#97;&#46;&#x70;&#x6c;&#46;">&#x6a;&#97;&#99;&#101;&#x6b;&#x40;&#x6a;&#97;&#112;&#x69;&#108;&#97;&#x2e;&#112;&#108;&#x2e;</a> Follow the author as <a href="https://twitter.com/jaceklaskowski">@jaceklaskowski</a> on Twitter, too.</p>
 <div class="footnotes">
 <hr/>
 <ol>
@@ -2389,31 +2461,6 @@ res0: Double = 29.787899999999745
 <p>It gives you ca 30 PLN.</p>
 
 <p>It&rsquo;d be nice to have a series with the date when a given pair was made, and then compare it with other means of gaining profits. A web app developed in <a href="http://www.playframework.com/">Play</a> and deployed to <a href="https://www.heroku.com/">Heroku</a> or <a href="http://www.cloudbees.com/">CloudBees</a> might be of help, wouldn&rsquo;t it?</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Beginner "Guide" to Sbt 0.13 and IntelliJ IDEA 13]]></title>
-    <link href="http://blog.jaceklaskowski.pl/2013/12/07/beginner-guide-to-sbt-0-dot-13-and-intellij-idea-13.html"/>
-    <updated>2013-12-07T16:39:37+01:00</updated>
-    <id>http://blog.jaceklaskowski.pl/2013/12/07/beginner-guide-to-sbt-0-dot-13-and-intellij-idea-13</id>
-    <content type="html"><![CDATA[<p><img class="left" src="http://blog.jaceklaskowski.pl/images/intellij-idea-13-new-logo.png" title="The logo of IntelliJ IDEA 13" > It has not been very long ago when the only way to work with <a href="http://www.scala-sbt.org/">sbt</a> projects in <a href="http://www.jetbrains.com/idea/">IntelliJ IDEA</a> was to use the <a href="https://github.com/mpeltonen/sbt-idea">sbt-idea</a> plugin that aimed at <em>&ldquo;creating IntelliJ IDEA project files&rdquo;</em>.</p>
-
-<p><a href="http://www.jetbrains.com/idea/whatsnew/">With the recent release of IntelliJ IDEA 13</a> (build: 133.193,  released: December 3, 2013) it&rsquo;s no longer true - the version comes with built-in sbt support and the support is available in <a href="http://www.jetbrains.com/idea/download/index.html">the free Community Edition</a>, too.</p>
-
-<p>My recent, rather quite frequent visits on <a href="http://stackoverflow.com/">StackOverflow</a> have showed that there&rsquo;s one question very often asked - <strong>How to start using sbt with IntelliJ IDEA?</strong> It turns out that the latest version of IntelliJ IDEA 13 squashed it pretty neatly and the built-in sbt support made the question irrelevant.</p>
-
-<p>Unless it changes, the page remains empty<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup>. What a surprise, isn&rsquo;t it? I&rsquo;ve always been thinking about writing the best beginner guide and here it is&hellip;at long last!</p>
-
-<p>On to querying <a href="http://stackoverflow.com/questions/tagged/sbt">StackOverflow&rsquo;s #sbt tag</a> for questions about <em>a</em> sbt support in IntelliJ IDEA 13.</p>
-<div class="footnotes">
-<hr/>
-<ol>
-<li id="fn:1">
-<p>as a kind of placeholder for future tips and tricks<a href="#fnref:1" rev="footnote">&#8617;</a></p></li>
-</ol>
-</div>
-
 ]]></content>
   </entry>
   

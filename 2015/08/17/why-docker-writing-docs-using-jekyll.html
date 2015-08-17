@@ -5,12 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Category: Docker - Mastering FP and OO with Scala</title>
+  <title>Why Docker - Writing Docs Using Jekyll - Mastering FP and OO with Scala</title>
   <meta name="author" content="Jacek Laskowski">
 
   
-  <meta name="description" content="Category: docker">
-  
+  <meta name="description" content="Spoiler I&rsquo;m so much into Docker that I could sing songs about how much it made my life easier. And yours soon, too. Just today I&rsquo;ve got a &hellip;">
+  <meta name="keywords" content="docker, jekyll, documentation">
 
   <!-- http://t.co/dKP3o1e -->
   <meta name="HandheldFriendly" content="True">
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://blog.jaceklaskowski.pl/categories/docker/index.html">
+  <link rel="canonical" href="http://blog.jaceklaskowski.pl/2015/08/17/why-docker-writing-docs-using-jekyll.html">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="http://feeds.feedburner.com/MasteringFpWithScala" rel="alternate" title="Mastering FP and OO with Scala" type="application/atom+xml">
@@ -46,7 +46,7 @@
 
 </head>
 
-<body   >
+<body    class="collapse-sidebar sidebar-footer" >
   <header role="banner"><hgroup>
   <h1><a href="/">Mastering FP and OO with Scala</a></h1>
   
@@ -78,64 +78,148 @@
   <div id="main">
     <div id="content">
       <div>
-<article role="article">
+<article class="hentry" role="article">
   
   <header>
-    <h1 class="entry-title">Category: Docker</h1>
+    
+      <h1 class="entry-title">Why Docker - Writing Docs Using Jekyll</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-08-17T11:06:45+02:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>17</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>11:06 am</span></time>
+        
+        
+           | <a href="#disqus_thread"
+             data-disqus-identifier="http://blog.jaceklaskowski.pl">Comments</a>
+        
+      </p>
     
   </header>
-  
-  <div id="blog-archives" class="category">
 
 
+<div class="entry-content"><p><strong>Spoiler</strong> I&rsquo;m so much into <a href="https://www.docker.com/">Docker</a> that I could sing songs about how much it made my life easier. And yours soon, too.</p>
 
-  
-  <h2>2015</h2>
+<p>Just today I&rsquo;ve got a request to review changes to introduce <a href="http://jekyllrb.com/">Jekyll</a> as the documentation framework. I was earlier proposing it myself so I knew what the outcome of the review could be - APPROVED.</p>
 
-<article>
-  
-<h1><a href="/2015/08/17/why-docker-writing-docs-using-jekyll.html">Why Docker - Writing Docs Using Jekyll</a></h1>
-<time datetime="2015-08-17T11:06:45+02:00" pubdate><span class='month'>Aug</span> <span class='day'>17</span> <span class='year'>2015</span></time>
+<p><em>But&hellip;</em></p>
 
-<footer>
-  <span class="categories">posted in <a class='category' href='/categories/docker/'>docker</a></span>
-</footer>
+<p>I also knew that the guy who proposed the change was fighting the installation of Ruby gems and Jekyll to have a complete working environment for the documentation system on his own laptop. He was on Linux while I&rsquo;m on Mac OS. He finally got it sorted out, but the final solution was not satisfactory to me - he installed additional dependencies onto his local machine directly and suggested the very same steps in README so others could follow his steps. I simply couldn&rsquo;t approve it. Sorry.</p>
 
+<p>The alternative was to use Docker and the <a href="https://github.com/jekyll/docker-jekyll">docker-jekyll</a> image. It makes Jekyll running in a self-contained container with no system-wide interaction with the local machine. And it&rsquo;s officially supported and maintained by the Jekyll project itself.</p>
 
-</article>
+<!-- more -->
 
 
+<h2>Using Jekyll inside Docker</h2>
 
-<article>
-  
-<h1><a href="/2015/07/24/docker-your-scala-web-application-play-framework.html">Docker Your Scala Web Application (Play Framework)</a></h1>
-<time datetime="2015-07-24T23:03:07+02:00" pubdate><span class='month'>Jul</span> <span class='day'>24</span> <span class='year'>2015</span></time>
+<p>The steps to use Jekyll without installing Ruby, gems and other dependencies locally is to use the <a href="https://github.com/jekyll/docker-jekyll">docker-jekyll</a> image. It&rsquo;s very safe because it&rsquo;s a self-contained image and I&rsquo;m not &ldquo;infecting&rdquo; my local working machine in any way (except installing Docker and pulling the image, but that&rsquo;s acceptable).</p>
 
-<footer>
-  <span class="categories">posted in <a class='category' href='/categories/docker/'>docker</a>, <a class='category' href='/categories/play-framework/'>play-framework</a>, <a class='category' href='/categories/sbt/'>sbt</a>, <a class='category' href='/categories/scala/'>scala</a></span>
-</footer>
+<p>Install Docker on your platform and do the following.</p>
 
+<p>Go to the <code>docs</code> directory where your documentation lives and execute:</p>
 
-</article>
+<pre><code>docker run --rm --volume=$(pwd):/srv/jekyll -t -p 4000:4000 jekyll/stable jekyll build
+</code></pre>
 
+<p>It will generate the docs from the sources and save the output into the current working directory (under <code>_site</code>).</p>
 
+<p>Serve the docs using <code>jekyll s</code> which is the default command while spinning up a new docker-jekyll container.</p>
 
-<article>
-  
-<h1><a href="/2015/07/14/apache-kafka-on-docker.html">Apache Kafka on Docker</a></h1>
-<time datetime="2015-07-14T20:59:33+02:00" pubdate><span class='month'>Jul</span> <span class='day'>14</span> <span class='year'>2015</span></time>
+<pre><code>docker run --rm --volume=$(pwd):/srv/jekyll -t --name=jekyll -p 4000:4000 jekyll/stable
+</code></pre>
 
-<footer>
-  <span class="categories">posted in <a class='category' href='/categories/apache-kafka/'>apache-kafka</a>, <a class='category' href='/categories/docker/'>docker</a></span>
-</footer>
+<p>Mind the name for the container - <strong>jekyll</strong> - so it&rsquo;s easier to work with it later on.</p>
 
+<pre><code>➜  docs git:(39fd9c9) ✗ docker run --rm --volume=$(pwd):/srv/jekyll -t --name=jekyll -p 4000:4000 jekyll/stable
+Configuration file: /srv/jekyll/_config.yml
+            Source: /srv/jekyll
+       Destination: /srv/jekyll/_site
+      Generating...
+                    done.
+ Auto-regeneration: enabled for '/srv/jekyll'
+Configuration file: /srv/jekyll/_config.yml
+    Server address: http://0.0.0.0:4000/
+  Server running... press ctrl-c to stop.
+</code></pre>
 
-</article>
+<p>Open <a href="http://0.0.0.0:4000/">http://0.0.0.0:4000/</a> and have fun!</p>
 
+<p>For people on Mac OS: You are supposed to use <a href="https://docs.docker.com/machine/">Docker Machine</a> and so the IP address is <code>docker-machine ip dev</code> where <code>dev</code> is the name of the machine.</p>
+
+<p>Stop the container using <code>docker stop jekyll</code>.</p>
+
+<pre><code>➜  docs git:(39fd9c9) ✗ docker ps
+CONTAINER ID        IMAGE               COMMAND              CREATED             STATUS              PORTS                    NAMES
+b6bb07d8b8aa        jekyll/stable       "/usr/bin/startup"   26 seconds ago      Up 26 seconds       0.0.0.0:4000-&gt;4000/tcp   jekyll
+➜  docs git:(39fd9c9) ✗ docker stop jekyll
+jekyll
+➜  docs git:(39fd9c9) ✗ docker ps
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+➜  docs git:(39fd9c9) ✗
+</code></pre>
+
+<p>Happy Dockering!</p>
+
+<p>Let me know what you think about the topic of the blog post in the <a href="#disqus_thread">Comments</a> section below or contact me at <a href="&#109;&#x61;&#x69;&#x6c;&#116;&#x6f;&#58;&#106;&#97;&#x63;&#x65;&#107;&#x40;&#x6a;&#x61;&#112;&#105;&#108;&#x61;&#x2e;&#x70;&#x6c;&#46;">&#106;&#97;&#99;&#x65;&#107;&#64;&#x6a;&#97;&#112;&#105;&#x6c;&#97;&#x2e;&#112;&#108;&#x2e;</a> Follow the author as <a href="https://twitter.com/jaceklaskowski">@jaceklaskowski</a> on Twitter, too.</p>
 </div>
 
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">Jacek Laskowski</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-08-17T11:06:45+02:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>17</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>11:06 am</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/categories/docker/'>docker</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://blog.jaceklaskowski.pl/2015/08/17/why-docker-writing-docs-using-jekyll.html" data-via="jaceklaskowski" data-counturl="http://blog.jaceklaskowski.pl/2015/08/17/why-docker-writing-docs-using-jekyll.html" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/2015/07/24/docker-your-scala-web-application-play-framework.html" title="Previous Post: Docker your Scala web application (Play Framework)">&laquo; Docker your Scala web application (Play Framework)</a>
+      
+      
+    </p>
+  </footer>
 </article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
 
 </div>
 
@@ -267,7 +351,10 @@
       var disqus_shortname = 'jaceklaskowski';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://blog.jaceklaskowski.pl/2015/08/17/why-docker-writing-docs-using-jekyll.html';
+        var disqus_url = 'http://blog.jaceklaskowski.pl/2015/08/17/why-docker-writing-docs-using-jekyll.html';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Apache-spark | Mastering FP and OO with Scala]]></title>
   <link href="http://blog.jaceklaskowski.pl/categories/apache-spark/atom.xml" rel="self"/>
   <link href="http://blog.jaceklaskowski.pl/"/>
-  <updated>2015-08-17T11:54:20+02:00</updated>
+  <updated>2015-08-22T19:53:38+02:00</updated>
   <id>http://blog.jaceklaskowski.pl/</id>
   <author>
     <name><![CDATA[Jacek Laskowski]]></name>
@@ -192,39 +192,40 @@ Following the official documentation [Building Spark](http://spark.apache.org/do
     [INFO] ------------------------------------------------------------------------
     [INFO] Reactor Summary:
     [INFO]
-    [INFO] Spark Project Parent POM ........................... SUCCESS [  3.220 s]
-    [INFO] Spark Project Launcher ............................. SUCCESS [ 11.681 s]
-    [INFO] Spark Project Networking ........................... SUCCESS [  9.907 s]
-    [INFO] Spark Project Shuffle Streaming Service ............ SUCCESS [  6.187 s]
-    [INFO] Spark Project Unsafe ............................... SUCCESS [  5.758 s]
-    [INFO] Spark Project Core ................................. SUCCESS [02:43 min]
-    [INFO] Spark Project Bagel ................................ SUCCESS [  8.570 s]
-    [INFO] Spark Project GraphX ............................... SUCCESS [ 19.496 s]
-    [INFO] Spark Project Streaming ............................ SUCCESS [ 36.986 s]
-    [INFO] Spark Project Catalyst ............................. SUCCESS [ 57.976 s]
-    [INFO] Spark Project SQL .................................. SUCCESS [ 57.685 s]
-    [INFO] Spark Project ML Library ........................... SUCCESS [01:10 min]
-    [INFO] Spark Project Tools ................................ SUCCESS [  5.609 s]
-    [INFO] Spark Project Hive ................................. SUCCESS [ 46.276 s]
-    [INFO] Spark Project REPL ................................. SUCCESS [  6.747 s]
-    [INFO] Spark Project YARN ................................. SUCCESS [ 12.052 s]
-    [INFO] Spark Project Assembly ............................. SUCCESS [01:11 min]
-    [INFO] Spark Project External Twitter ..................... SUCCESS [  7.838 s]
-    [INFO] Spark Project External Flume Sink .................. SUCCESS [  6.701 s]
-    [INFO] Spark Project External Flume ....................... SUCCESS [  9.614 s]
-    [INFO] Spark Project External Flume Assembly .............. SUCCESS [  2.135 s]
-    [INFO] Spark Project External MQTT ........................ SUCCESS [  7.247 s]
-    [INFO] Spark Project External ZeroMQ ...................... SUCCESS [  7.550 s]
-    [INFO] Spark Project External Kafka ....................... SUCCESS [ 12.960 s]
-    [INFO] Spark Project Examples ............................. SUCCESS [01:28 min]
-    [INFO] Spark Project External Kafka Assembly .............. SUCCESS [ 27.143 s]
-    [INFO] Spark Project YARN Shuffle Service ................. SUCCESS [  7.143 s]
+    [INFO] Spark Project Parent POM ........................... SUCCESS [  6.187 s]
+    [INFO] Spark Project Launcher ............................. SUCCESS [ 10.096 s]
+    [INFO] Spark Project Networking ........................... SUCCESS [  8.650 s]
+    [INFO] Spark Project Shuffle Streaming Service ............ SUCCESS [  6.085 s]
+    [INFO] Spark Project Unsafe ............................... SUCCESS [ 10.308 s]
+    [INFO] Spark Project Core ................................. SUCCESS [02:08 min]
+    [INFO] Spark Project Bagel ................................ SUCCESS [  6.750 s]
+    [INFO] Spark Project GraphX ............................... SUCCESS [ 15.942 s]
+    [INFO] Spark Project Streaming ............................ SUCCESS [ 32.429 s]
+    [INFO] Spark Project Catalyst ............................. SUCCESS [ 55.389 s]
+    [INFO] Spark Project SQL .................................. SUCCESS [ 56.297 s]
+    [INFO] Spark Project ML Library ........................... SUCCESS [01:05 min]
+    [INFO] Spark Project Tools ................................ SUCCESS [  4.702 s]
+    [INFO] Spark Project Hive ................................. SUCCESS [ 47.624 s]
+    [INFO] Spark Project REPL ................................. SUCCESS [  5.686 s]
+    [INFO] Spark Project YARN Shuffle Service ................. SUCCESS [  7.479 s]
+    [INFO] Spark Project YARN ................................. SUCCESS [ 11.903 s]
+    [INFO] Spark Project Assembly ............................. SUCCESS [ 59.155 s]
+    [INFO] Spark Project External Twitter ..................... SUCCESS [  7.177 s]
+    [INFO] Spark Project External Flume Sink .................. SUCCESS [  6.205 s]
+    [INFO] Spark Project External Flume ....................... SUCCESS [  9.151 s]
+    [INFO] Spark Project External Flume Assembly .............. SUCCESS [  1.896 s]
+    [INFO] Spark Project External MQTT ........................ SUCCESS [ 15.044 s]
+    [INFO] Spark Project External MQTT Assembly ............... SUCCESS [  3.593 s]
+    [INFO] Spark Project External ZeroMQ ...................... SUCCESS [  6.658 s]
+    [INFO] Spark Project External Kafka ....................... SUCCESS [ 11.207 s]
+    [INFO] Spark Project Examples ............................. SUCCESS [01:16 min]
+    [INFO] Spark Project External Kafka Assembly .............. SUCCESS [  5.115 s]
     [INFO] ------------------------------------------------------------------------
     [INFO] BUILD SUCCESS
     [INFO] ------------------------------------------------------------------------
-    [INFO] Total time: 12:49 min
-    [INFO] Finished at: 2015-07-22T11:02:46+02:00
-    [INFO] Final Memory: 85M/958M
+    [INFO] Total time: 11:21 min
+    [INFO] Finished at: 2015-08-22T15:08:02+02:00
+    [INFO] Final Memory: 431M/1960M
     [INFO] ------------------------------------------------------------------------
 
 The jars for the version are at your command in the Maven local repository. Switch the version of Spark Streaming to **1.5.0-SNAPSHOT** and start over.

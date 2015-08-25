@@ -8,7 +8,7 @@ sidebar: collapse
 keywords: docker, jekyll, documentation
 published: true
 ---
-**Spoiler** I'm so much into [Docker](https://www.docker.com/) that I could sing songs about how much it made my life easier. And yours soon, too.
+**Spoiler** I'm so much into [Docker](https://www.docker.com/) that I could sing songs about how much it made my life easier. And you're soon, too. Beware!
 
 Just today I've got a request to review changes to introduce [Jekyll](http://jekyllrb.com/) as the documentation framework. I was earlier proposing it myself so I knew what the outcome of the review could be - APPROVED.
 
@@ -28,13 +28,13 @@ Install Docker on your platform and do the following.
 
 Go to the `docs` directory where your documentation lives and execute:
 
-    docker run --rm --volume=$(pwd):/srv/jekyll -t -p 4000:4000 jekyll/stable jekyll build
+    docker run --rm -v $(pwd):/srv/jekyll -t -p 4000:4000 jekyll/stable jekyll build
 
 It will generate the docs from the sources and save the output into the current working directory (under `_site`).
 
 Serve the docs using `jekyll s` which is the default command while spinning up a new docker-jekyll container.
 
-    docker run --rm --volume=$(pwd):/srv/jekyll -t --name=jekyll -p 4000:4000 jekyll/stable
+    docker run --rm -v $(pwd):/srv/jekyll -t --name=jekyll -p 4000:4000 jekyll/stable
 
 Mind the name for the container - **jekyll** - so it's easier to work with it later on.
 
@@ -51,8 +51,6 @@ Mind the name for the container - **jekyll** - so it's easier to work with it la
 
 Open http://0.0.0.0:4000/ and have fun!
 
-For people on Mac OS: You are supposed to use [Docker Machine](https://docs.docker.com/machine/) and so the IP address is `docker-machine ip dev` where `dev` is the name of the machine.
-
 Stop the container using `docker stop jekyll`.
 
     ➜  docs git:(39fd9c9) ✗ docker ps
@@ -65,5 +63,15 @@ Stop the container using `docker stop jekyll`.
     ➜  docs git:(39fd9c9) ✗
 
 Happy Dockering!
+
+## Caveats on Mac OS (and possibly on Windows)
+
+You are using [Docker Machine](https://docs.docker.com/machine/) to work with Docker. And so the IP address for Jekyll's generated website is given by `docker-machine ip dev` where `dev` is the name of the Docker machine instance.
+
+Also, you may face issues with not regenerating docs after your changes even when `jekyll serve` alone is supposed to work fine. It seems it does not with Docker on Mac OS. The workaround is to use `jekyll serve --force_polling`. The complete command line to have Jekyll running inside a Docker container with your changes being picked up is as follows:
+
+    docker run --rm -v $(pwd):/srv/jekyll -t --name=jekyll -p 4000:4000 jekyll/stable jekyll serve --force_polling
+
+See https://github.com/jekyll/jekyll/issues/2926.
 
 Let me know what you think about the topic of the blog post in the [Comments](#disqus_thread) section below or contact me at jacek@japila.pl. Follow the author as [@jaceklaskowski](https://twitter.com/jaceklaskowski) on Twitter, too.

@@ -63,7 +63,7 @@ In order to run the client you should build Kafka from the sources first and pub
 
 Building Kafka from the sources is as simple as executing `gradle -PscalaVersion=2.11.7 clean releaseTarGz` in the directory where you `git clone https://github.com/apache/kafka.git`d [the Kafka repo from GitHub](https://github.com/apache/kafka.git).
 
-    ➜  kafka git:(trunk) gradle -PscalaVersion=2.11.7 clean releaseTarGz
+    ➜  kafka git:(trunk) gradle -PscalaVersion=2.11.7 clean releaseTarGz install
     Building project 'core' with Scala version 2.11.7
     ...
     BUILD SUCCESSFUL
@@ -72,48 +72,47 @@ Building Kafka from the sources is as simple as executing `gradle -PscalaVersion
 
 I was building the distro against **Scala 2.11.7**.
 
-Once done, `core/build/distributions/kafka_2.11-0.8.3-SNAPSHOT.tgz` is where you find the release package.
+Once done, `core/build/distributions/kafka_2.11-0.9.0.0-SNAPSHOT.tgz` is where you find the release package.
 
-    ➜  kafka git:(trunk) ✗ ls -l core/build/distributions/kafka_2.11-0.8.3-SNAPSHOT.tgz
-    -rw-r--r--  1 jacek  staff  17006303 18 lip 13:19 core/build/distributions/kafka_2.11-0.8.3-SNAPSHOT.tgz
+    ➜  kafka git:(trunk) ls -l core/build/distributions/kafka_2.11-0.9.0.0-SNAPSHOT.tgz
+    -rw-r--r--  1 jacek  staff  17813003 29 wrz 08:32 core/build/distributions/kafka_2.11-0.9.0.0-SNAPSHOT.tgz
 
 Unpack it and `cd` to it.
 
-    ➜  kafka git:(trunk) ✗ tar -zxf core/build/distributions/kafka_2.11-0.8.3-SNAPSHOT.tgz
-    ➜  kafka git:(trunk) ✗ cd kafka_2.11-0.8.3-SNAPSHOT
+    ➜  kafka git:(trunk) tar -zxf core/build/distributions/kafka_2.11-0.9.0.0-SNAPSHOT.tgz
+    ➜  kafka git:(trunk) ✗ cd kafka_2.11-0.9.0.0-SNAPSHOT
+    ➜  kafka_2.11-0.9.0.0-SNAPSHOT git:(trunk) ✗ ls -l
+    total 32
+    -rw-r--r--   1 jacek  staff  11358  9 lis  2014 LICENSE
+    -rw-r--r--   1 jacek  staff    162  9 lis  2014 NOTICE
+    drwxr-xr-x  26 jacek  staff    884 29 wrz 08:32 bin
+    drwxr-xr-x  16 jacek  staff    544 29 wrz 08:32 config
+    drwxr-xr-x  21 jacek  staff    714 29 wrz 08:32 libs
 
 ## Zookeeper up and running
 
 Running Zookeeper is the very first step you should do (as that's how Kafka maintains high-availability). Use `./bin/zookeeper-server-start.sh config/zookeeper.properties`:
 
-    ➜  kafka_2.11-0.8.3-SNAPSHOT git:(trunk) ✗ ./bin/zookeeper-server-start.sh config/zookeeper.properties
-    [2015-07-20 00:17:08,134] INFO Reading configuration from: config/zookeeper.properties (org.apache.zookeeper.server.quorum.QuorumPeerConfig)
-    [2015-07-20 00:17:08,136] INFO autopurge.snapRetainCount set to 3 (org.apache.zookeeper.server.DatadirCleanupManager)
-    [2015-07-20 00:17:08,136] INFO autopurge.purgeInterval set to 0 (org.apache.zookeeper.server.DatadirCleanupManager)
-    [2015-07-20 00:17:08,136] INFO Purge task is not scheduled. (org.apache.zookeeper.server.DatadirCleanupManager)
-    [2015-07-20 00:17:08,136] WARN Either no config or no quorum defined in config, running  in standalone mode (org.apache.zookeeper.server.quorum.QuorumPeerMain)
-    [2015-07-20 00:17:08,153] INFO Reading configuration from: config/zookeeper.properties (org.apache.zookeeper.server.quorum.QuorumPeerConfig)
-    [2015-07-20 00:17:08,154] INFO Starting server (org.apache.zookeeper.server.ZooKeeperServerMain)
-    [2015-07-20 00:17:08,165] INFO Server environment:zookeeper.version=3.4.6-1569965, built on 02/20/2014 09:09 GMT (org.apache.zookeeper.server.ZooKeeperServer)
-    [2015-07-20 00:17:08,165] INFO Server environment:host.name=192.168.1.9 (org.apache.zookeeper.server.ZooKeeperServer)
-    [2015-07-20 00:17:08,165] INFO Server environment:java.version=1.8.0_45 (org.apache.zookeeper.server.ZooKeeperServer)
+    ➜  kafka_2.11-0.9.0.0-SNAPSHOT git:(trunk) ✗ ./bin/zookeeper-server-start.sh config/zookeeper.properties
+    [2015-09-29 12:26:41,011] INFO Reading configuration from: config/zookeeper.properties (org.apache.zookeeper.server.quorum.QuorumPeerConfig)
+    [2015-09-29 12:26:41,014] INFO autopurge.snapRetainCount set to 3 (org.apache.zookeeper.server.DatadirCleanupManager)
+    [2015-09-29 12:26:41,014] INFO autopurge.purgeInterval set to 0 (org.apache.zookeeper.server.DatadirCleanupManager)
+    [2015-09-29 12:26:41,014] INFO Purge task is not scheduled. (org.apache.zookeeper.server.DatadirCleanupManager)
+    [2015-09-29 12:26:41,014] WARN Either no config or no quorum defined in config, running  in standalone mode (org.apache.zookeeper.server.quorum.QuorumPeerMain)
+    [2015-09-29 12:26:41,036] INFO Reading configuration from: config/zookeeper.properties (org.apache.zookeeper.server.quorum.QuorumPeerConfig)
+    [2015-09-29 12:26:41,036] INFO Starting server (org.apache.zookeeper.server.ZooKeeperServerMain)
+    [2015-09-29 12:26:41,301] INFO Server environment:zookeeper.version=3.4.6-1569965, built on 02/20/2014 09:09 GMT (org.apache.zookeeper.server.ZooKeeperServer)
+    [2015-09-29 12:26:41,301] INFO Server environment:host.name=172.20.36.184 (org.apache.zookeeper.server.ZooKeeperServer)
+    [2015-09-29 12:26:41,301] INFO Server environment:java.version=1.8.0_60 (org.apache.zookeeper.server.ZooKeeperServer)
     ...
-    [2015-07-20 00:17:08,191] INFO binding to port 0.0.0.0/0.0.0.0:2181 (org.apache.zookeeper.server.NIOServerCnxnFactory)
+    [2015-09-29 12:26:41,333] INFO binding to port 0.0.0.0/0.0.0.0:2181 (org.apache.zookeeper.server.NIOServerCnxnFactory)
 
 ## Kafka broker up and running
 
-With Zookeeper up, start a Kafka broker using `./bin/kafka-server-start.sh config/server.properties` command:
+In another terminal, start a Kafka broker using `./bin/kafka-server-start.sh config/server.properties` command:
 
-    ➜  kafka_2.11-0.8.3-SNAPSHOT git:(trunk) ✗ ./bin/kafka-server-start.sh config/server.properties
-    [2015-07-20 00:18:33,574] INFO KafkaConfig values:
-    	advertised.host.name = null
-      ...
-    	log.dir = /tmp/kafka-logs
-      ...
-    	zookeeper.connect = localhost:2181
-    	zookeeper.sync.time.ms = 2000
-    	port = 9092
-      ...
+      ➜  kafka_2.11-0.9.0.0-SNAPSHOT git:(trunk) ✗ ./bin/kafka-server-start.sh config/server.properties
+    ...
     [2015-07-20 00:18:33,671] INFO starting (kafka.server.KafkaServer)
     [2015-07-20 00:18:33,673] INFO Connecting to zookeeper on localhost:2181 (kafka.server.KafkaServer)
     [2015-07-20 00:18:33,684] INFO Starting ZkClient event thread. (org.I0Itec.zkclient.ZkEventThread)
@@ -122,42 +121,47 @@ With Zookeeper up, start a Kafka broker using `./bin/kafka-server-start.sh confi
     [2015-07-20 00:18:33,694] INFO Client environment:java.version=1.8.0_45 (org.apache.zookeeper.ZooKeeper)
     [2015-07-20 00:18:33,694] INFO Client environment:java.vendor=Oracle Corporation (org.apache.zookeeper.ZooKeeper)
     ...
-    [2015-07-20 00:18:34,414] INFO Registered broker 0 at path /brokers/ids/0 with addresses: PLAINTEXT -> EndPoint(192.168.1.9,9092,PLAINTEXT) (kafka.utils.ZkUtils$)
-    [2015-07-20 00:18:34,419] INFO [Kafka Server 0], started (kafka.server.KafkaServer)
+    [2015-09-29 13:18:49,919] INFO Registered broker 0 at path /brokers/ids/0 with addresses: PLAINTEXT -> EndPoint(192.168.99.1,9092,PLAINTEXT) (kafka.utils.ZkUtils$)
+    [2015-09-29 13:18:49,933] INFO Kafka version : 0.9.0.0-SNAPSHOT (org.apache.kafka.common.utils.AppInfoParser)
+    [2015-09-29 13:18:49,933] INFO Kafka commitId : 4e7db39556ba916c (org.apache.kafka.common.utils.AppInfoParser)
+    [2015-09-29 13:18:49,934] INFO [Kafka Server 0], started (kafka.server.KafkaServer)
+    [2015-09-29 13:18:49,935] INFO New leader is 0 (kafka.server.ZookeeperLeaderElector$LeaderChangeListener)
 
 ## Creating topic
 
 You're now going to create `my-topic` topic where the custom producer is going to publish messages to. Of course, the name of the topic is arbitrary, but should match what the custom producer uses.
 
-    ➜  kafka_2.11-0.8.3-SNAPSHOT git:(trunk) ✗ ./bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic my-topic-test
+    ➜  kafka_2.11-0.9.0.0-SNAPSHOT git:(trunk) ✗ ./bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic my-topic-test
     Created topic "my-topic-test".
 
 Check out the topics available using `./bin/kafka-topics.sh --list --zookeeper localhost:2181`. You should see one.
 
-    ➜  kafka_2.11-0.8.3-SNAPSHOT git:(trunk) ✗ ./bin/kafka-topics.sh --list --zookeeper localhost:2181
+    ➜  kafka_2.11-0.9.0.0-SNAPSHOT git:(trunk) ✗ ./bin/kafka-topics.sh --list --zookeeper localhost:2181
     my-topic-test
 
-## Scala/sbt project setup
+## kafka-publisher - Scala project
 
-Create a Scala/sbt project with the following `build.sbt`:
+Create a Scala project. The project is managed by sbt with the following `build.sbt`:
 
-    val kafkaVersion = "0.8.3-SNAPSHOT"
-
+    val kafkaVersion = "0.9.0.0-SNAPSHOT"
     scalaVersion := "2.11.7"
 
-    resolvers += Resolver.mavenLocal
-
     libraryDependencies += "org.apache.kafka" % "kafka-clients" % kafkaVersion
+    resolvers += Resolver.mavenLocal
 
 Use the following `project/build.properties`:
 
-    sbt.version=0.13.9-RC3
+    sbt.version=0.13.9
 
 ## Sending messages using KafkaProducer - `sbt run`
 
 With the setup, you should now be able to run `sbt run` to run the custom Scala producer for Kafka.
 
-    [kafka-publisher]> run
+    ➜  kafka-publisher  sbt run
+    [info] Loading global plugins from /Users/jacek/.sbt/0.13/plugins
+    [info] Loading project definition from /Users/jacek/dev/sandbox/kafka-publisher/project
+    [info] Set current project to kafka-publisher (in build file:/Users/jacek/dev/sandbox/kafka-publisher/)
+    [info] Compiling 1 Scala source to /Users/jacek/dev/sandbox/kafka-publisher/target/scala-2.11/classes...
     [info] Running KafkaProducer
     Connecting to my-topic-test
     SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
@@ -168,11 +172,14 @@ With the setup, you should now be able to run `sbt run` to run the custom Scala 
     partition = 0
     topic     = my-topic-test
 
-    [success] Total time: 8 s, completed Jul 20, 2015 12:29:44 AM
+    [success] Total time: 4 s, completed Sep 29, 2015 4:21:14 PM
 
 Executing `sbt run` again should show a different offset for the sam partition and topic:
 
-    [kafka-publisher]> run
+    ➜  kafka-publisher  sbt run
+    [info] Loading global plugins from /Users/jacek/.sbt/0.13/plugins
+    [info] Loading project definition from /Users/jacek/dev/sandbox/kafka-publisher/project
+    [info] Set current project to kafka-publisher (in build file:/Users/jacek/dev/sandbox/kafka-publisher/)
     [info] Running KafkaProducer
     Connecting to my-topic-test
     SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
@@ -183,7 +190,7 @@ Executing `sbt run` again should show a different offset for the sam partition a
     partition = 0
     topic     = my-topic-test
 
-    [success] Total time: 0 s, completed Jul 20, 2015 12:30:47 AM
+    [success] Total time: 1 s, completed Sep 29, 2015 4:21:47 PM
 
 ## Using kafkacat as a Kafka message consumer
 

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Slick | Mastering FP and OO with Scala]]></title>
   <link href="http://blog.jaceklaskowski.pl/categories/slick/atom.xml" rel="self"/>
   <link href="http://blog.jaceklaskowski.pl/"/>
-  <updated>2015-08-25T14:20:39+02:00</updated>
+  <updated>2015-09-29T16:40:29-04:00</updated>
   <id>http://blog.jaceklaskowski.pl/</id>
   <author>
     <name><![CDATA[Jacek Laskowski]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[Mistakes Introducing Slick for Database Access Under Play Framework 2.3.4 and 2.4.0-M1]]></title>
     <link href="http://blog.jaceklaskowski.pl/2014/09/12/mistakes-introducing-slick-for-database-access-under-play-framework-2-dot-3-4-and-2-dot-4-0-m1.html"/>
-    <updated>2014-09-12T21:47:50+02:00</updated>
+    <updated>2014-09-12T15:47:50-04:00</updated>
     <id>http://blog.jaceklaskowski.pl/2014/09/12/mistakes-introducing-slick-for-database-access-under-play-framework-2-dot-3-4-and-2-dot-4-0-m1</id>
     <content type="html"><![CDATA[This is a summary of my attempt to run [Slick](http://slick.typesafe.com/) under [Play Framework](https://www.playframework.com/) **2.3.4** and **2.4.0-M1** that ultimately turned out a quite successful endeavour.
 

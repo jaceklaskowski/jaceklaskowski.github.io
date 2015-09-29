@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Git | Mastering FP and OO with Scala]]></title>
   <link href="http://blog.jaceklaskowski.pl/categories/git/atom.xml" rel="self"/>
   <link href="http://blog.jaceklaskowski.pl/"/>
-  <updated>2015-08-25T14:20:39+02:00</updated>
+  <updated>2015-09-29T16:40:29-04:00</updated>
   <id>http://blog.jaceklaskowski.pl/</id>
   <author>
     <name><![CDATA[Jacek Laskowski]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[Oh My Zsh's Plugins to Boost Happiness From Using Git]]></title>
     <link href="http://blog.jaceklaskowski.pl/2015/02/28/oh-my-zshs-plugins-to-boost-happiness-from-using-git.html"/>
-    <updated>2015-02-28T20:26:40+01:00</updated>
+    <updated>2015-02-28T14:26:40-05:00</updated>
     <id>http://blog.jaceklaskowski.pl/2015/02/28/oh-my-zshs-plugins-to-boost-happiness-from-using-git</id>
     <content type="html"><![CDATA[From the website of the very useful and must-have addition to your terminal - [Oh-My-Zsh](http://ohmyz.sh/):
 

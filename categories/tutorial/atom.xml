@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Tutorial | Mastering FP and OO with Scala]]></title>
   <link href="http://blog.jaceklaskowski.pl/categories/tutorial/atom.xml" rel="self"/>
   <link href="http://blog.jaceklaskowski.pl/"/>
-  <updated>2015-08-25T14:20:39+02:00</updated>
+  <updated>2015-09-29T16:40:29-04:00</updated>
   <id>http://blog.jaceklaskowski.pl/</id>
   <author>
     <name><![CDATA[Jacek Laskowski]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[Getting Started With Play Framework and AngularJS - Day 1]]></title>
     <link href="http://blog.jaceklaskowski.pl/2014/09/08/getting-started-with-play-framework-and-angularjs-day-1.html"/>
-    <updated>2014-09-08T12:42:49+02:00</updated>
+    <updated>2014-09-08T06:42:49-04:00</updated>
     <id>http://blog.jaceklaskowski.pl/2014/09/08/getting-started-with-play-framework-and-angularjs-day-1</id>
     <content type="html"><![CDATA[Let's face it -- there are tons of very good tutorials about how to get started with [Play Framework](https://www.playframework.com/) and [AngularJS](https://angularjs.org/) to build modern web applications, and despite the fact there are still quite a few people out there who keep asking me about writing mine. Since writing tutorials is a way to clear up understanding of a topic to me, I found it very compelling to help myself and others using the two - Play and Angular - properly. Well, the *properly* part comes with your comments when I fix the parts that are outdated or plain wrong.
 

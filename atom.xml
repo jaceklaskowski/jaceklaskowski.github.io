@@ -4,7 +4,7 @@
   <title><![CDATA[Mastering FP and OO with Scala]]></title>
   <link href="http://blog.jaceklaskowski.pl/atom.xml" rel="self"/>
   <link href="http://blog.jaceklaskowski.pl/"/>
-  <updated>2015-08-25T14:20:39+02:00</updated>
+  <updated>2015-09-29T16:40:29-04:00</updated>
   <id>http://blog.jaceklaskowski.pl/</id>
   <author>
     <name><![CDATA[Jacek Laskowski]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[Why Docker - Writing Docs Using Jekyll]]></title>
     <link href="http://blog.jaceklaskowski.pl/2015/08/17/why-docker-writing-docs-using-jekyll.html"/>
-    <updated>2015-08-17T11:06:45+02:00</updated>
+    <updated>2015-08-17T05:06:45-04:00</updated>
     <id>http://blog.jaceklaskowski.pl/2015/08/17/why-docker-writing-docs-using-jekyll</id>
     <content type="html"><![CDATA[<p><strong>Spoiler</strong> I&rsquo;m so much into <a href="https://www.docker.com/">Docker</a> that I could sing songs about how much it made my life easier. And you&rsquo;re soon, too. Beware!</p>
 
@@ -90,14 +90,14 @@ CONTAINER ID        IMAGE               COMMAND             CREATED             
 
 <p>See <a href="https://github.com/jekyll/jekyll/issues/2926.">https://github.com/jekyll/jekyll/issues/2926.</a></p>
 
-<p>Let me know what you think about the topic of the blog post in the <a href="#disqus_thread">Comments</a> section below or contact me at <a href="&#x6d;&#x61;&#105;&#108;&#116;&#x6f;&#58;&#106;&#x61;&#99;&#x65;&#x6b;&#64;&#106;&#x61;&#x70;&#105;&#x6c;&#97;&#46;&#x70;&#108;&#46;">&#106;&#x61;&#x63;&#101;&#107;&#64;&#x6a;&#x61;&#x70;&#x69;&#x6c;&#x61;&#x2e;&#112;&#x6c;&#x2e;</a> Follow the author as <a href="https://twitter.com/jaceklaskowski">@jaceklaskowski</a> on Twitter, too.</p>
+<p>Let me know what you think about the topic of the blog post in the <a href="#disqus_thread">Comments</a> section below or contact me at <a href="&#x6d;&#x61;&#x69;&#108;&#116;&#111;&#58;&#x6a;&#97;&#99;&#101;&#107;&#x40;&#x6a;&#x61;&#112;&#105;&#108;&#x61;&#46;&#112;&#x6c;&#46;">&#106;&#x61;&#99;&#x65;&#107;&#x40;&#106;&#97;&#112;&#x69;&#x6c;&#x61;&#46;&#x70;&#x6c;&#x2e;</a> Follow the author as <a href="https://twitter.com/jaceklaskowski">@jaceklaskowski</a> on Twitter, too.</p>
 ]]></content>
   </entry>
   
   <entry>
     <title type="html"><![CDATA[Docker Your Scala Web Application (Play Framework)]]></title>
     <link href="http://blog.jaceklaskowski.pl/2015/07/24/docker-your-scala-web-application-play-framework.html"/>
-    <updated>2015-07-24T23:03:07+02:00</updated>
+    <updated>2015-07-24T17:03:07-04:00</updated>
     <id>http://blog.jaceklaskowski.pl/2015/07/24/docker-your-scala-web-application-play-framework</id>
     <content type="html"><![CDATA[<p>We&rsquo;re experimenting with <a href="https://www.docker.com/">Docker</a> in the <a href="http://deepsense.io/">DeepSense.io</a> project. There might be a case or two in the other Scala company in Warsaw - <a href="http://www.hcore.com/">HCore</a>. I&rsquo;ve also been noticing interest in using Docker in Scala projects in <a href="http://www.javeo.eu/">Javeo</a> where the <a href="http://www.meetup.com/WarszawScaLa/">Warsaw Scala Enthusiasts</a> meetups are taking place. The Docker space seems very hot for Scala developers in Warsaw, Poland. And these companies <em>are</em> hiring Scala developers!</p>
 
@@ -229,14 +229,14 @@ CONTAINER ID        IMAGE                          COMMAND                CREATE
 
 <p>It&rsquo;s so easy to have a Docker image of a Play Framework/Scala web application that I hardly believe I could have lived without using it for so long. Once an application becomes a Docker image you can use the other commands to play with it, mainly to deploy the image to any environment to have a consistent and exact environment. Love it so much now. And you can deploy the image to <a href="https://hub.docker.com/">Docker Hub</a> (similarly how you publish the sources of your excellent applications to GitHub).</p>
 
-<p>Let me know what you think about the topic of the blog post in the <a href="#disqus_thread">Comments</a> section below or contact me at <a href="&#x6d;&#x61;&#105;&#x6c;&#x74;&#111;&#x3a;&#106;&#x61;&#99;&#101;&#107;&#64;&#106;&#97;&#112;&#105;&#x6c;&#x61;&#x2e;&#112;&#108;&#x2e;">&#106;&#x61;&#x63;&#x65;&#107;&#x40;&#106;&#x61;&#112;&#105;&#x6c;&#x61;&#x2e;&#x70;&#108;&#x2e;</a> Follow the author as <a href="https://twitter.com/jaceklaskowski">@jaceklaskowski</a> on Twitter, too.</p>
+<p>Let me know what you think about the topic of the blog post in the <a href="#disqus_thread">Comments</a> section below or contact me at <a href="&#x6d;&#97;&#x69;&#x6c;&#x74;&#111;&#x3a;&#x6a;&#97;&#99;&#101;&#107;&#x40;&#x6a;&#x61;&#x70;&#x69;&#108;&#x61;&#46;&#112;&#108;&#46;">&#x6a;&#97;&#99;&#x65;&#x6b;&#x40;&#x6a;&#97;&#x70;&#x69;&#108;&#97;&#46;&#112;&#x6c;&#x2e;</a> Follow the author as <a href="https://twitter.com/jaceklaskowski">@jaceklaskowski</a> on Twitter, too.</p>
 ]]></content>
   </entry>
   
   <entry>
     <title type="html"><![CDATA[Real-time Data Processing Using Apache Kafka and Spark Streaming (and Scala and Sbt)]]></title>
     <link href="http://blog.jaceklaskowski.pl/2015/07/20/real-time-data-processing-using-apache-kafka-and-spark-streaming.html"/>
-    <updated>2015-07-20T21:02:39+02:00</updated>
+    <updated>2015-07-20T15:02:39-04:00</updated>
     <id>http://blog.jaceklaskowski.pl/2015/07/20/real-time-data-processing-using-apache-kafka-and-spark-streaming</id>
     <content type="html"><![CDATA[<p>It&rsquo;s been a while since I worked with <a href="http://spark.apache.org/streaming/">Spark Streaming</a>. It was back then when I was working for a pet project that ultimately ended up as a Typesafe Activator template <a href="http://www.typesafe.com/activator/template/spark-streaming-scala-akka">Spark Streaming with Scala and Akka</a> to get people going with the technologies.</p>
 
@@ -470,7 +470,7 @@ Time: 1437462720000 ms
 
 <p>Once the data&rsquo;s processed, Spark Streaming could be publishing results into yet another Kafka topic and/or store in Hadoop for later. It seems I&rsquo;ve got a very powerful setup I&rsquo;m not yet fully aware of where I should apply to.</p>
 
-<p>Let me know what you think about the topic<sup id="fnref:2"><a href="#fn:2" rel="footnote">2</a></sup> of the blog post in the <a href="#disqus_thread">Comments</a> section below or contact me at <a href="&#x6d;&#97;&#105;&#108;&#116;&#x6f;&#x3a;&#106;&#x61;&#x63;&#x65;&#107;&#64;&#x6a;&#x61;&#x70;&#105;&#108;&#97;&#x2e;&#x70;&#108;&#46;">&#x6a;&#x61;&#99;&#x65;&#107;&#64;&#x6a;&#97;&#x70;&#x69;&#x6c;&#x61;&#x2e;&#112;&#108;&#x2e;</a> Follow the author as <a href="https://twitter.com/jaceklaskowski">@jaceklaskowski</a> on Twitter, too.</p>
+<p>Let me know what you think about the topic<sup id="fnref:2"><a href="#fn:2" rel="footnote">2</a></sup> of the blog post in the <a href="#disqus_thread">Comments</a> section below or contact me at <a href="&#x6d;&#x61;&#x69;&#x6c;&#116;&#x6f;&#58;&#x6a;&#97;&#99;&#x65;&#x6b;&#x40;&#106;&#97;&#x70;&#105;&#x6c;&#x61;&#x2e;&#x70;&#x6c;&#x2e;">&#x6a;&#97;&#x63;&#x65;&#x6b;&#64;&#106;&#97;&#x70;&#x69;&#x6c;&#97;&#46;&#112;&#108;&#x2e;</a> Follow the author as <a href="https://twitter.com/jaceklaskowski">@jaceklaskowski</a> on Twitter, too.</p>
 <div class="footnotes">
 <hr/>
 <ol>
@@ -487,7 +487,7 @@ Time: 1437462720000 ms
   <entry>
     <title type="html"><![CDATA[Publishing Events Using Custom Producer for Apache Kafka]]></title>
     <link href="http://blog.jaceklaskowski.pl/2015/07/19/publishing-events-using-custom-producer-for-apache-kafka.html"/>
-    <updated>2015-07-19T23:04:21+02:00</updated>
+    <updated>2015-07-19T17:04:21-04:00</updated>
     <id>http://blog.jaceklaskowski.pl/2015/07/19/publishing-events-using-custom-producer-for-apache-kafka</id>
     <content type="html"><![CDATA[<p>I&rsquo;m a <a href="http://www.scala-lang.org/">Scala</a> proponent so when I found out that <a href="https://cwiki.apache.org/confluence/display/KAFKA/Client+Rewrite">the Apache Kafka team has decided to switch to using Java as the main language of the new client API</a> it was beyond my imagination. <a href="http://akka.io/docs/">Akka</a>&rsquo;s fine with their Java/Scala APIs and so I can&rsquo;t believe <a href="http://kafka.apache.org/">Apache Kafka</a> couldn&rsquo;t offer similar APIs, too. It&rsquo;s even more weird when one finds out that Apache Kafka itself is written in Scala. Why on earth did they decide to do the migration?!</p>
 
@@ -581,7 +581,7 @@ Time: 1437462720000 ms
 
 <p>Building Kafka from the sources is as simple as executing <code>gradle -PscalaVersion=2.11.7 clean releaseTarGz</code> in the directory where you <code>git clone https://github.com/apache/kafka.git</code>d <a href="https://github.com/apache/kafka.git">the Kafka repo from GitHub</a>.</p>
 
-<pre><code>➜  kafka git:(trunk) gradle -PscalaVersion=2.11.7 clean releaseTarGz
+<pre><code>➜  kafka git:(trunk) gradle -PscalaVersion=2.11.7 clean releaseTarGz install
 Building project 'core' with Scala version 2.11.7
 ...
 BUILD SUCCESSFUL
@@ -591,51 +591,50 @@ Total time: 1 mins 23.233 secs
 
 <p>I was building the distro against <strong>Scala 2.11.7</strong>.</p>
 
-<p>Once done, <code>core/build/distributions/kafka_2.11-0.8.3-SNAPSHOT.tgz</code> is where you find the release package.</p>
+<p>Once done, <code>core/build/distributions/kafka_2.11-0.9.0.0-SNAPSHOT.tgz</code> is where you find the release package.</p>
 
-<pre><code>➜  kafka git:(trunk) ✗ ls -l core/build/distributions/kafka_2.11-0.8.3-SNAPSHOT.tgz
--rw-r--r--  1 jacek  staff  17006303 18 lip 13:19 core/build/distributions/kafka_2.11-0.8.3-SNAPSHOT.tgz
+<pre><code>➜  kafka git:(trunk) ls -l core/build/distributions/kafka_2.11-0.9.0.0-SNAPSHOT.tgz
+-rw-r--r--  1 jacek  staff  17813003 29 wrz 08:32 core/build/distributions/kafka_2.11-0.9.0.0-SNAPSHOT.tgz
 </code></pre>
 
 <p>Unpack it and <code>cd</code> to it.</p>
 
-<pre><code>➜  kafka git:(trunk) ✗ tar -zxf core/build/distributions/kafka_2.11-0.8.3-SNAPSHOT.tgz
-➜  kafka git:(trunk) ✗ cd kafka_2.11-0.8.3-SNAPSHOT
+<pre><code>➜  kafka git:(trunk) tar -zxf core/build/distributions/kafka_2.11-0.9.0.0-SNAPSHOT.tgz
+➜  kafka git:(trunk) ✗ cd kafka_2.11-0.9.0.0-SNAPSHOT
+➜  kafka_2.11-0.9.0.0-SNAPSHOT git:(trunk) ✗ ls -l
+total 32
+-rw-r--r--   1 jacek  staff  11358  9 lis  2014 LICENSE
+-rw-r--r--   1 jacek  staff    162  9 lis  2014 NOTICE
+drwxr-xr-x  26 jacek  staff    884 29 wrz 08:32 bin
+drwxr-xr-x  16 jacek  staff    544 29 wrz 08:32 config
+drwxr-xr-x  21 jacek  staff    714 29 wrz 08:32 libs
 </code></pre>
 
 <h2>Zookeeper up and running</h2>
 
 <p>Running Zookeeper is the very first step you should do (as that&rsquo;s how Kafka maintains high-availability). Use <code>./bin/zookeeper-server-start.sh config/zookeeper.properties</code>:</p>
 
-<pre><code>➜  kafka_2.11-0.8.3-SNAPSHOT git:(trunk) ✗ ./bin/zookeeper-server-start.sh config/zookeeper.properties
-[2015-07-20 00:17:08,134] INFO Reading configuration from: config/zookeeper.properties (org.apache.zookeeper.server.quorum.QuorumPeerConfig)
-[2015-07-20 00:17:08,136] INFO autopurge.snapRetainCount set to 3 (org.apache.zookeeper.server.DatadirCleanupManager)
-[2015-07-20 00:17:08,136] INFO autopurge.purgeInterval set to 0 (org.apache.zookeeper.server.DatadirCleanupManager)
-[2015-07-20 00:17:08,136] INFO Purge task is not scheduled. (org.apache.zookeeper.server.DatadirCleanupManager)
-[2015-07-20 00:17:08,136] WARN Either no config or no quorum defined in config, running  in standalone mode (org.apache.zookeeper.server.quorum.QuorumPeerMain)
-[2015-07-20 00:17:08,153] INFO Reading configuration from: config/zookeeper.properties (org.apache.zookeeper.server.quorum.QuorumPeerConfig)
-[2015-07-20 00:17:08,154] INFO Starting server (org.apache.zookeeper.server.ZooKeeperServerMain)
-[2015-07-20 00:17:08,165] INFO Server environment:zookeeper.version=3.4.6-1569965, built on 02/20/2014 09:09 GMT (org.apache.zookeeper.server.ZooKeeperServer)
-[2015-07-20 00:17:08,165] INFO Server environment:host.name=192.168.1.9 (org.apache.zookeeper.server.ZooKeeperServer)
-[2015-07-20 00:17:08,165] INFO Server environment:java.version=1.8.0_45 (org.apache.zookeeper.server.ZooKeeperServer)
+<pre><code>➜  kafka_2.11-0.9.0.0-SNAPSHOT git:(trunk) ✗ ./bin/zookeeper-server-start.sh config/zookeeper.properties
+[2015-09-29 12:26:41,011] INFO Reading configuration from: config/zookeeper.properties (org.apache.zookeeper.server.quorum.QuorumPeerConfig)
+[2015-09-29 12:26:41,014] INFO autopurge.snapRetainCount set to 3 (org.apache.zookeeper.server.DatadirCleanupManager)
+[2015-09-29 12:26:41,014] INFO autopurge.purgeInterval set to 0 (org.apache.zookeeper.server.DatadirCleanupManager)
+[2015-09-29 12:26:41,014] INFO Purge task is not scheduled. (org.apache.zookeeper.server.DatadirCleanupManager)
+[2015-09-29 12:26:41,014] WARN Either no config or no quorum defined in config, running  in standalone mode (org.apache.zookeeper.server.quorum.QuorumPeerMain)
+[2015-09-29 12:26:41,036] INFO Reading configuration from: config/zookeeper.properties (org.apache.zookeeper.server.quorum.QuorumPeerConfig)
+[2015-09-29 12:26:41,036] INFO Starting server (org.apache.zookeeper.server.ZooKeeperServerMain)
+[2015-09-29 12:26:41,301] INFO Server environment:zookeeper.version=3.4.6-1569965, built on 02/20/2014 09:09 GMT (org.apache.zookeeper.server.ZooKeeperServer)
+[2015-09-29 12:26:41,301] INFO Server environment:host.name=172.20.36.184 (org.apache.zookeeper.server.ZooKeeperServer)
+[2015-09-29 12:26:41,301] INFO Server environment:java.version=1.8.0_60 (org.apache.zookeeper.server.ZooKeeperServer)
 ...
-[2015-07-20 00:17:08,191] INFO binding to port 0.0.0.0/0.0.0.0:2181 (org.apache.zookeeper.server.NIOServerCnxnFactory)
+[2015-09-29 12:26:41,333] INFO binding to port 0.0.0.0/0.0.0.0:2181 (org.apache.zookeeper.server.NIOServerCnxnFactory)
 </code></pre>
 
 <h2>Kafka broker up and running</h2>
 
-<p>With Zookeeper up, start a Kafka broker using <code>./bin/kafka-server-start.sh config/server.properties</code> command:</p>
+<p>In another terminal, start a Kafka broker using <code>./bin/kafka-server-start.sh config/server.properties</code> command:</p>
 
-<pre><code>➜  kafka_2.11-0.8.3-SNAPSHOT git:(trunk) ✗ ./bin/kafka-server-start.sh config/server.properties
-[2015-07-20 00:18:33,574] INFO KafkaConfig values:
-    advertised.host.name = null
-  ...
-    log.dir = /tmp/kafka-logs
-  ...
-    zookeeper.connect = localhost:2181
-    zookeeper.sync.time.ms = 2000
-    port = 9092
-  ...
+<pre><code>  ➜  kafka_2.11-0.9.0.0-SNAPSHOT git:(trunk) ✗ ./bin/kafka-server-start.sh config/server.properties
+...
 [2015-07-20 00:18:33,671] INFO starting (kafka.server.KafkaServer)
 [2015-07-20 00:18:33,673] INFO Connecting to zookeeper on localhost:2181 (kafka.server.KafkaServer)
 [2015-07-20 00:18:33,684] INFO Starting ZkClient event thread. (org.I0Itec.zkclient.ZkEventThread)
@@ -644,47 +643,52 @@ Total time: 1 mins 23.233 secs
 [2015-07-20 00:18:33,694] INFO Client environment:java.version=1.8.0_45 (org.apache.zookeeper.ZooKeeper)
 [2015-07-20 00:18:33,694] INFO Client environment:java.vendor=Oracle Corporation (org.apache.zookeeper.ZooKeeper)
 ...
-[2015-07-20 00:18:34,414] INFO Registered broker 0 at path /brokers/ids/0 with addresses: PLAINTEXT -&gt; EndPoint(192.168.1.9,9092,PLAINTEXT) (kafka.utils.ZkUtils$)
-[2015-07-20 00:18:34,419] INFO [Kafka Server 0], started (kafka.server.KafkaServer)
+[2015-09-29 13:18:49,919] INFO Registered broker 0 at path /brokers/ids/0 with addresses: PLAINTEXT -&gt; EndPoint(192.168.99.1,9092,PLAINTEXT) (kafka.utils.ZkUtils$)
+[2015-09-29 13:18:49,933] INFO Kafka version : 0.9.0.0-SNAPSHOT (org.apache.kafka.common.utils.AppInfoParser)
+[2015-09-29 13:18:49,933] INFO Kafka commitId : 4e7db39556ba916c (org.apache.kafka.common.utils.AppInfoParser)
+[2015-09-29 13:18:49,934] INFO [Kafka Server 0], started (kafka.server.KafkaServer)
+[2015-09-29 13:18:49,935] INFO New leader is 0 (kafka.server.ZookeeperLeaderElector$LeaderChangeListener)
 </code></pre>
 
 <h2>Creating topic</h2>
 
 <p>You&rsquo;re now going to create <code>my-topic</code> topic where the custom producer is going to publish messages to. Of course, the name of the topic is arbitrary, but should match what the custom producer uses.</p>
 
-<pre><code>➜  kafka_2.11-0.8.3-SNAPSHOT git:(trunk) ✗ ./bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic my-topic-test
+<pre><code>➜  kafka_2.11-0.9.0.0-SNAPSHOT git:(trunk) ✗ ./bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic my-topic-test
 Created topic "my-topic-test".
 </code></pre>
 
 <p>Check out the topics available using <code>./bin/kafka-topics.sh --list --zookeeper localhost:2181</code>. You should see one.</p>
 
-<pre><code>➜  kafka_2.11-0.8.3-SNAPSHOT git:(trunk) ✗ ./bin/kafka-topics.sh --list --zookeeper localhost:2181
+<pre><code>➜  kafka_2.11-0.9.0.0-SNAPSHOT git:(trunk) ✗ ./bin/kafka-topics.sh --list --zookeeper localhost:2181
 my-topic-test
 </code></pre>
 
-<h2>Scala/sbt project setup</h2>
+<h2>kafka-publisher - Scala project</h2>
 
-<p>Create a Scala/sbt project with the following <code>build.sbt</code>:</p>
+<p>Create a Scala project. The project is managed by sbt with the following <code>build.sbt</code>:</p>
 
-<pre><code>val kafkaVersion = "0.8.3-SNAPSHOT"
-
+<pre><code>val kafkaVersion = "0.9.0.0-SNAPSHOT"
 scalaVersion := "2.11.7"
 
-resolvers += Resolver.mavenLocal
-
 libraryDependencies += "org.apache.kafka" % "kafka-clients" % kafkaVersion
+resolvers += Resolver.mavenLocal
 </code></pre>
 
 <p>Use the following <code>project/build.properties</code>:</p>
 
-<pre><code>sbt.version=0.13.9-RC3
+<pre><code>sbt.version=0.13.9
 </code></pre>
 
 <h2>Sending messages using KafkaProducer - <code>sbt run</code></h2>
 
 <p>With the setup, you should now be able to run <code>sbt run</code> to run the custom Scala producer for Kafka.</p>
 
-<pre><code>[kafka-publisher]&gt; run
+<pre><code>➜  kafka-publisher  sbt run
+[info] Loading global plugins from /Users/jacek/.sbt/0.13/plugins
+[info] Loading project definition from /Users/jacek/dev/sandbox/kafka-publisher/project
+[info] Set current project to kafka-publisher (in build file:/Users/jacek/dev/sandbox/kafka-publisher/)
+[info] Compiling 1 Scala source to /Users/jacek/dev/sandbox/kafka-publisher/target/scala-2.11/classes...
 [info] Running KafkaProducer
 Connecting to my-topic-test
 SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
@@ -695,12 +699,15 @@ offset    = 0
 partition = 0
 topic     = my-topic-test
 
-[success] Total time: 8 s, completed Jul 20, 2015 12:29:44 AM
+[success] Total time: 4 s, completed Sep 29, 2015 4:21:14 PM
 </code></pre>
 
 <p>Executing <code>sbt run</code> again should show a different offset for the sam partition and topic:</p>
 
-<pre><code>[kafka-publisher]&gt; run
+<pre><code>➜  kafka-publisher  sbt run
+[info] Loading global plugins from /Users/jacek/.sbt/0.13/plugins
+[info] Loading project definition from /Users/jacek/dev/sandbox/kafka-publisher/project
+[info] Set current project to kafka-publisher (in build file:/Users/jacek/dev/sandbox/kafka-publisher/)
 [info] Running KafkaProducer
 Connecting to my-topic-test
 SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
@@ -711,7 +718,7 @@ offset    = 1
 partition = 0
 topic     = my-topic-test
 
-[success] Total time: 0 s, completed Jul 20, 2015 12:30:47 AM
+[success] Total time: 1 s, completed Sep 29, 2015 4:21:47 PM
 </code></pre>
 
 <h2>Using kafkacat as a Kafka message consumer</h2>
@@ -733,7 +740,7 @@ hello at 20.07.2015 0:30:46
 
 <p>You may also want to read <a href="http://kafka.apache.org/documentation.html#quickstart">1.3 Quick Start</a> in the official documentation of Apache Kafka.</p>
 
-<p>Let me know what you think about the topic<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup> of the blog post in the <a href="#disqus_thread">Comments</a> section below or contact me at <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#x6a;&#x61;&#99;&#x65;&#x6b;&#x40;&#106;&#97;&#x70;&#105;&#108;&#97;&#46;&#112;&#108;&#x2e;">&#106;&#x61;&#x63;&#x65;&#x6b;&#x40;&#106;&#97;&#x70;&#x69;&#108;&#x61;&#x2e;&#x70;&#108;&#x2e;</a> Follow the author as <a href="https://twitter.com/jaceklaskowski">@jaceklaskowski</a> on Twitter, too.</p>
+<p>Let me know what you think about the topic<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup> of the blog post in the <a href="#disqus_thread">Comments</a> section below or contact me at <a href="&#109;&#x61;&#x69;&#x6c;&#116;&#x6f;&#58;&#x6a;&#97;&#x63;&#x65;&#x6b;&#x40;&#106;&#x61;&#x70;&#105;&#x6c;&#x61;&#46;&#112;&#108;&#46;">&#106;&#97;&#x63;&#101;&#107;&#x40;&#x6a;&#x61;&#x70;&#x69;&#x6c;&#97;&#x2e;&#112;&#x6c;&#46;</a> Follow the author as <a href="https://twitter.com/jaceklaskowski">@jaceklaskowski</a> on Twitter, too.</p>
 <div class="footnotes">
 <hr/>
 <ol>
@@ -748,7 +755,7 @@ hello at 20.07.2015 0:30:46
   <entry>
     <title type="html"><![CDATA[Apache Kafka on Docker]]></title>
     <link href="http://blog.jaceklaskowski.pl/2015/07/14/apache-kafka-on-docker.html"/>
-    <updated>2015-07-14T20:59:33+02:00</updated>
+    <updated>2015-07-14T14:59:33-04:00</updated>
     <id>http://blog.jaceklaskowski.pl/2015/07/14/apache-kafka-on-docker</id>
     <content type="html"><![CDATA[<p><a href="http://kafka.apache.org/"><img class="left" src="http://blog.jaceklaskowski.pl/images/kafka_logo.png" title="Apache Kafka" ></a></p>
 
@@ -929,7 +936,7 @@ wurstmeister/zookeeper   latest              a3075a3d32da        9 months ago   
 
 <p>With these two docker images - <a href="https://registry.hub.docker.com/u/wurstmeister/kafka/">wurstmeister/kafka</a> and <a href="https://registry.hub.docker.com/u/wurstmeister/zookeeper/">wurstmeister/zookeeper</a> - you can run <strong>Apache Kafka</strong> without much changing your local workstation to install it together with the necessary components like Apache ZooKeeper. You don&rsquo;t need to worry about upgrading the software and its dependencies except docker itself (and boot2docker if you&rsquo;re lucky to be on Mac OS). That saves you from spending time on installation and ensures proper functioning of your machine and the software. Moreover, the Docker images could be deployed to other machines and guarantee a consistent environment of the software inside.</p>
 
-<p>Let me know what you think about the topic<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup> of the blog post in the <a href="#disqus_thread">Comments</a> section below or contact me at <a href="&#109;&#97;&#105;&#108;&#x74;&#111;&#x3a;&#106;&#x61;&#99;&#x65;&#x6b;&#64;&#x6a;&#97;&#x70;&#105;&#108;&#97;&#46;&#112;&#108;&#46;">&#x6a;&#97;&#x63;&#101;&#107;&#x40;&#106;&#97;&#x70;&#105;&#108;&#97;&#46;&#112;&#x6c;&#46;</a> Follow the author as <a href="https://twitter.com/jaceklaskowski">@jaceklaskowski</a> on Twitter, too.</p>
+<p>Let me know what you think about the topic<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup> of the blog post in the <a href="#disqus_thread">Comments</a> section below or contact me at <a href="&#x6d;&#97;&#105;&#x6c;&#116;&#x6f;&#x3a;&#x6a;&#97;&#99;&#x65;&#107;&#64;&#106;&#x61;&#112;&#105;&#108;&#97;&#x2e;&#112;&#x6c;&#x2e;">&#x6a;&#97;&#x63;&#101;&#x6b;&#x40;&#106;&#97;&#112;&#105;&#x6c;&#x61;&#46;&#112;&#x6c;&#46;</a> Follow the author as <a href="https://twitter.com/jaceklaskowski">@jaceklaskowski</a> on Twitter, too.</p>
 <div class="footnotes">
 <hr/>
 <ol>
@@ -944,7 +951,7 @@ wurstmeister/zookeeper   latest              a3075a3d32da        9 months ago   
   <entry>
     <title type="html"><![CDATA[Ad Hoc Polymorphism in Scala With Type Classes]]></title>
     <link href="http://blog.jaceklaskowski.pl/2015/05/15/ad-hoc-polymorphism-in-scala-with-type-classes.html"/>
-    <updated>2015-05-15T22:21:20+02:00</updated>
+    <updated>2015-05-15T16:21:20-04:00</updated>
     <id>http://blog.jaceklaskowski.pl/2015/05/15/ad-hoc-polymorphism-in-scala-with-type-classes</id>
     <content type="html"><![CDATA[<p>My journey into the depths of <a href="http://www.scala-lang.org/">Scala</a> is in full swing. Not only can I learn the theory (with the group of <a href="http://warsawscala.pl">Warsaw Scala Enthusiasts</a>), but also apply it to commercial projects (with the Scala development teams of <a href="http://deepsense.io/">DeepSense.io</a> and <a href="http://www.hcore.com/">HCore</a>). Each day I feel I&rsquo;m getting better at using <strong>type system in Scala</strong> in a more concious and (hopefully) efficient manner.</p>
 
@@ -1239,7 +1246,7 @@ implicit val minus2Value = new Value[Minus] {
   <entry>
     <title type="html"><![CDATA[Ditching Guice's @Singleton in Favour of Scala's (Companion) Object]]></title>
     <link href="http://blog.jaceklaskowski.pl/2015/05/09/ditching-guices-at-singleton-in-favour-of-scalas-companion-object.html"/>
-    <updated>2015-05-09T14:57:19+02:00</updated>
+    <updated>2015-05-09T08:57:19-04:00</updated>
     <id>http://blog.jaceklaskowski.pl/2015/05/09/ditching-guices-at-singleton-in-favour-of-scalas-companion-object</id>
     <content type="html"><![CDATA[<p><a href="https://twitter.com/akomarzewski">Arek Komarzewski</a> (a Scala developer in HCore) mentioned the following this Friday and made my day (and the whole week, too):</p>
 
@@ -1275,7 +1282,7 @@ implicit val minus2Value = new Value[Minus] {
   <entry>
     <title type="html"><![CDATA[Using AutoPlugin in Sbt for Common Settings Across Projects in Multi-project Build]]></title>
     <link href="http://blog.jaceklaskowski.pl/2015/04/12/using-autoplugin-in-sbt-for-common-settings-across-projects-in-multi-project-build.html"/>
-    <updated>2015-04-12T15:20:45+02:00</updated>
+    <updated>2015-04-12T09:20:45-04:00</updated>
     <id>http://blog.jaceklaskowski.pl/2015/04/12/using-autoplugin-in-sbt-for-common-settings-across-projects-in-multi-project-build</id>
     <content type="html"><![CDATA[<p>What a joy to learn all the goodies sbt brings to the table and be given a chance to apply it right away to commercial projects in Scala!</p>
 
@@ -1334,7 +1341,7 @@ object CommonSettingsPlugin extends AutoPlugin {
   <entry>
     <title type="html"><![CDATA[Code Review With Gerrit and Contributing to a Patch Set?]]></title>
     <link href="http://blog.jaceklaskowski.pl/2015/04/05/code-review-with-gerrit-and-contributing-to-a-patchset.html"/>
-    <updated>2015-04-05T17:59:41+02:00</updated>
+    <updated>2015-04-05T11:59:41-04:00</updated>
     <id>http://blog.jaceklaskowski.pl/2015/04/05/code-review-with-gerrit-and-contributing-to-a-patchset</id>
     <content type="html"><![CDATA[<p><a href="https://code.google.com/p/gerrit/"><img class="left" src="http://blog.jaceklaskowski.pl/images/gerrit-diffy.png" title="Gerrit Code Review" ></a></p>
 
@@ -1388,7 +1395,7 @@ object CommonSettingsPlugin extends AutoPlugin {
   <entry>
     <title type="html"><![CDATA[Daily Routines to Learn Scala With IntelliJ IDEA]]></title>
     <link href="http://blog.jaceklaskowski.pl/2015/03/28/daily-routines-to-learn-scala-with-intellij-idea.html"/>
-    <updated>2015-03-28T12:54:28+01:00</updated>
+    <updated>2015-03-28T07:54:28-04:00</updated>
     <id>http://blog.jaceklaskowski.pl/2015/03/28/daily-routines-to-learn-scala-with-intellij-idea</id>
     <content type="html"><![CDATA[<p><a href="http://blog.jetbrains.com/idea/2015/03/intellij-idea-14-1-is-here/"><img class="left" src="http://blog.jaceklaskowski.pl/images/scala-idea-intellij-idea-14-1.png" title="IntelliJ IDEA 14.1 is Here!" ></a> So, you&rsquo;ve got a moment to learn <a href="http://www.scala-lang.org/">Scala</a> and have <a href="https://www.jetbrains.com/idea/">IntelliJ IDEA</a> with <a href="https://plugins.jetbrains.com/plugin/?id=1347">Scala plugin</a> installed. Your wish is to <em>maximize</em> the mental outcome given the time at hand with <em>little to no effort</em> to set up a productive working environment. You may even think you may have gotten one, but, unless you&rsquo;re doing what I&rsquo;m describing here, you&rsquo;re actually far from truly having it. I&rsquo;m asking you to go <em>the extra mile</em>!</p>
 
@@ -1490,7 +1497,7 @@ object CommonSettingsPlugin extends AutoPlugin {
   <entry>
     <title type="html"><![CDATA[Oh My Zsh's Plugins to Boost Happiness From Using Git]]></title>
     <link href="http://blog.jaceklaskowski.pl/2015/02/28/oh-my-zshs-plugins-to-boost-happiness-from-using-git.html"/>
-    <updated>2015-02-28T20:26:40+01:00</updated>
+    <updated>2015-02-28T14:26:40-05:00</updated>
     <id>http://blog.jaceklaskowski.pl/2015/02/28/oh-my-zshs-plugins-to-boost-happiness-from-using-git</id>
     <content type="html"><![CDATA[<p>From the website of the very useful and must-have addition to your terminal - <a href="http://ohmyz.sh/">Oh-My-Zsh</a>:</p>
 
@@ -1563,7 +1570,7 @@ plugins=(git osx brew common-aliases)
   <entry>
     <title type="html"><![CDATA[REST Clients (for Working With REST Microservices)]]></title>
     <link href="http://blog.jaceklaskowski.pl/2015/02/11/rest-clients-for-working-with-rest-microservices.html"/>
-    <updated>2015-02-11T23:02:42+01:00</updated>
+    <updated>2015-02-11T17:02:42-05:00</updated>
     <id>http://blog.jaceklaskowski.pl/2015/02/11/rest-clients-for-working-with-rest-microservices</id>
     <content type="html"><![CDATA[<p>It&rsquo;s so engaging to learn things while learning others. So is the case with the new architectural style <strong>REST microservices</strong> and developing them using <a href="http://www.scala-lang.org/">Scala</a> language and tools.</p>
 
@@ -1653,7 +1660,7 @@ Server: tmprl
   <entry>
     <title type="html"><![CDATA[Sbt-dependency-graph for Easier Dependency Management in Sbt]]></title>
     <link href="http://blog.jaceklaskowski.pl/2014/11/29/sbt-dependency-graph-for-easier-dependency-management-in-sbt.html"/>
-    <updated>2014-11-29T23:10:06+01:00</updated>
+    <updated>2014-11-29T17:10:06-05:00</updated>
     <id>http://blog.jaceklaskowski.pl/2014/11/29/sbt-dependency-graph-for-easier-dependency-management-in-sbt</id>
     <content type="html"><![CDATA[<p>That&rsquo;s gonna be short and hopefully simple. If you&rsquo;re with <a href="http://www.scala-sbt.org/">sbt</a> you&rsquo;re going to like <a href="https://github.com/jrudolph/sbt-dependency-graph">sbt-dependency-graph</a> <em>plugin to create a dependency graph for your project</em> very much.</p>
 
@@ -1730,7 +1737,7 @@ Server: tmprl
   <entry>
     <title type="html"><![CDATA[Loose Notes About Cassandra]]></title>
     <link href="http://blog.jaceklaskowski.pl/2014/09/25/loose-notes-about-cassandra.html"/>
-    <updated>2014-09-25T09:05:39+02:00</updated>
+    <updated>2014-09-25T03:05:39-04:00</updated>
     <id>http://blog.jaceklaskowski.pl/2014/09/25/loose-notes-about-cassandra</id>
     <content type="html"><![CDATA[<p>I&rsquo;ve got curious about <a href="http://cassandra.apache.org/">Cassandra</a> and more and more I&rsquo;ve been asking myself about the use cases it could be the most valuable solution for. With all the answers out there, I simply needed a place where I could <em>dump</em> the findings to ultimately build something useful as a single page (and perhaps ditch it to create something of a higher value).</p>
 
@@ -1842,7 +1849,7 @@ SELECT * FROM users;
   <entry>
     <title type="html"><![CDATA[Mistakes Introducing Slick for Database Access Under Play Framework 2.3.4 and 2.4.0-M1]]></title>
     <link href="http://blog.jaceklaskowski.pl/2014/09/12/mistakes-introducing-slick-for-database-access-under-play-framework-2-dot-3-4-and-2-dot-4-0-m1.html"/>
-    <updated>2014-09-12T21:47:50+02:00</updated>
+    <updated>2014-09-12T15:47:50-04:00</updated>
     <id>http://blog.jaceklaskowski.pl/2014/09/12/mistakes-introducing-slick-for-database-access-under-play-framework-2-dot-3-4-and-2-dot-4-0-m1</id>
     <content type="html"><![CDATA[<p>This is a summary of my attempt to run <a href="http://slick.typesafe.com/">Slick</a> under <a href="https://www.playframework.com/">Play Framework</a> <strong>2.3.4</strong> and <strong>2.4.0-M1</strong> that ultimately turned out a quite successful endeavour.</p>
 
@@ -1987,7 +1994,7 @@ When using a case class, the companion object extends the correct function type 
   <entry>
     <title type="html"><![CDATA[Getting Started With Play Framework and AngularJS - Day 1]]></title>
     <link href="http://blog.jaceklaskowski.pl/2014/09/08/getting-started-with-play-framework-and-angularjs-day-1.html"/>
-    <updated>2014-09-08T12:42:49+02:00</updated>
+    <updated>2014-09-08T06:42:49-04:00</updated>
     <id>http://blog.jaceklaskowski.pl/2014/09/08/getting-started-with-play-framework-and-angularjs-day-1</id>
     <content type="html"><![CDATA[<p>Let&rsquo;s face it &ndash; there are tons of very good tutorials about how to get started with <a href="https://www.playframework.com/">Play Framework</a> and <a href="https://angularjs.org/">AngularJS</a> to build modern web applications, and despite the fact there are still quite a few people out there who keep asking me about writing mine. Since writing tutorials is a way to clear up understanding of a topic to me, I found it very compelling to help myself and others using the two - Play and Angular - properly. Well, the <em>properly</em> part comes with your comments when I fix the parts that are outdated or plain wrong.</p>
 
@@ -2107,7 +2114,7 @@ Application jaceklaskowski/hello-play-tutorial deployed: http://hello-play-tutor
   <entry>
     <title type="html"><![CDATA[JSON in Play Framework With JsValue and Reads]]></title>
     <link href="http://blog.jaceklaskowski.pl/2014/09/02/json-in-play-framework-with-jsvalue-and-reads.html"/>
-    <updated>2014-09-02T16:00:00+02:00</updated>
+    <updated>2014-09-02T10:00:00-04:00</updated>
     <id>http://blog.jaceklaskowski.pl/2014/09/02/json-in-play-framework-with-jsvalue-and-reads</id>
     <content type="html"><![CDATA[<p>There are many ways to learn <a href="http://www.scala-lang.org/">the Scala programming language</a> and the vast number of libraries for the language. Mine is to use <a href="http://www.scala-sbt.org/">sbt</a> console in a customized project with required dependencies that are automatically downloaded by sbt. All (analysing, downloading, setting up CLASSPATH and such) is handled by the tooling itself not me. Share your approach if it appears smarter.</p>
 
@@ -2212,7 +2219,7 @@ val jacek: Person = json.as[Person]
   <entry>
     <title type="html"><![CDATA[Trait Init[Scope] in Sbt]]></title>
     <link href="http://blog.jaceklaskowski.pl/2014/07/22/trait-init-scope-in-sbt.html"/>
-    <updated>2014-07-22T13:19:54+02:00</updated>
+    <updated>2014-07-22T07:19:54-04:00</updated>
     <id>http://blog.jaceklaskowski.pl/2014/07/22/trait-init-scope-in-sbt</id>
     <content type="html"><![CDATA[<p>It&rsquo;s been my wish to master <a href="http://scala-lang.org/">Scala</a> recently and since I&rsquo;ve been spending more time with <a href="http://www.scala-sbt.org/">sbt</a> I&rsquo;ve made the decision to use one to master the other (in no particular order). There are quite a few sophisticated projects in Scala out there, but sbt is enough for my needs.</p>
 
@@ -2301,9 +2308,9 @@ val jacek: Person = json.as[Person]
   
   <entry>
     <title type="html"><![CDATA[Contributing to Open Source Projects on GitHub - Cheat Sheet]]></title>
-    <link href="http://blog.jaceklaskowski.pl/2014/07/08/contributing-to-open-source-projects-on-github-cheat-sheet.html"/>
-    <updated>2014-07-08T01:24:32+02:00</updated>
-    <id>http://blog.jaceklaskowski.pl/2014/07/08/contributing-to-open-source-projects-on-github-cheat-sheet</id>
+    <link href="http://blog.jaceklaskowski.pl/2014/07/07/contributing-to-open-source-projects-on-github-cheat-sheet.html"/>
+    <updated>2014-07-07T19:24:32-04:00</updated>
+    <id>http://blog.jaceklaskowski.pl/2014/07/07/contributing-to-open-source-projects-on-github-cheat-sheet</id>
     <content type="html"><![CDATA[<p>I&rsquo;ve been contributing to many open source projects over the past couple of years and I found <a href="https://github.com/jaceklaskowski">GitHub</a> pleasantly helpful to continue the gig in the years to come. I&rsquo;ve learnt few techniques along the way (from many sources I&rsquo;m including after the section they appply to).</p>
 
 <p>I don&rsquo;t want to keep the techniques for myself so the git/GitHub cheat sheet is supposed to help me remember the commands and others to learn from my mistakes (<em>aka</em> experience). It&rsquo;s so easy on GitHub that I keep wondering why it took me so long to learn it. It must not for you.</p>
@@ -2445,7 +2452,7 @@ val jacek: Person = json.as[Person]
   <entry>
     <title type="html"><![CDATA[Calculate Profit in Scala With foldLeft]]></title>
     <link href="http://blog.jaceklaskowski.pl/2014/06/26/calculate-profit-in-scala-with-foldLeft.html"/>
-    <updated>2014-06-26T22:57:00+02:00</updated>
+    <updated>2014-06-26T16:57:00-04:00</updated>
     <id>http://blog.jaceklaskowski.pl/2014/06/26/calculate-profit-in-scala-with-foldLeft</id>
     <content type="html"><![CDATA[<p>With a credit in a foreign currency one may want to hedge to offset the foreign currency getting stronger, and hence increasing the cost of the credit.</p>
 

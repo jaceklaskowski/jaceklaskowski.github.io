@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Cassandra | Mastering FP and OO with Scala]]></title>
   <link href="http://blog.jaceklaskowski.pl/categories/cassandra/atom.xml" rel="self"/>
   <link href="http://blog.jaceklaskowski.pl/"/>
-  <updated>2015-08-25T14:20:39+02:00</updated>
+  <updated>2015-09-29T16:40:29-04:00</updated>
   <id>http://blog.jaceklaskowski.pl/</id>
   <author>
     <name><![CDATA[Jacek Laskowski]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[Loose Notes About Cassandra]]></title>
     <link href="http://blog.jaceklaskowski.pl/2014/09/25/loose-notes-about-cassandra.html"/>
-    <updated>2014-09-25T09:05:39+02:00</updated>
+    <updated>2014-09-25T03:05:39-04:00</updated>
     <id>http://blog.jaceklaskowski.pl/2014/09/25/loose-notes-about-cassandra</id>
     <content type="html"><![CDATA[I've got curious about [Cassandra](http://cassandra.apache.org/) and more and more I've been asking myself about the use cases it could be the most valuable solution for. With all the answers out there, I simply needed a place where I could *dump* the findings to ultimately build something useful as a single page (and perhaps ditch it to create something of a higher value).
 

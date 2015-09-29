@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Json | Mastering FP and OO with Scala]]></title>
   <link href="http://blog.jaceklaskowski.pl/categories/json/atom.xml" rel="self"/>
   <link href="http://blog.jaceklaskowski.pl/"/>
-  <updated>2015-08-25T14:20:39+02:00</updated>
+  <updated>2015-09-29T16:40:29-04:00</updated>
   <id>http://blog.jaceklaskowski.pl/</id>
   <author>
     <name><![CDATA[Jacek Laskowski]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[JSON in Play Framework With JsValue and Reads]]></title>
     <link href="http://blog.jaceklaskowski.pl/2014/09/02/json-in-play-framework-with-jsvalue-and-reads.html"/>
-    <updated>2014-09-02T16:00:00+02:00</updated>
+    <updated>2014-09-02T10:00:00-04:00</updated>
     <id>http://blog.jaceklaskowski.pl/2014/09/02/json-in-play-framework-with-jsvalue-and-reads</id>
     <content type="html"><![CDATA[There are many ways to learn [the Scala programming language](http://www.scala-lang.org/) and the vast number of libraries for the language. Mine is to use [sbt](http://www.scala-sbt.org/) console in a customized project with required dependencies that are automatically downloaded by sbt. All (analysing, downloading, setting up CLASSPATH and such) is handled by the tooling itself not me. Share your approach if it appears smarter.
 

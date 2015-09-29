@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Microservices | Mastering FP and OO with Scala]]></title>
   <link href="http://blog.jaceklaskowski.pl/categories/microservices/atom.xml" rel="self"/>
   <link href="http://blog.jaceklaskowski.pl/"/>
-  <updated>2015-08-25T14:20:39+02:00</updated>
+  <updated>2015-09-29T16:40:29-04:00</updated>
   <id>http://blog.jaceklaskowski.pl/</id>
   <author>
     <name><![CDATA[Jacek Laskowski]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[REST Clients (for Working With REST Microservices)]]></title>
     <link href="http://blog.jaceklaskowski.pl/2015/02/11/rest-clients-for-working-with-rest-microservices.html"/>
-    <updated>2015-02-11T23:02:42+01:00</updated>
+    <updated>2015-02-11T17:02:42-05:00</updated>
     <id>http://blog.jaceklaskowski.pl/2015/02/11/rest-clients-for-working-with-rest-microservices</id>
     <content type="html"><![CDATA[It's so engaging to learn things while learning others. So is the case with the new architectural style **REST microservices** and developing them using [Scala](http://www.scala-lang.org/) language and tools.
 

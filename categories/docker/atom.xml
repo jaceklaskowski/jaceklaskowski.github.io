@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Docker | Mastering FP and OO with Scala]]></title>
   <link href="http://blog.jaceklaskowski.pl/categories/docker/atom.xml" rel="self"/>
   <link href="http://blog.jaceklaskowski.pl/"/>
-  <updated>2015-08-25T14:20:39+02:00</updated>
+  <updated>2015-09-29T16:40:29-04:00</updated>
   <id>http://blog.jaceklaskowski.pl/</id>
   <author>
     <name><![CDATA[Jacek Laskowski]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[Why Docker - Writing Docs Using Jekyll]]></title>
     <link href="http://blog.jaceklaskowski.pl/2015/08/17/why-docker-writing-docs-using-jekyll.html"/>
-    <updated>2015-08-17T11:06:45+02:00</updated>
+    <updated>2015-08-17T05:06:45-04:00</updated>
     <id>http://blog.jaceklaskowski.pl/2015/08/17/why-docker-writing-docs-using-jekyll</id>
     <content type="html"><![CDATA[**Spoiler** I'm so much into [Docker](https://www.docker.com/) that I could sing songs about how much it made my life easier. And you're soon, too. Beware!
 
@@ -91,7 +91,7 @@ Let me know what you think about the topic of the blog post in the [Comments](#d
   <entry>
     <title type="html"><![CDATA[Docker Your Scala Web Application (Play Framework)]]></title>
     <link href="http://blog.jaceklaskowski.pl/2015/07/24/docker-your-scala-web-application-play-framework.html"/>
-    <updated>2015-07-24T23:03:07+02:00</updated>
+    <updated>2015-07-24T17:03:07-04:00</updated>
     <id>http://blog.jaceklaskowski.pl/2015/07/24/docker-your-scala-web-application-play-framework</id>
     <content type="html"><![CDATA[We're experimenting with [Docker](https://www.docker.com/) in the [DeepSense.io](http://deepsense.io/) project. There might be a case or two in the other Scala company in Warsaw - [HCore](http://www.hcore.com/). I've also been noticing interest in using Docker in Scala projects in [Javeo](http://www.javeo.eu/) where the [Warsaw Scala Enthusiasts](http://www.meetup.com/WarszawScaLa/) meetups are taking place. The Docker space seems very hot for Scala developers in Warsaw, Poland. And these companies *are* hiring Scala developers!
 
@@ -223,7 +223,7 @@ Let me know what you think about the topic of the blog post in the [Comments](#d
   <entry>
     <title type="html"><![CDATA[Apache Kafka on Docker]]></title>
     <link href="http://blog.jaceklaskowski.pl/2015/07/14/apache-kafka-on-docker.html"/>
-    <updated>2015-07-14T20:59:33+02:00</updated>
+    <updated>2015-07-14T14:59:33-04:00</updated>
     <id>http://blog.jaceklaskowski.pl/2015/07/14/apache-kafka-on-docker</id>
     <content type="html"><![CDATA[[<img class="left" src="/images/kafka_logo.png" title="Apache Kafka" >](http://kafka.apache.org/)
 

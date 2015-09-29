@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Intellij-idea | Mastering FP and OO with Scala]]></title>
   <link href="http://blog.jaceklaskowski.pl/categories/intellij-idea/atom.xml" rel="self"/>
   <link href="http://blog.jaceklaskowski.pl/"/>
-  <updated>2015-08-25T14:20:39+02:00</updated>
+  <updated>2015-09-29T16:40:29-04:00</updated>
   <id>http://blog.jaceklaskowski.pl/</id>
   <author>
     <name><![CDATA[Jacek Laskowski]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[Daily Routines to Learn Scala With IntelliJ IDEA]]></title>
     <link href="http://blog.jaceklaskowski.pl/2015/03/28/daily-routines-to-learn-scala-with-intellij-idea.html"/>
-    <updated>2015-03-28T12:54:28+01:00</updated>
+    <updated>2015-03-28T07:54:28-04:00</updated>
     <id>http://blog.jaceklaskowski.pl/2015/03/28/daily-routines-to-learn-scala-with-intellij-idea</id>
     <content type="html"><![CDATA[[<img class="left" src="/images/scala-idea-intellij-idea-14-1.png" title="IntelliJ IDEA 14.1 is Here!" >](http://blog.jetbrains.com/idea/2015/03/intellij-idea-14-1-is-here/) So, you've got a moment to learn [Scala](http://www.scala-lang.org/) and have [IntelliJ IDEA](https://www.jetbrains.com/idea/) with [Scala plugin](https://plugins.jetbrains.com/plugin/?id=1347) installed. Your wish is to *maximize* the mental outcome given the time at hand with *little to no effort* to set up a productive working environment. You may even think you may have gotten one, but, unless you're doing what I'm describing here, you're actually far from truly having it. I'm asking you to go *the extra mile*!
 
@@ -117,7 +117,7 @@ Give the tips from the blog post a try and a month later you will have found the
   <entry>
     <title type="html"><![CDATA[Beginner "Guide" to Sbt 0.13 and IntelliJ IDEA 13]]></title>
     <link href="http://blog.jaceklaskowski.pl/2013/12/07/beginner-guide-to-sbt-0-dot-13-and-intellij-idea-13.html"/>
-    <updated>2013-12-07T16:39:37+01:00</updated>
+    <updated>2013-12-07T10:39:37-05:00</updated>
     <id>http://blog.jaceklaskowski.pl/2013/12/07/beginner-guide-to-sbt-0-dot-13-and-intellij-idea-13</id>
     <content type="html"><![CDATA[<img class="left" src="/images/intellij-idea-13-new-logo.png" title="The logo of IntelliJ IDEA 13" > It has not been very long ago when the only way to work with [sbt](http://www.scala-sbt.org/) projects in [IntelliJ IDEA](http://www.jetbrains.com/idea/) was to use the [sbt-idea](https://github.com/mpeltonen/sbt-idea) plugin that aimed at *"creating IntelliJ IDEA project files"*.
 

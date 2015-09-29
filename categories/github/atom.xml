@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Github | Mastering FP and OO with Scala]]></title>
   <link href="http://blog.jaceklaskowski.pl/categories/github/atom.xml" rel="self"/>
   <link href="http://blog.jaceklaskowski.pl/"/>
-  <updated>2015-08-25T14:20:39+02:00</updated>
+  <updated>2015-09-29T16:40:29-04:00</updated>
   <id>http://blog.jaceklaskowski.pl/</id>
   <author>
     <name><![CDATA[Jacek Laskowski]]></name>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Contributing to Open Source Projects on GitHub - Cheat Sheet]]></title>
-    <link href="http://blog.jaceklaskowski.pl/2014/07/08/contributing-to-open-source-projects-on-github-cheat-sheet.html"/>
-    <updated>2014-07-08T01:24:32+02:00</updated>
-    <id>http://blog.jaceklaskowski.pl/2014/07/08/contributing-to-open-source-projects-on-github-cheat-sheet</id>
+    <link href="http://blog.jaceklaskowski.pl/2014/07/07/contributing-to-open-source-projects-on-github-cheat-sheet.html"/>
+    <updated>2014-07-07T19:24:32-04:00</updated>
+    <id>http://blog.jaceklaskowski.pl/2014/07/07/contributing-to-open-source-projects-on-github-cheat-sheet</id>
     <content type="html"><![CDATA[I've been contributing to many open source projects over the past couple of years and I found [GitHub](https://github.com/jaceklaskowski) pleasantly helpful to continue the gig in the years to come. I've learnt few techniques along the way (from many sources I'm including after the section they appply to).
 
 I don't want to keep the techniques for myself so the git/GitHub cheat sheet is supposed to help me remember the commands and others to learn from my mistakes (*aka* experience). It's so easy on GitHub that I keep wondering why it took me so long to learn it. It must not for you.

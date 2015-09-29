@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Tools | Mastering FP and OO with Scala]]></title>
   <link href="http://blog.jaceklaskowski.pl/categories/tools/atom.xml" rel="self"/>
   <link href="http://blog.jaceklaskowski.pl/"/>
-  <updated>2015-08-25T14:20:39+02:00</updated>
+  <updated>2015-09-29T16:40:29-04:00</updated>
   <id>http://blog.jaceklaskowski.pl/</id>
   <author>
     <name><![CDATA[Jacek Laskowski]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[Using AutoPlugin in Sbt for Common Settings Across Projects in Multi-project Build]]></title>
     <link href="http://blog.jaceklaskowski.pl/2015/04/12/using-autoplugin-in-sbt-for-common-settings-across-projects-in-multi-project-build.html"/>
-    <updated>2015-04-12T15:20:45+02:00</updated>
+    <updated>2015-04-12T09:20:45-04:00</updated>
     <id>http://blog.jaceklaskowski.pl/2015/04/12/using-autoplugin-in-sbt-for-common-settings-across-projects-in-multi-project-build</id>
     <content type="html"><![CDATA[What a joy to learn all the goodies sbt brings to the table and be given a chance to apply it right away to commercial projects in Scala!
 
@@ -73,7 +73,7 @@ p.s. Shhh, the team thinks it was just me to have figured it out myself.
   <entry>
     <title type="html"><![CDATA[Code Review With Gerrit and Contributing to a Patch Set?]]></title>
     <link href="http://blog.jaceklaskowski.pl/2015/04/05/code-review-with-gerrit-and-contributing-to-a-patchset.html"/>
-    <updated>2015-04-05T17:59:41+02:00</updated>
+    <updated>2015-04-05T11:59:41-04:00</updated>
     <id>http://blog.jaceklaskowski.pl/2015/04/05/code-review-with-gerrit-and-contributing-to-a-patchset</id>
     <content type="html"><![CDATA[[<img class="left" src="/images/gerrit-diffy.png" title="Gerrit Code Review" >](https://code.google.com/p/gerrit/)
 
